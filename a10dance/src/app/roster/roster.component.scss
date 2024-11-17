@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.warn-text {
+  color: var(--warn-color);
+}
+
+.mat-column-actions {
+  width: 100px;
+  text-align: right;
+}
+
+.mat-column-status {
+  width: 80px;
+  text-align: center;
+}
