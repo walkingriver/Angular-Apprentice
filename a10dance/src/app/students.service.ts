@@ -35,6 +35,19 @@ export class StudentsService {
     return [...mockStudents];
   }
 
+  getById(id: string) {
+    return mockStudents.find(s => s.id === id);
+  }
+
+  update(student: Student) {
+    const index = mockStudents.findIndex(s => s.id === student.id);
+    if (index !== -1) {
+      mockStudents[index] = { ...student };
+      return true;
+    }
+    return false;
+  }
+
   delete(student: Student) {
     mockStudents = mockStudents.filter(s => s.id !== student.id);
     return [...mockStudents];

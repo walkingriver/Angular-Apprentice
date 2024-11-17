@@ -14,6 +14,11 @@ export const routes: Routes = [
       .then(m => m.RosterComponent)
   },
   {
+    path: 'student/:id',
+    loadComponent: () => import('./student-details/student-details.component')
+      .then(m => m.StudentDetailsComponent)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
