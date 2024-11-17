@@ -1,5 +1,13 @@
 # Introduction
 
+In late spring 2018, my manager approached me with some interesting news. He explained that our executive director had complained that although Angular was prevalent throughout his organization, his own developers were not very experienced with it. 
+
+What could be done about that? They discussed various options, from video course subscriptions, to books, to hiring an outside training firm to provide the necessary training.
+
+At that point, my manager spoke up. “What if we ask Mike Callaghan to do it?” He then proceeded to recommend me in an executive meeting to train a group of our software developers how to use Angular.
+
+****
+
 My journey into front-end development began well before modern frameworks became mainstream. Starting with Visual Basic 6, I learned the essentials of creating user interfaces, which set the stage for exploring increasingly sophisticated tools. When jQuery emerged in 2006, it transformed the front-end landscape, allowing developers to interact with the DOM in a way that was simpler and more powerful than raw JavaScript alone. jQuery enabled more dynamic, responsive websites, sparking an evolution in web development that pushed me to experiment and adopt new technologies as they arrived.
 
 In my pursuit of richer web applications, I also spent time with WPF (Windows Presentation Foundation) and Silverlight, both of which allowed for desktop-like experiences on the web. But it wasn’t until the arrival of AngularJS in 2012 that I truly felt the potential of single-page applications. By 2013, with AngularJS version 1.2, I was fully invested in this framework that introduced groundbreaking concepts like two-way data binding, dependency injection, and a component-driven approach that made building complex applications feasible.

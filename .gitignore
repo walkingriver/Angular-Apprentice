@@ -36,6 +36,8 @@ yarn-debug.log*
 yarn-error.log*
 testem.log
 /typings
+/_drafts/
+/my-angular-app/
 
 # System files
 .DS_Store
