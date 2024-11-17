@@ -12,7 +12,7 @@ export interface Student {
   status?: 'present' | 'absent';
 }
 
-const mockStudents: Student[] = [
+let mockStudents: Student[] = [
   { id: '1', firstName: 'Greg', lastName: 'Marine' },
   { id: '2', firstName: 'Jonathan', lastName: 'Bennett' },
   { id: '3', firstName: 'Neil', lastName: 'Estandarte' },
@@ -32,6 +32,11 @@ export class StudentsService {
   constructor() { }
 
   getAll() {
+    return [...mockStudents];
+  }
+
+  delete(student: Student) {
+    mockStudents = mockStudents.filter(s => s.id !== student.id);
     return [...mockStudents];
   }
 }

@@ -1,0 +1,69 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+.app-sidenav {
+  width: 240px;
+  
+  mat-toolbar {
+    border-bottom: 1px solid var(--mat-toolbar-container-background-color);
+  }
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.active-link {
+  background: rgba(0, 0, 0, 0.05);
+  
+  mat-icon {
+    color: var(--mat-sidenav-container-text-color);
+  }
+}
+
+// Responsive behavior
+@media (max-width: 768px) {
+  .app-sidenav {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  mat-sidenav {
+    // Switch to overlay mode on mobile
+    ::ng-deep .mat-drawer {
+      position: fixed !important;
+    }
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .content {
+    padding: 0.5rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .menu-button {
+    display: none;
+  }
+}
