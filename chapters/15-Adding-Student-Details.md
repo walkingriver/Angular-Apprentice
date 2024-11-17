@@ -1,10 +1,119 @@
 # Adding Student Details and Responsive Actions
 
-In this chapter, we'll enhance our roster page with student details and implement responsive action menus. We'll use Material's bottom sheet component for a more mobile-friendly experience when the screen is narrow, and we'll leverage Angular's signals for reactive state management.
+In this chapter, we'll enhance our roster page with student details and implement responsive behavior using Angular Signals.
 
-## Responsive Design with Signals
+## Understanding Angular Signals
 
-Angular's signals provide a more efficient and intuitive way to handle reactive state compared to traditional observables. For our responsive design, we'll convert the breakpoint observer's observable to a signal:
+Signals represent Angular's modern approach to reactive programming. They provide a way to handle reactive state that's more efficient and developer-friendly than traditional observables or zone-based change detection.
+
+### What are Signals?
+
+A signal is a wrapper around a value that notifies interested consumers when that value changes. Think of it like a "smart" variable that:
+1. Knows when its value changes
+2. Notifies only the components that actually use that value
+3. Updates the UI efficiently without checking everything
+
+Here's a simple example:
+```typescript
+// Create a signal with an initial value
+const count = signal(0);
+
+// Read the signal's value
+console.log(count()); // 0
+
+// Update the signal's value
+count.set(1);
+
+// Transform the value while setting
+count.update(current => current + 1);
+```
+
+### Why Signals?
+
+Angular introduced signals to address several challenges:
+
+1. **Performance**
+   - Traditional change detection checks everything
+   - Signals enable fine-grained updates
+   - Only affected parts of the UI are updated
+
+2. **Developer Experience**
+   - Simpler syntax than RxJS for basic reactivity
+   - Better TypeScript integration
+   - No need to manage subscriptions
+
+3. **Debugging**
+   - Clear data flow
+   - Easy to track value changes
+   - Built-in debugging capabilities
+
+### Types of Signals
+
+Angular provides several types of signals:
+
+1. **Writable Signals**
+   ```typescript
+   const name = signal('Alice');
+   name.set('Bob');           // Direct set
+   name.update(n => n + '!'); // Update with function
+   ```
+
+2. **Computed Signals**
+   ```typescript
+   const firstName = signal('John');
+   const lastName = signal('Doe');
+   const fullName = computed(() => 
+     `${firstName()} ${lastName()}`
+   );
+   ```
+
+3. **Effects**
+   ```typescript
+   effect(() => {
+     console.log(`Name changed to: ${name()}`);
+   });
+   ```
+
+### Converting from Observables
+
+Many Angular APIs still use RxJS observables. The `toSignal()` function bridges this gap:
+
+```typescript
+import { toSignal } from '@angular/core/rxjs-interop';
+
+// Convert observable to signal
+const data = toSignal(someObservable$, {
+  initialValue: defaultValue
+});
+```
+
+### Best Practices
+
+When working with signals:
+
+1. **Granularity**
+   - Create signals for atomic pieces of state
+   - Use computed signals for derived values
+   - Don't create signals for static data
+
+2. **Immutability**
+   - Treat signal values as immutable
+   - Create new objects/arrays when updating
+   - Use `.update()` for transformations
+
+3. **Effects**
+   - Use effects for side effects only
+   - Keep effects focused and small
+   - Clean up resources in effect cleanup functions
+
+4. **Performance**
+   - Minimize computations in computed signals
+   - Use signals at the right level of the component tree
+   - Batch updates when possible
+
+## Implementing Responsive Design with Signals
+
+Now that we understand signals, let's use them to implement responsive behavior in our roster page. We'll create a signal that tracks whether the user is on a mobile device:
 
 ```typescript
 import { Component, inject, signal, effect } from '@angular/core';
@@ -76,11 +185,10 @@ First, let's create our bottom sheet component:
 
 ```typescript
 // student-actions.bottom-sheet.ts
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { 
   MatBottomSheetRef, 
-  MAT_BOTTOM_SHEET_DATA,
-  MatBottomSheet 
+  MAT_BOTTOM_SHEET_DATA
 } from '@angular/material/bottom-sheet';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -131,13 +239,11 @@ import { Student } from '../students.service';
   `]
 })
 export class StudentActionsBottomSheet {
-  constructor(
-    private bottomSheetRef: MatBottomSheetRef<StudentActionsBottomSheet>,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: {
-      student: Student;
-      onAction: (action: string) => void;
-    }
-  ) {}
+  private bottomSheetRef = inject(MatBottomSheetRef<StudentActionsBottomSheet>);
+  protected data = inject(MAT_BOTTOM_SHEET_DATA) as {
+    student: Student;
+    onAction: (action: string) => void;
+  };
 
   markPresent() {
     this.data.onAction('present');
@@ -165,11 +271,14 @@ Now let's update our roster component to use either the menu or bottom sheet bas
 
 ```typescript
 // roster.component.ts
+import { Component, inject, effect } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { StudentActionsBottomSheet } from './student-actions.bottom-sheet';
 
 export class RosterComponent {
+  private bottomSheet = inject(MatBottomSheet);
   private breakpointObserver = inject(BreakpointObserver);
 
   // Convert breakpoint observable to signal
@@ -182,18 +291,15 @@ export class RosterComponent {
     { initialValue: false }
   );
 
-  constructor(
-    private studentService: StudentsService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private bottomSheet: MatBottomSheet,
-    private breakpointObserver: BreakpointObserver
-  ) {
-    this.students = this.studentService.getAll();
+  constructor() {
+    // Optional: Track mobile state changes
+    effect(() => {
+      console.log('Mobile state:', this.isMobile());
+    });
   }
 
   openActions(student: Student) {
-    if (isMobile()) {
+    if (this.isMobile()) {
       this.bottomSheet.open(StudentActionsBottomSheet, {
         data: {
           student,
@@ -215,27 +321,31 @@ export class RosterComponent {
           }
         }
       });
-    } else {
-      // Use existing menu
     }
   }
 }
 ```
 
-The bottom sheet provides several advantages for mobile users:
-1. Larger touch targets
-2. More natural mobile interaction pattern
-3. Room for additional context (like student name)
-4. Easy dismissal with swipe
-5. Built-in backdrop and animations
+In our template, we use the signal directly:
 
-Options:
-- `hasBackdrop`: control backdrop visibility
-- `backdropClass`: custom backdrop styling
-- `ariaLabel`: accessibility label
-- `closeOnNavigation`: auto-close on navigation
-- `data`: pass data to the bottom sheet
-- `panelClass`: custom panel styling
+```html
+<!-- roster.component.html -->
+<td mat-cell *matCellDef="let student">
+  @if (isMobile()) {
+    <button mat-icon-button (click)="openActions(student)">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  } @else {
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <!-- Existing menu items -->
+    </mat-menu>
+  }
+</td>
+```
 
 ## Student Details Component
 
