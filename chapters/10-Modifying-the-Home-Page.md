@@ -146,17 +146,53 @@ mat-card-content {
 
 ## Adding the Image
 
-Before we can see our page in action, we need to add the classroom image:
+Our template references a classroom image, so let's add one. First, create 
+the images directory in our source folder:
 
 ```bash
 mkdir -p src/assets/images
 ```
 
-Now download the image from our GitHub repo and save it to `src/assets/images/classroom.jpg`:
-<https://github.com/walkingriver/at10dance-angular/raw/volume1-demo/src/assets/images/classroom.jpg>
+> [!NOTE]
+> Visit [Pixabay](https://pixabay.com) and search for a classroom image that you like. 
+> Pixabay offers high-quality, royalty-free images under the Creative Commons license, 
+> making them perfect for learning projects like ours.
+>
+> Once you've found an image:
+> 1. Download it (medium size should be sufficient)
+> 2. Save it as `classroom.jpg` in the `src/assets/images` directory
+>
+> In our template, we reference the image as `assets/images/classroom.jpg`. Angular 
+> automatically serves files from the `src/assets` directory, making them available 
+> at the `/assets` URL path in our application.
 
-> [!TIP]
-> Make sure the image path in your template matches the location where you saved the image.
+> [!IMPORTANT]
+> For the image to be served correctly, we need to update our asset configuration in 
+> `angular.json`. While we generally try to avoid modifying configuration files, this 
+> is an important step that ensures our assets are properly included in the build:
+>
+> ```json
+> {
+>   "projects": {
+>     "a10dance": {
+>       "architect": {
+>         "build": {
+>           "options": {
+>             "assets": [
+>               "src/favicon.ico",
+>               "src/assets"
+>             ]
+>           }
+>         }
+>       }
+>     }
+>   }
+> }
+> ```
+>
+> This configuration tells Angular to include both our favicon and everything in the 
+> `src/assets` directory when building the application. Without this, our images and 
+> other static assets won't be available at runtime.
 
 ## Testing the Page
 
@@ -166,14 +202,18 @@ First, let's start our development server:
 ng serve --open
 ```
 
-> [!TIP]
-> The `--open` flag automatically opens your default browser to `http://localhost:4200`. You can also use `npm start`, which is an alias for `ng serve`.
+When the server starts and we open our browser, we should see a nicely styled card 
+with our content. The Material card provides a subtle elevation effect and consistent 
+padding, making our content look polished and professional.
 
-When the server starts and we open our browser, we should see a nicely styled card with our content. The Material card provides a subtle elevation effect and consistent padding, making our content look polished and professional.
-
-If we click the "Go to Roster" button, nothing will happen yet. While we've added the `routerLink="/roster"` to our button, we haven't created the corresponding route in our `app.config.ts`. We'll set up the roster route and component in the next chapter.
+If we click the "Go to Roster" button, nothing will happen yet. While we've added 
+the `routerLink="/roster"` to our button, we haven't created the corresponding route 
+in our `app.config.ts`. We'll set up the roster route and component in the next chapter.
 
 > [!NOTE]
-> If you check your browser's console, you'll see Angular's router warning us about the missing route. This is helpful during development to catch navigation issues.
+> If you check your browser's console, you'll see Angular's router warning us about 
+> the missing route. This is helpful during development to catch navigation issues.
 
-Our home page now has a clean, modern look following Material Design principles. In the next chapter, we'll create the roster page and set up its route, where we'll explore more complex Material components like tables and dialogs.
+Our home page now has a clean, modern look following Material Design principles. In 
+the next chapter, we'll create the roster page and set up its route, where we'll 
+explore more complex Material components like tables and dialogs.
