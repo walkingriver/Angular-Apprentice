@@ -1,210 +1,264 @@
 # Implementing a Student Roster
 
-Now you need to put those students you just created into the roster
-page. Open src/app/roster/roster.page.ts.
+Now that we've created our roster page, let's display the students we created in a prior chapter. We'll use Angular Material's table component, which provides a powerful and flexible way to display data in a tabular format.
 
-Just before the constructor, create an array of students to hold the
-list you will retrieve from the StudentsService:
+## Understanding Material Table
 
-> //This will hold the list of students
->
-> students: Student\[\] = \[\];
+Before we dive in, let's understand the key components of a Material table:
 
-Next, you need to inject a reference to the StudentsService into the
-page's constructor. Insert a new private parameter studentService, of
-type StudentsService.
+1. **MatTable**: The main container component that manages the data display
+2. **MatColumnDef**: Defines a column and its properties
+3. **MatHeaderCell**: The header cell template for a column
+4. **MatCell**: The data cell template for a column
+5. **MatHeaderRow**: The header row that contains header cells
+6. **MatRow**: The data row that contains data cells
 
-> constructor(
->
-> private studentService: StudentsService) { }
+Each of these components works together to create a cohesive, accessible table that follows Material Design principles.
 
-Make sure you get the casing right, or Angular will not be happy with
-you. Marking the parameter private automatically exposes the parameter
-as a member of the component class. It is a handy shortcut TypeScript
-provides.
+## Setting Up the Component
 
-By default, the RosterPage implements Angular's OnInit interface, which
-requires you to implement the OnInit Angular hook you saw in the guided
-tour.
+Let's update our roster component to use Material's table:
 
-The function implementation, called ngOnInit, should currently be empty.
-Inside this function, call the getAllStudents function from the
-StudentService, and assign its result to the component\'s students
-array.
+```typescript
+// roster.component.ts
+import { Component, inject } from '@angular/core';
+import { 
+  MatTable,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatCell,
+  MatCellDef,
+  MatRow,
+  MatRowDef,
+  MatColumnDef
+} from '@angular/material/table';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { 
+  MatMenu, 
+  MatMenuItem, 
+  MatMenuTrigger 
+} from '@angular/material/menu';
+import { StudentsService, Student } from '../students.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 
-> ngOnInit() {
->
-> this.students = this.studentService.getAll();
->
-> }
+@Component({
+  selector: 'app-roster',
+  standalone: true,
+  imports: [
+    // Material Table
+    MatTable,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatCell,
+    MatCellDef,
+    MatRow,
+    MatRowDef,
+    MatColumnDef,
+    // Material Menu
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    // Other Material
+    MatIcon,
+    MatIconButton
+  ],
+  templateUrl: './roster.component.html',
+  styleUrls: ['./roster.component.scss']
+})
+export class RosterComponent {
+  private studentsService = inject(StudentsService);
+  private breakpointObserver = inject(BreakpointObserver);
 
-Now open the roster.page.html file in the same folder, so you can create
-some markup to render the students.
+  displayedColumns = ['name', 'status', 'actions'];
+  students = this.studentsService.getAll();
 
-The header is already done, and its name should be set to Roster, so
-there is nothing you need to do there. You could change it to "Class
-Roster" or something if you really want.
+  // Convert breakpoint observable to signal
+  readonly isMobile = toSignal(
+    this.breakpointObserver.observe([
+      Breakpoints.HandsetPortrait
+    ]).pipe(
+      map(result => result.matches)
+    ),
+    { initialValue: false }
+  );
+}
+```
 
-I am hoping that the ion-header is familiar, as you have seen it on the
-home page, and during the guided tour.
+Let's look at what's new here:
 
-Immediately after the ion-header, you need an ion-content. Inside the
-ion-content, I will introduce a new component: The ion-list.
+1. **Dependency Injection**: We're using Angular's `inject()` function instead of constructor injection. This modern approach provides better tree-shaking and more flexible dependency management.
 
-## ion-list
+2. **Breakpoint Observer**: From `@angular/cdk/layout`, this service helps us create responsive layouts by detecting screen size changes.
 
-An ion-list is another container component, designed to wrap multiple
-types of items in a visually consistent manner. ion-lists contain things
-called ion-items, which in turn wrap ion-labels, ion-buttons, ion-icons,
-form input fields and so forth. You will use all of those and more
-during this book.
+3. **Signals**: We convert the breakpoint observable to a signal using `toSignal()`. Signals are Angular's new reactivity primitive, providing more efficient change detection.
 
-ion-lists can also be used to implement item sliding, which you have
-probably seen before. These are options that appear only when you swipe
-a list item left or right, revealing a less often used, or potentially
-dangerous option, such as delete.
+## Creating the Table Template
 
-Inside of the ion-list, you can iterate over the students array with an
-\*ngFor directive on the outermost element inside the list. In this
-case, it will be an ion-item-sliding component. It will look like this.
+Now let's create our table template:
 
-> \<ion-item-sliding \*ngFor=\"let student of students\"\>
+```html
+<!-- roster.component.html -->
+<div class="roster-container">
+  <table mat-table [dataSource]="students">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let student">
+        {{student.lastName}}, {{student.firstName}}
+      </td>
+    </ng-container>
 
-This will create one ion-item-sliding component (and everything inside
-it) for each student in the students array.
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let student">
+        @if (student.status === 'present') {
+          <mat-icon>visibility</mat-icon>
+        } @else if (student.status === 'absent') {
+          <mat-icon>visibility_off</mat-icon>
+        }
+      </td>
+    </ng-container>
 
-ion-item-sliding will provide us with the item swipe, or slide, option.
-Inside that will be an ion-item tag. This component will encapsulate the
-complete list item.
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let student">
+        @if (isMobile()) {
+          <button mat-icon-button (click)="openActions(student)">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        } @else {
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
 
-Inside the ion-item, add an ion-icon and an ion-label as siblings. Set
-the icon's slot attribute to "start," meaning that it will appear at the
-start of the line. Inside the ion-label, bind some text to the student's
-last and first names, separated by a comma.
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="markPresent(student)">
+              <mat-icon>visibility</mat-icon>
+              <span>Mark Present</span>
+            </button>
+            
+            <button mat-menu-item (click)="markAbsent(student)">
+              <mat-icon>visibility_off</mat-icon>
+              <span>Mark Absent</span>
+            </button>
+            
+            <button mat-menu-item 
+                    (click)="deleteStudent(student)"
+                    class="warn-text">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        }
 
-Next to those, create two more ion-icon tags, which you will
-conditionally render based on the student's status of absent or present.
-The first one is for present; set it to display the eye icon. The second
-is to be displayed when the student is absent, so for that one, use the
-eye-off-outline, which is an outline of an eye with a line through it.
+        <a mat-icon-button 
+           [routerLink]="['/student', student.id]"
+           aria-label="View student details">
+          <mat-icon>chevron_right</mat-icon>
+        </a>
+      </td>
+    </ng-container>
 
-The way you render the icons conditionally is to add the \*ngIf
-directive to each icon. One will evaluate to true if the student's
-status is present. The other will render if the student's status is
-absent.
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+```
 
-Note that it is entirely possible for the student's status to be set to
-neither value, because the status field is optional. In that case,
-neither icon will be rendered, which is what I want.
+Let's examine the key parts:
 
-Here is the completed ion-content code with the list.
+1. **Column Definitions**: Each column is defined using `matColumnDef` with its own header and cell templates.
 
-> \<ion-content\>
->
-> \<ion-list\>
->
-> \<ion-item-sliding \*ngFor=\"let student of students\"\>
->
-> \<ion-item\>
->
-> \<ion-icon slot=\"start\" name=\"person-outline\"\>
->
-> \</ion-icon\>
->
-> \<ion-label\>
->
-> {{student.lastName}}, {{student.firstName}}
->
-> \</ion-label\>
->
-> \<ion-icon \*ngIf=\"student.status===\'present\'\"
->
-> slot=\"end\" name=\"eye\"\>\</ion-icon\>
->
-> \<ion-icon \*ngIf=\"student.status===\'absent\'\"
->
-> slot=\"end\" name=\"eye-off-outline\"\>
->
-> \</ion-icon\>
->
-> \</ion-item\>
->
-> \</ion-item-sliding\>
->
-> \</ion-list\>
->
-> \</ion-content\>
+2. **Material Icons**: We use `mat-icon` for visual indicators:
+   - `visibility` for present students
+   - `visibility_off` for absent students
+   - `more_vert` for the actions menu
+   - `chevron_right` for navigation
 
-Save the file now and see how it looks. If all went well, all of our
-students are displayed as expected.
+3. **Responsive Menu**: We use Angular's new `@if` control flow syntax to show different interfaces based on screen size:
+   - Bottom sheet on mobile
+   - Menu on desktop
 
-![A screenshot of a cell phone Description automatically
-generated](media/image10.png){width="4.5in" height="2.35in"}
+4. **Material Menu**: The `mat-menu` component provides a dropdown menu with consistent styling and behavior.
 
-I want to wrap up this chapter by finishing that sliding item.
-Immediately before the ion-itemSliding closing tag, add an
-ion-itemOptions slide, with the side attribute set to end. This means
-you want the option to appear at the end of the item, meaning when you
-slide it toward the beginning of the item.
+## Adding Basic Styles
 
-Inside of that tag, add a single ion-itemOption tag (mind the
-singular/plural here. The plural tag is the outer tag). Set this one's
-color to danger, which by default is a scary looking orange/red color.
-You will deal with the click handler later, so for now, simply set the
-tag's value to the word Delete. The complete code should now look like
-this.
+Finally, let's style our table:
 
-> \<ion-content\>
->
-> \<ion-list\>
->
-> \<ion-item-sliding \*ngFor=\"let student of students\"\>
->
-> \<ion-item\>
->
-> \<ion-icon slot=\"start\" name=\"person-outline\"\>
->
-> \</ion-icon\>
->
-> \<ion-label\>
->
-> {{student.lastName}}, {{student.firstName}}
->
-> \</ion-label\>
->
-> \<ion-icon \*ngIf=\"student.status===\'present\'\"
->
-> slot=\"end\" name=\"eye\"\>\</ion-icon\>
->
-> \<ion-icon \*ngIf=\"student.status===\'absent\'\"
->
-> slot=\"end\" name=\"eye-off-outline\"\>\</ion-icon\>
->
-> \</ion-item\>
->
-> \<ion-item-options side=\"end\"\>
->
-> \<ion-item-option color=\"danger\"\>Delete
->
-> \</ion-item-option\>
->
-> \</ion-item-options\>
->
-> \</ion-item-sliding\>
->
-> \</ion-list\>
->
-> \</ion-content\>
+```scss
+// roster.component.scss
+.roster-container {
+  width: 100%;
+  padding: 1rem;
+}
 
-Save the file and refresh the page. At this point, the only
-interactivity is the slider itself, so click and drag an item towards
-the beginning of the item. You should see a Delete button. You can click
-it. It behaves visually as you would expect it to, but it will not do
-anything...yet.
+// Override Material table styles
+::ng-deep .mat-mdc-table {
+  background: transparent !important;
+  
+  // Remove default borders
+  .mdc-data-table__header-cell,
+  .mdc-data-table__cell {
+    border-bottom: none !important;
+  }
 
-![A screenshot of a cell phone Description automatically
-generated](media/image11.png){width="4.5in" height="2.35in"}
+  // Remove table outline
+  .mdc-data-table__table {
+    border: none !important;
+  }
+}
 
-In the next chapter you will wire up some new commands to this page so
-that you can manage our roster of students.
+// Custom table styles
+.mat-mdc-row,
+.mat-mdc-header-row {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  min-height: 48px;
+  margin: 0;
+  border-bottom: 1px solid var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
 
+  &:hover {
+    background: var(--mat-table-hover-state-layer-color, rgba(0, 0, 0, 0.04));
+  }
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  padding: 12px 0;
+}
+
+.mat-column-name {
+  flex: 1;
+  margin-right: 24px;
+}
+
+.mat-column-status {
+  text-align: center;
+  width: 80px;
+}
+
+.mat-column-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.warn-text {
+  color: var(--mat-warn-color);
+}
+```
+
+Our styles use Material Design's system colors through CSS variables, ensuring consistent theming throughout the application.
+
+In the next chapter, we'll implement the actions we've set up in our template, allowing us to mark students present or absent and remove them from the class.
