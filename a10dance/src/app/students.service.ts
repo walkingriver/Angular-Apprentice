@@ -14,22 +14,42 @@ export interface Student {
 
 let mockStudents: Student[] = [
   { id: '1', firstName: 'Greg', lastName: 'Marine' },
-  { id: '2', firstName: 'Jonathan', lastName: 'Bennett' },
-  { id: '3', firstName: 'Neil', lastName: 'Estandarte' },
+  {
+    id: '2',
+    firstName: 'Jonathan',
+    lastName: 'Bennett',
+  },
+  {
+    id: '3',
+    firstName: 'Neil',
+    lastName: 'Estandarte',
+  },
   { id: '4', firstName: 'Jen', lastName: 'Townsend' },
   { id: '5', firstName: 'Casey', lastName: 'McBride' },
   { id: '6', firstName: 'Diane', lastName: 'Rivera' },
-  { id: '7', firstName: 'Troy', lastName: 'Gutierrez' },
-  { id: '8', firstName: 'Priscilla', lastName: 'Little' },
+  {
+    id: '7',
+    firstName: 'Troy',
+    lastName: 'Gutierrez',
+  },
+  {
+    id: '8',
+    firstName: 'Priscilla',
+    lastName: 'Little',
+  },
   { id: '9', firstName: 'Bobby', lastName: 'Robbins' },
-  { id: '10', firstName: 'Edmund', lastName: 'Gardner' }
+  {
+    id: '10',
+    firstName: 'Edmund',
+    lastName: 'Gardner',
+  },
 ];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StudentsService {
-  constructor() { }
+  constructor() {}
 
   getAll() {
     return [...mockStudents];
@@ -40,7 +60,9 @@ export class StudentsService {
   }
 
   update(student: Student) {
-    const index = mockStudents.findIndex(s => s.id === student.id);
+    const index = mockStudents.findIndex(
+      s => s.id === student.id
+    );
     if (index !== -1) {
       mockStudents[index] = { ...student };
       return true;
@@ -49,7 +71,9 @@ export class StudentsService {
   }
 
   delete(student: Student) {
-    mockStudents = mockStudents.filter(s => s.id !== student.id);
+    mockStudents = mockStudents.filter(
+      s => s.id !== student.id
+    );
     return [...mockStudents];
   }
 }

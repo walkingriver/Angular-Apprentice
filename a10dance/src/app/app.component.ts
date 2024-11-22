@@ -1,26 +1,30 @@
-import { Component, inject } from '@angular/core';
-import { 
-  MatSidenav, 
-  MatSidenavContainer, 
-  MatSidenavContent 
-} from '@angular/material/sidenav';
-import { 
-  MatToolbar,
-  MatToolbarRow
-} from '@angular/material/toolbar';
-import { MatIcon } from '@angular/material/icon';
-import { 
+import { Component } from '@angular/core';
+import {
   MatButton,
-  MatIconButton
+  MatIconButton,
 } from '@angular/material/button';
-import { 
-  MatList, 
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatList,
   MatListItem,
   MatListItemIcon,
   MatListItemTitle,
-  MatNavList
+  MatNavList,
 } from '@angular/material/list';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  MatSidenav,
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import {
+  MatToolbar,
+  MatToolbarRow,
+} from '@angular/material/toolbar';
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 
 interface NavItem {
   title: string;
@@ -52,22 +56,22 @@ interface NavItem {
     // Router
     RouterLink,
     RouterLinkActive,
-    RouterOutlet
+    RouterOutlet,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   navItems: NavItem[] = [
     {
       title: 'Home',
       route: '/home',
-      icon: 'home'
+      icon: 'home',
     },
     {
       title: 'Roster',
       route: '/roster',
-      icon: 'people'
-    }
+      icon: 'people',
+    },
   ];
 }

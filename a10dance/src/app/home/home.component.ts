@@ -1,8 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { MatCard, MatCardContent, MatCardHeader, 
-         MatCardTitle, MatCardSubtitle, MatCardImage } from '@angular/material/card';
 import { MatButton } from '@angular/material/button';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -11,9 +17,13 @@ import { MatButton } from '@angular/material/button';
   standalone: true,
   imports: [
     RouterLink,
-    MatCard, MatCardContent, MatCardHeader,
-    MatCardTitle, MatCardSubtitle, MatCardImage,
-    MatButton
-  ]
+    MatCard,
+    MatCardContent,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardImage,
+    MatButton,
+  ],
 })
 export class HomeComponent {}

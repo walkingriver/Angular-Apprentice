@@ -12,7 +12,7 @@
 // Override Material table styles
 ::ng-deep .mat-mdc-table {
   background: transparent !important;
-  
+
   // Remove all default borders
   .mdc-data-table__header-cell,
   .mdc-data-table__cell {
@@ -34,14 +34,21 @@
   padding: 0 16px;
   min-height: 48px;
   margin: 0;
-  border-bottom: 1px solid var(--mat-table-row-item-outline-color, rgba(0, 0, 0, 0.12));
+  border-bottom: 1px solid
+    var(
+      --mat-table-row-item-outline-color,
+      rgba(0, 0, 0, 0.12)
+    );
 
   &:last-child {
     border-bottom: none;
   }
 
   &:hover {
-    background: var(--mat-table-hover-state-layer-color, rgba(0, 0, 0, 0.04));
+    background: var(
+      --mat-table-hover-state-layer-color,
+      rgba(0, 0, 0, 0.04)
+    );
   }
 }
 

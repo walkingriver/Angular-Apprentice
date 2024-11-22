@@ -9,9 +9,10 @@ mat-sidenav-container {
 
 .app-sidenav {
   width: 240px;
-  
+
   mat-toolbar {
-    border-bottom: 1px solid var(--mat-toolbar-container-background-color);
+    border-bottom: 1px solid
+      var(--mat-toolbar-container-background-color);
   }
 }
 
@@ -33,7 +34,7 @@ mat-sidenav-content {
 
 .active-link {
   background: rgba(0, 0, 0, 0.05);
-  
+
   mat-icon {
     color: var(--mat-sidenav-container-text-color);
   }

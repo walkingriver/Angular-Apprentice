@@ -1,14 +1,31 @@
-import { Component, inject } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { FormsModule, NgModel } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatFormField, MatLabel, MatError, MatHint, MatFormFieldModule } from '@angular/material/form-field';
-import { MatInput, MatInputModule } from '@angular/material/input';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+  MatButton,
+  MatIconButton,
+} from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MatError,
+  MatFormField,
+  MatFormFieldModule,
+  MatLabel,
+} from '@angular/material/form-field';
+import {
+  MatInput,
+  MatInputModule,
+} from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StudentsService, Student } from '../students.service';
+import {
+  ActivatedRoute,
+  Router,
+} from '@angular/router';
+import {
+  Student,
+  StudentsService,
+} from '../students.service';
 
 @Component({
   selector: 'app-student-details',
@@ -26,11 +43,9 @@ import { StudentsService, Student } from '../students.service';
     MatInputModule,
     MatDatepickerModule,
   ],
-  providers: [
-    provideNativeDateAdapter()
-  ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './student-details.component.html',
-  styleUrls: ['./student-details.component.scss']
+  styleUrls: ['./student-details.component.scss'],
 })
 export class StudentDetailsComponent {
   private route = inject(ActivatedRoute);
@@ -45,13 +60,14 @@ export class StudentDetailsComponent {
     birthDate: undefined,
     parentName: '',
     parentEmail: '',
-    parentPhone: ''
+    parentPhone: '',
   };
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      const foundStudent = this.studentsService.getById(id);
+      const foundStudent =
+        this.studentsService.getById(id);
       if (foundStudent) {
         this.student = { ...foundStudent };
       } else {
@@ -63,9 +79,13 @@ export class StudentDetailsComponent {
   onSubmit() {
     if (this.student.id) {
       this.studentsService.update(this.student);
-      this.snackBar.open('Student updated successfully', 'Close', {
-        duration: 3000
-      });
+      this.snackBar.open(
+        'Student updated successfully',
+        'Close',
+        {
+          duration: 3000,
+        }
+      );
     }
     this.router.navigate(['/roster']);
   }

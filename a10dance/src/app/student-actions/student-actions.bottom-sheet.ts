@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { 
-  MatBottomSheetRef, 
-  MAT_BOTTOM_SHEET_DATA
+import {
+  MAT_BOTTOM_SHEET_DATA,
+  MatBottomSheetRef,
 } from '@angular/material/bottom-sheet';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { Student } from '../students.service';
 
 @Component({
@@ -14,7 +14,8 @@ import { Student } from '../students.service';
   template: `
     <mat-nav-list>
       <h3 matSubheader>
-        {{data.student.firstName}} {{data.student.lastName}}
+        {{ data.student.firstName }}
+        {{ data.student.lastName }}
       </h3>
 
       <a mat-list-item (click)="markPresent()">
@@ -23,7 +24,9 @@ import { Student } from '../students.service';
       </a>
 
       <a mat-list-item (click)="markAbsent()">
-        <mat-icon matListItemIcon>visibility_off</mat-icon>
+        <mat-icon matListItemIcon
+          >visibility_off</mat-icon
+        >
         <span matListItemTitle>Mark Absent</span>
       </a>
 
@@ -32,27 +35,37 @@ import { Student } from '../students.service';
         <span matListItemTitle>View Details</span>
       </a>
 
-      <a mat-list-item (click)="delete()" class="warn-item">
-        <mat-icon matListItemIcon color="warn">delete</mat-icon>
+      <a
+        mat-list-item
+        (click)="delete()"
+        class="warn-item"
+      >
+        <mat-icon matListItemIcon color="warn"
+          >delete</mat-icon
+        >
         <span matListItemTitle>Delete Student</span>
       </a>
     </mat-nav-list>
   `,
-  styles: [`
-    .warn-item {
-      color: var(--mdc-theme-error);
-    }
+  styles: [
+    `
+      .warn-item {
+        color: var(--mdc-theme-error);
+      }
 
-    h3 {
-      margin: 0;
-      padding: 16px;
-      background: var(--mdc-theme-surface-variant);
-      color: var(--mdc-theme-on-surface-variant);
-    }
-  `]
+      h3 {
+        margin: 0;
+        padding: 16px;
+        background: var(--mdc-theme-surface-variant);
+        color: var(--mdc-theme-on-surface-variant);
+      }
+    `,
+  ],
 })
 export class StudentActionsBottomSheet {
-  private bottomSheetRef = inject(MatBottomSheetRef<StudentActionsBottomSheet>);
+  private bottomSheetRef = inject(
+    MatBottomSheetRef<StudentActionsBottomSheet>
+  );
   protected data = inject(MAT_BOTTOM_SHEET_DATA) as {
     student: Student;
     onAction: (action: string) => void;

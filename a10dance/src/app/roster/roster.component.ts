@@ -1,33 +1,39 @@
+import {
+  BreakpointObserver,
+  Breakpoints,
+} from '@angular/cdk/layout';
 import { Component, inject } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatIconButton } from '@angular/material/button';
-import { 
-  MatMenu, 
-  MatMenuItem, 
-  MatMenuTrigger 
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import {
+  MatMenu,
+  MatMenuItem,
+  MatMenuTrigger,
 } from '@angular/material/menu';
-import { 
-  MatTable,
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
   MatHeaderRow,
   MatHeaderRowDef,
-  MatCell,
-  MatCellDef,
   MatRow,
   MatRowDef,
-  MatColumnDef
+  MatTable,
 } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { RouterLink } from '@angular/router';
-import { StudentsService, Student } from '../students.service';
-import { StudentActionsBottomSheet } from '../student-actions/student-actions.bottom-sheet';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { StudentActionsBottomSheet } from '../student-actions/student-actions.bottom-sheet';
+import {
+  Student,
+  StudentsService,
+} from '../students.service';
 
 @Component({
   selector: 'app-roster',
@@ -54,31 +60,31 @@ import { map } from 'rxjs/operators';
     // Components
     RouterLink,
     StudentActionsBottomSheet,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
   ],
   host: {
-    class: 'app-roster'
+    class: 'app-roster',
   },
   templateUrl: './roster.component.html',
-  styleUrls: ['./roster.component.scss']
+  styleUrls: ['./roster.component.scss'],
 })
 export class RosterComponent {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private studentsService = inject(StudentsService);
   private bottomSheet = inject(MatBottomSheet);
-  private breakpointObserver = inject(BreakpointObserver);
+  private breakpointObserver = inject(
+    BreakpointObserver
+  );
 
   displayedColumns = ['name', 'status', 'actions'];
   students = this.studentsService.getAll();
 
   // Convert breakpoint observable to signal
   readonly isMobile = toSignal(
-    this.breakpointObserver.observe([
-      Breakpoints.HandsetPortrait
-    ]).pipe(
-      map(result => result.matches)
-    ),
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .pipe(map(result => result.matches)),
     { initialValue: false }
   );
 
@@ -98,8 +104,8 @@ export class RosterComponent {
               this.deleteStudent(student);
               break;
           }
-        }
-      }
+        },
+      },
     });
   }
 
@@ -122,18 +128,22 @@ export class RosterComponent {
   }
 
   deleteStudent(student: Student) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Delete Student',
-        message: `Are you sure you want to delete ${student.firstName} ${student.lastName}?`,
-        confirmText: 'Delete',
-        cancelText: 'Cancel'
+    const dialogRef = this.dialog.open(
+      ConfirmDialogComponent,
+      {
+        data: {
+          title: 'Delete Student',
+          message: `Are you sure you want to delete ${student.firstName} ${student.lastName}?`,
+          confirmText: 'Delete',
+          cancelText: 'Cancel',
+        },
       }
-    });
+    );
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.students = this.studentsService.delete(student);
+        this.students =
+          this.studentsService.delete(student);
         this.snackBar.open(
           `Deleted ${student.firstName} ${student.lastName}`,
           'Dismiss',
