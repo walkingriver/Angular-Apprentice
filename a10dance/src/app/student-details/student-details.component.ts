@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError, MatHint, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatDatepicker, MatDatepickerToggle, MatDatepickerInput } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule, MatDatepickerToggle } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentsService, Student } from '../students.service';
 
@@ -22,10 +22,12 @@ import { StudentsService, Student } from '../students.service';
     MatInput,
     MatButton,
     MatIconButton,
-    MatDatepicker,
-    MatDatepickerToggle,
-    MatDatepickerInput,
-    MatNativeDateModule
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+  ],
+  providers: [
+    provideNativeDateAdapter()
   ],
   templateUrl: './student-details.component.html',
   styleUrls: ['./student-details.component.scss']
@@ -40,7 +42,7 @@ export class StudentDetailsComponent {
     id: '',
     firstName: '',
     lastName: '',
-    birthDate: '',
+    birthDate: undefined,
     parentName: '',
     parentEmail: '',
     parentPhone: ''
