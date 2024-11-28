@@ -33,6 +33,21 @@ h2 {
   margin-top: 1rem;
 }
 
+.photo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  .student-photo {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
 // Tablet and up
 @media (min-width: 600px) {
   .student-details {

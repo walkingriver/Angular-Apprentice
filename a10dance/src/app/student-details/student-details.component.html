@@ -122,6 +122,25 @@
       </mat-form-field>
     </div>
 
+    <div class="form-row photo-section">
+      @if (student.photoUrl) {
+        <img [src]="student.photoUrl" alt="Student photo" class="student-photo">
+      }
+      
+      @if (showCamera) {
+        <app-webcam (photoTaken)="handlePhoto($event)"></app-webcam>
+      }
+      
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="toggleCamera()"
+      >
+        {{ showCamera ? 'Cancel' : (student.photoUrl ? 'Change Photo' : 'Add Photo') }}
+      </button>
+    </div>
+
     <div class="form-actions">
       <button
         mat-button

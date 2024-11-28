@@ -26,6 +26,7 @@ import {
   Student,
   StudentsService,
 } from '../students.service';
+import { WebcamComponent } from '../shared/webcam/webcam.component';
 
 @Component({
   selector: 'app-student-details',
@@ -42,6 +43,7 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    WebcamComponent,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './student-details.component.html',
@@ -61,7 +63,10 @@ export class StudentDetailsComponent {
     parentName: '',
     parentEmail: '',
     parentPhone: '',
+    photoUrl: '',
   };
+
+  showCamera = false;
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -92,5 +97,14 @@ export class StudentDetailsComponent {
 
   onCancel() {
     this.router.navigate(['/roster']);
+  }
+
+  toggleCamera() {
+    this.showCamera = !this.showCamera;
+  }
+
+  handlePhoto(photoData: string) {
+    this.student.photoUrl = photoData;
+    this.showCamera = false;
   }
 }
