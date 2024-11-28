@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, signal } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -7,18 +7,22 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatButtonModule],
   template: `
     <div class="webcam-container">
-      <video #video [hidden]="hasPhoto()" autoplay playsinline></video>
-      <canvas #canvas [hidden]="!hasPhoto()"></canvas>
-      @if (!hasPhoto()) {
-        <button mat-raised-button color="accent" (click)="capture()">
+      @if (!photo()) {
+        <video #video autoplay playsinline
+               [attr.width]="width()"
+               [attr.height]="height()"
+               (play)="videoLoaded()">
+        </video>
+        <button mat-raised-button color="accent" (click)="takePhoto()">
           Take Photo
         </button>
       } @else {
+        <img [src]="photo()" [width]="width()" [height]="height()" alt="Captured photo">
         <div class="button-group">
-          <button mat-raised-button color="warn" (click)="retake()">
+          <button mat-raised-button color="warn" (click)="retakePhoto()">
             Retake
           </button>
-          <button mat-raised-button color="primary" (click)="accept()">
+          <button mat-raised-button color="primary" (click)="acceptPhoto()">
             Accept
           </button>
         </div>
@@ -32,9 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
       align-items: center;
       gap: 1rem;
       
-      video, canvas {
-        width: 100%;
-        max-width: 400px;
+      video, img {
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
@@ -47,67 +49,71 @@ import { MatButtonModule } from '@angular/material/button';
   `]
 })
 export class WebcamComponent {
-  @ViewChild('video') videoElement!: ElementRef<HTMLVideoElement>;
-  @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
-  @Output() photoTaken = new EventEmitter<string>();
+  width = signal(400);
+  height = signal(300);
+  photo = signal<string | null>(null);
+  photoTaken = output<string>();
 
-  hasPhoto = signal(false);
-  private stream: MediaStream | null = null;
+  private videoElement?: HTMLVideoElement;
 
-  async startCamera() {
-    try {
-      this.stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: 'user'
-        }
-      });
-      this.videoElement.nativeElement.srcObject = this.stream;
-    } catch (err) {
-      console.error('Error accessing camera:', err);
-    }
-  }
-
-  stopCamera() {
-    if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
-      this.stream = null;
-    }
-  }
-
-  capture() {
-    const video = this.videoElement.nativeElement;
-    const canvas = this.canvasElement.nativeElement;
-    const context = canvas.getContext('2d');
-
-    if (!context) return;
-
-    // Set canvas size to match video dimensions
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    // Draw the video frame on the canvas
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    this.hasPhoto.set(true);
-  }
-
-  retake() {
-    this.hasPhoto.set(false);
-  }
-
-  accept() {
-    const canvas = this.canvasElement.nativeElement;
-    const imageData = canvas.toDataURL('image/jpeg');
-    this.photoTaken.emit(imageData);
-    this.stopCamera();
-  }
-
-  ngAfterViewInit() {
+  ngOnInit() {
     this.startCamera();
   }
 
   ngOnDestroy() {
     this.stopCamera();
+  }
+
+  videoLoaded() {
+    this.videoElement = document.querySelector('video') as HTMLVideoElement;
+  }
+
+  async startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: this.width(), height: this.height() }
+      });
+
+      const video = document.querySelector('video');
+      if (video) {
+        video.srcObject = stream;
+      }
+    } catch (err) {
+      console.error('Camera access denied:', err);
+    }
+  }
+
+  stopCamera() {
+    if (this.videoElement?.srcObject) {
+      const stream = this.videoElement.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  takePhoto() {
+    if (!this.videoElement) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = this.width();
+    canvas.height = this.height();
+
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
+    this.photo.set(canvas.toDataURL('image/jpeg'));
+    this.stopCamera();
+  }
+
+  retakePhoto() {
+    this.photo.set(null);
+    this.startCamera();
+  }
+
+  acceptPhoto() {
+    const currentPhoto = this.photo();
+    if (currentPhoto) {
+      this.photoTaken.emit(currentPhoto);
+    }
   }
 }
