@@ -1,10 +1,10 @@
 {
-  "name": "angular-acolyte",
-  "displayName": "Angular Acolyte",
+  "name": "angular-apprentice",
+  "displayName": "Angular Apprentice",
   "author": "Michael D. Callaghan",
   "contributors": [],
-  "version": "2.0.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "A comprehensive guide designed for those new to Angular. This book takes readers on a journey through the fundamentals of Angular, providing step-by-step instructions and practical examples. From setting up the development environment to deploying applications, readers will gain a solid understanding of Angular's core concepts and best practices. Whether you're a novice developer or looking to enhance your web development skills, this book offers valuable insights and hands-on experience to help you become proficient in building modern web applications with Angular.",
   "scripts": {
     "split-md": "awk '/^# / { header = $0; sub(/^# /, \"\", header); gsub(/[^a-zA-Z0-9 ]/, \"\", header); gsub(/ /, \"-\", header); n++; } { if (n) print > (sprintf(\"%02d-%s.md\", n, header)); }' $1",
     "convert-md": "pandoc -o ./output/$npm_package_name.md --resource-path=chapters $1",

@@ -1,14 +1,14 @@
 # Introduction
 
-In late spring 2018, my manager approached me with some interesting news. He explained that our executive director had complained that although Angular was prevalent throughout his organization, his own developers were not very experienced with it. 
+In late spring 2018, my manager approached me with some interesting news. He explained that our executive director had noted that although Angular was prevalent throughout his organization, his developers lacked experience with it.
 
-What could be done about that? They discussed various options, from video course subscriptions, to books, to hiring an outside training firm to provide the necessary training.
+What could be done about this? They discussed various options, from video course subscriptions to books to hiring an outside training firm to provide the necessary training.
 
 At that point, my manager spoke up. “What if we ask Mike Callaghan to do it?” He then proceeded to recommend me in an executive meeting to train a group of our software developers how to use Angular.
 
-****
+## My Angular Journey
 
-My journey into front-end development began well before modern frameworks became mainstream. Starting with Visual Basic 6, I learned the essentials of creating user interfaces, which set the stage for exploring increasingly sophisticated tools. When jQuery emerged in 2006, it transformed the front-end landscape, allowing developers to interact with the DOM in a way that was simpler and more powerful than raw JavaScript alone. jQuery enabled more dynamic, responsive websites, sparking an evolution in web development that pushed me to experiment and adopt new technologies as they arrived.
+My journey into front-end development began well before modern frameworks became mainstream. Starting with Visual Basic 6, I learned the essentials of creating user interfaces, which set the stage for exploring increasingly sophisticated tools. When jQuery emerged in 2006, it transformed the front-end landscape, allowing developers to interact with the DOM in ways that were simpler and more powerful than raw JavaScript alone. jQuery enabled more dynamic, responsive websites, sparking an evolution in web development that pushed me to experiment with and adopt new technologies as they emerged.
 
 In my pursuit of richer web applications, I also spent time with WPF (Windows Presentation Foundation) and Silverlight, both of which allowed for desktop-like experiences on the web. But it wasn’t until the arrival of AngularJS in 2012 that I truly felt the potential of single-page applications. By 2013, with AngularJS version 1.2, I was fully invested in this framework that introduced groundbreaking concepts like two-way data binding, dependency injection, and a component-driven approach that made building complex applications feasible.
 
@@ -23,15 +23,15 @@ Angular 17 introduced a new approach to flow control, a feature that gives devel
 
 One of the most exciting additions in Angular 18 was the introduction of signals, a new way to handle reactive programming. Signals provide a straightforward mechanism for managing reactive state, offering an alternative to traditional observables by simplifying the way data flows through an application. With signals, Angular applications can more easily track dependencies and respond to changes in data without the verbosity or complexity that can sometimes accompany observables. Signals allow developers to create reactive applications that are more intuitive, efficient, and easier to debug, making it simpler to build complex, data-driven interfaces. This update marks a major step forward in Angular’s ability to support reactive programming patterns.
 
-Today, we’re at Angular 19, a culmination of over a decade of development and refinement. Angular 19 offers a mature, stable, and highly performant framework ideal for building web applications that meet the demands of today’s users. With Angular Material, we have a component library that brings a polished, responsive, and accessible design to our applications, ensuring a cohesive user experience across different devices and screen sizes.
+Today, we're at Angular 19, which represents a culmination of over a decade of development and refinement. Angular 19 offers a mature, stable, and highly performant framework ideal for building web applications that meet the demands of today's users. With Angular Material, we have a component library that brings a polished, responsive, and accessible design to our applications, ensuring a cohesive user experience across different devices and screen sizes.
 
 In this book, we’ll explore Angular 19 and Angular Material in depth. Our journey will take us from the fundamental structure of an Angular application to creating responsive layouts and using Angular Material’s robust UI components. This book is designed to be hands-on, introducing each concept as it becomes relevant, so you can focus on building practical, real-world applications without unnecessary detours.
 
----
+## Prerequisites
 
 A foundational knowledge of HTML, CSS, and JavaScript will be helpful as we dive into Angular, but no prior experience with the framework is necessary. By the end of this book, you’ll be equipped to build sophisticated, responsive applications using Angular 19 and Angular Material, fully leveraging the power and flexibility of this mature, modern framework to create robust, user-friendly web applications.
 
----
+## Stay Connected
 
 Sign up at https://walkingriver.gumroad.com to receive notifications whenever new content is added.
 
