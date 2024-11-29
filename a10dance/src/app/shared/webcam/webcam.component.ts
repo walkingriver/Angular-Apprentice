@@ -7,8 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatButtonModule],
   template: `
     <div class="webcam-container">
-      @if (!photo()) {
-        <video #video autoplay playsinline
+      @if (!photo() || isRetaking()) {
+        <video #video
+               autoplay 
+               playsinline
                [attr.width]="width()"
                [attr.height]="height()"
                (play)="videoLoaded()">
@@ -17,7 +19,10 @@ import { MatButtonModule } from '@angular/material/button';
           Take Photo
         </button>
       } @else {
-        <img [src]="photo()" [width]="width()" [height]="height()" alt="Captured photo">
+        <img [src]="photo()" 
+             [width]="width()" 
+             [height]="height()" 
+             alt="Captured photo">
         <div class="button-group">
           <button mat-raised-button color="warn" (click)="retakePhoto()">
             Retake
@@ -52,6 +57,7 @@ export class WebcamComponent {
   width = signal(400);
   height = signal(300);
   photo = signal<string | null>(null);
+  isRetaking = signal(false);
   photoTaken = output<string>();
 
   private videoElement?: HTMLVideoElement;
@@ -102,11 +108,12 @@ export class WebcamComponent {
 
     context.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
     this.photo.set(canvas.toDataURL('image/jpeg'));
+    this.isRetaking.set(false);
     this.stopCamera();
   }
 
   retakePhoto() {
-    this.photo.set(null);
+    this.isRetaking.set(true);
     this.startCamera();
   }
 
