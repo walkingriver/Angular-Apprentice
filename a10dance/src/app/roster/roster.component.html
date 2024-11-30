@@ -1,5 +1,26 @@
 <div class="roster-container">
-  <table mat-table [dataSource]="students">
+  <table mat-table [dataSource]="students()" class="mat-elevation-z1">
+    <!-- Avatar Column -->
+    <ng-container matColumnDef="avatar">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let student">
+        <div class="avatar-container">
+          @if (student.photoUrl) {
+            <img [src]="student.photoUrl" 
+                 [alt]="student.firstName + ' ' + student.lastName"
+                 class="student-avatar" />
+          } @else {
+            <mat-icon class="student-avatar-placeholder">account_circle</mat-icon>
+          }
+          @if (student.status) {
+            <mat-icon [class]="'status-indicator ' + student.status">
+              {{ student.status === 'present' ? 'check_circle' : 'cancel' }}
+            </mat-icon>
+          }
+        </div>
+      </td>
+    </ng-container>
+
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
