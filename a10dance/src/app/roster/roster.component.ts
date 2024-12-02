@@ -111,7 +111,7 @@ export class RosterComponent {
   }
 
   markPresent(student: Student) {
-    student.status = 'present';
+    this.studentsService.updateAttendance(student.id, 'present');
     this.snackBar.open(
       `Marked ${student.firstName} as present`,
       'Dismiss',
@@ -120,7 +120,7 @@ export class RosterComponent {
   }
 
   markAbsent(student: Student) {
-    student.status = 'absent';
+    this.studentsService.updateAttendance(student.id, 'absent');
     this.snackBar.open(
       `Marked ${student.firstName} as absent`,
       'Dismiss',

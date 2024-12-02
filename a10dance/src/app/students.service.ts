@@ -124,6 +124,17 @@ export class StudentsService {
     this.saveToStorage();
   }
 
+  updateAttendance(studentId: string, status: Student['status']) {
+    this.studentsSignal.update(students =>
+      students.map(student =>
+        student.id === studentId
+          ? { ...student, status }
+          : student
+      )
+    );
+    this.saveToStorage();
+  }
+
   // Debug Functions
   seedSampleData() {
     this.studentsSignal.set([...defaultStudents]);
