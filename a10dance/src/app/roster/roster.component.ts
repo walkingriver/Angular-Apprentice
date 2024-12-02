@@ -2,11 +2,7 @@ import {
   BreakpointObserver,
   Breakpoints,
 } from '@angular/cdk/layout';
-import {
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatIconButton } from '@angular/material/button';
@@ -81,7 +77,7 @@ export class RosterComponent {
     BreakpointObserver
   );
 
-  students = signal(this.studentsService.getAll());
+  students = this.studentsService.getStudentsSignal();
 
   displayedColumns = ['avatar', 'name', 'actions'];
 
@@ -147,9 +143,7 @@ export class RosterComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.students.set(
-          this.studentsService.delete(student)
-        );
+        this.studentsService.delete(student);
         this.snackBar.open(
           `Deleted ${student.firstName} ${student.lastName}`,
           'Dismiss',

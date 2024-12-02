@@ -60,7 +60,7 @@ export class DebugMenuComponent {
   private snackBar = inject(MatSnackBar);
 
   seedData() {
-    // this.studentsService.seedSampleData();
+    this.studentsService.seedSampleData();
     this.snackBar.open(
       'Sample data seeded',
       'Dismiss',
@@ -71,14 +71,14 @@ export class DebugMenuComponent {
   }
 
   resetAttendance() {
-    // this.studentsService.resetAttendance();
+    this.studentsService.resetAttendance();
     this.snackBar.open('Attendance reset', 'Dismiss', {
       duration: 3000,
     });
   }
 
   clearData() {
-    // this.studentsService.clearAllData();
+    this.studentsService.clearAllData();
     this.snackBar.open('All data cleared', 'Dismiss', {
       duration: 3000,
     });
