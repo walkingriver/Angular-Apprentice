@@ -12,7 +12,7 @@ export interface Student {
   status?: 'present' | 'absent';
 }
 
-let mockStudents: Student[] = [
+const defaultStudents: Student[] = [
   { id: '1', firstName: 'Greg', lastName: 'Marine' },
   {
     id: '2',
@@ -49,31 +49,68 @@ let mockStudents: Student[] = [
   providedIn: 'root',
 })
 export class StudentsService {
-  constructor() {}
+  private readonly STORAGE_KEY = 'a10dance_students';
+  private students: Student[] = [];
+
+  constructor() {
+    this.loadFromStorage();
+  }
+
+  private loadFromStorage() {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    if (stored) {
+      try {
+        this.students = JSON.parse(stored);
+      } catch (e) {
+        console.error('Error loading students from storage:', e);
+        this.students = [...defaultStudents];
+      }
+    } else {
+      // First time use - initialize with default data
+      this.students = [...defaultStudents];
+      this.saveToStorage();
+    }
+  }
+
+  private saveToStorage() {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.students));
+    } catch (e) {
+      console.error('Error saving students to storage:', e);
+    }
+  }
 
   getAll() {
-    return [...mockStudents];
+    return [...this.students];
   }
 
   getById(id: string) {
-    return mockStudents.find(s => s.id === id);
+    return this.students.find(s => s.id === id);
   }
 
   update(student: Student) {
-    const index = mockStudents.findIndex(
-      s => s.id === student.id
-    );
+    const index = this.students.findIndex(s => s.id === student.id);
     if (index !== -1) {
-      mockStudents[index] = { ...student };
+      this.students[index] = { ...student };
+      this.saveToStorage();
       return true;
     }
     return false;
   }
 
   delete(student: Student) {
-    mockStudents = mockStudents.filter(
-      s => s.id !== student.id
-    );
-    return [...mockStudents];
+    this.students = this.students.filter(s => s.id !== student.id);
+    this.saveToStorage();
+    return [...this.students];
+  }
+
+  add(student: Student) {
+    // Ensure unique ID
+    if (!student.id) {
+      student.id = Date.now().toString();
+    }
+    this.students.push({ ...student });
+    this.saveToStorage();
+    return [...this.students];
   }
 }
