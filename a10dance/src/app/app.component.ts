@@ -25,6 +25,7 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
+import { DebugMenuComponent } from './debug-menu/debug-menu.component';
 
 interface NavItem {
   title: string;
@@ -36,6 +37,7 @@ interface NavItem {
   selector: 'app-root',
   standalone: true,
   imports: [
+    DebugMenuComponent,
     // Material Sidenav
     MatSidenav,
     MatSidenavContainer,
