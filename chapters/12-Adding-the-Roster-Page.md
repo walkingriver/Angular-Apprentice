@@ -67,5 +67,4 @@ npm start
 
 Once it finishes building, we can navigate back to our home page and click the
 Roster link. Our newly created roster page will be displayed. There isn't much 
-there yet, but we'll build it out in the next chapter using Material's data 
-table and other components.
+there yet, but we'll build it out soon.

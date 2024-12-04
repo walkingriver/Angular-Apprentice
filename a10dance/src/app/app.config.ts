@@ -10,15 +10,17 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./home/home.component').then(
-        m => m.HomeComponent
+        (c) => c.HomeComponent
       ),
+    title: 'Home',
   },
   {
     path: 'roster',
     loadComponent: () =>
       import('./roster/roster.component').then(
-        m => m.RosterComponent
+        (c) => c.RosterComponent
       ),
+    title: 'Roster',
   },
   {
     path: 'student/:id',
@@ -26,6 +28,7 @@ export const routes: Routes = [
       import(
         './student-details/student-details.component'
       ).then(m => m.StudentDetailsComponent),
+    title: 'Student Details',
   },
   {
     path: '',
@@ -37,6 +40,10 @@ export const routes: Routes = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    // {
+    //   provide: TitleStrategy,
+    //   useClass: AppTitleStrategy,
+    // },
     provideAnimations(),
   ],
 };
