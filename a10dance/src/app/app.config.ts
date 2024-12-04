@@ -3,14 +3,16 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideRouter,
   Routes,
+  TitleStrategy,
 } from '@angular/router';
+import { AppTitleStrategy } from './core/title.strategy';
 
 export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
       import('./home/home.component').then(
-        (c) => c.HomeComponent
+        c => c.HomeComponent
       ),
     title: 'Home',
   },
@@ -18,7 +20,7 @@ export const routes: Routes = [
     path: 'roster',
     loadComponent: () =>
       import('./roster/roster.component').then(
-        (c) => c.RosterComponent
+        c => c.RosterComponent
       ),
     title: 'Roster',
   },
@@ -40,10 +42,10 @@ export const routes: Routes = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    // {
-    //   provide: TitleStrategy,
-    //   useClass: AppTitleStrategy,
-    // },
+    {
+      provide: TitleStrategy,
+      useClass: AppTitleStrategy,
+    },
     provideAnimations(),
   ],
 };
