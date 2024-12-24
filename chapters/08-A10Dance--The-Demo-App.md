@@ -1,6 +1,6 @@
 # A10Dance - The Demo App
 
-Throughout this book, we'll be building an application called
+Throughout the rest of this book, we'll be building an application called
 A10Dance. It is an attendance application originally designed to help
 Sunday School teachers keep track of the students in their classes.
 
@@ -12,7 +12,7 @@ Our application will consist of three pages:
 
 -   A Student Detail page
 
-We'll implement a side navigation menu to enable easy navigation between the home and
+We'll implement a side  menu to enable easy navigation between the home and
 student roster pages. Together, we'll explore how the menu is built using Material's
 sidenav component, and how navigation is configured to move from page to page.
 
