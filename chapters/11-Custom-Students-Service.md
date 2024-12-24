@@ -72,32 +72,74 @@ won't be enforced at runtime, the TypeScript compiler will prevent
 us from assigning any other value, and our IDE will offer smart
 code completion when assigning a value to this field.
 
-Next, let's create an array of students that we can use in place of a
-database for now. We'll call it mockStudents:
+## Using Faker.js for Sample Data
 
-```typescript
-const mockStudents: Student[] = [
-  { id: '1', firstName: 'Greg', lastName: 'Marine' },
-  { id: '2', firstName: 'Jonathan', lastName: 'Bennett' },
-  { id: '3', firstName: 'Neil', lastName: 'Estandarte' },
-  { id: '4', firstName: 'Jen', lastName: 'Townsend' },
-  { id: '5', firstName: 'Casey', lastName: 'McBride' },
-  { id: '6', firstName: 'Diane', lastName: 'Rivera' },
-  { id: '7', firstName: 'Troy', lastName: 'Gutierrez' },
-  { id: '8', firstName: 'Priscilla', lastName: 'Little' },
-  { id: '9', firstName: 'Bobby', lastName: 'Robbins' },
-  { id: '10', firstName: 'Edmund', lastName: 'Gardner' }
-];
+When building applications, we often need realistic sample data for development and testing. While we could create mock data manually, this becomes tedious and often doesn't represent the variety we'd see in a real application. This is where Faker.js comes in.
+
+Faker.js is a popular library that generates massive amounts of realistic fake data. It's particularly useful for:
+- Populating development databases
+- Creating realistic test scenarios
+- Building demos and prototypes
+- Testing edge cases with diverse data
+
+Let's install Faker.js in our project:
+
+```bash
+npm install @faker-js/faker
 ```
 
+Now, instead of our hardcoded student list, we'll create a function that generates dynamic student data. First, let's set a constant for our class size:
+
+```typescript
+const CLASS_SIZE = 25;
+```
+
+Then, we'll create a function to generate our fake students:
+
+```typescript
+import { faker } from '@faker-js/faker';
+
+const generateFakeStudents = (count: number): Student[] => {
+  return Array.from({ length: count }, (_, index) => ({
+    id: (index + 1).toString(),
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    birthDate: faker.date.between({ from: '2016-01-01', to: '2018-12-31' }),
+    parentName: faker.person.fullName(),
+    parentEmail: faker.internet.email(),
+    parentPhone: faker.phone.number(),
+    photoUrl: faker.image.avatar(),
+    status: null; // Intentionally keeping the attendance status empty
+}));
+};
+
+const defaultStudents: Student[] = generateFakeStudents(CLASS_SIZE);
+```
+
+Let's break down the Faker.js functions we're using:
+
+- `faker.person.firstName()` and `faker.person.lastName()`: Generate realistic first and last names from various cultures
+- `faker.date.between()`: Creates a random date within a specified range, perfect for generating birth dates
+- `faker.person.fullName()`: Generates a full name for the parent
+- `faker.internet.email()`: Creates a realistic email address
+- `faker.phone.number()`: Generates a formatted phone number
+- `faker.image.avatar()`: Provides a URL to a randomly generated avatar image
+
+Faker.js offers many other useful functions that could enhance our sample data:
+
+- `faker.location.streetAddress()`: Could be used for student addresses
+- `faker.date.recent()`: Useful for generating recent attendance records
+- `faker.number.int()`: Could generate student ID numbers or grades
+- `faker.helpers.multiple()`: Creates multiple records using a generator function
+- `faker.image.urlPicsumPhotos()`: Alternative to avatar for more realistic student photos
+- `faker.helpers.arrayElement()`: Randomly selects an item from an array, which we could have used for student attendance status
+
 Now for the function. Let's create a function called `getAll()`. This will
-return a copy of the mockStudents array. In a future chapter, we'll
-flesh out this service with more functionality, but for now, this is
-plenty.
+return a copy of the defaultStudents array.
 
 ```typescript
 getAll() {
-  return [...mockStudents];
+  return [...defaultStudents];
 }
 ```
 
@@ -115,7 +157,7 @@ export class StudentsService {
   constructor() { }
 
   getAll() {
-    return [...mockStudents];
+    return [...defaultStudents];
   }
 }
 ```

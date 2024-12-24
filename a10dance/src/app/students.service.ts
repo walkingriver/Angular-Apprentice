@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { faker } from '@faker-js/faker';
 
 export interface Student {
   id: string;
@@ -12,38 +13,29 @@ export interface Student {
   status?: 'present' | 'absent';
 }
 
-const defaultStudents: Student[] = [
-  { id: '1', firstName: 'Greg', lastName: 'Marine' },
-  {
-    id: '2',
-    firstName: 'Jonathan',
-    lastName: 'Bennett',
-  },
-  {
-    id: '3',
-    firstName: 'Neil',
-    lastName: 'Estandarte',
-  },
-  { id: '4', firstName: 'Jen', lastName: 'Townsend' },
-  { id: '5', firstName: 'Casey', lastName: 'McBride' },
-  { id: '6', firstName: 'Diane', lastName: 'Rivera' },
-  {
-    id: '7',
-    firstName: 'Troy',
-    lastName: 'Gutierrez',
-  },
-  {
-    id: '8',
-    firstName: 'Priscilla',
-    lastName: 'Little',
-  },
-  { id: '9', firstName: 'Bobby', lastName: 'Robbins' },
-  {
-    id: '10',
-    firstName: 'Edmund',
-    lastName: 'Gardner',
-  },
-];
+const CLASS_SIZE = 50;
+
+const generateFakeStudents = (
+  count: number
+): Student[] => {
+  return Array.from({ length: count }, (_, index) => ({
+    id: (index + 1).toString(),
+    firstName: faker.person.firstName(),
+    lastName: faker.person.lastName(),
+    birthDate: faker.date.between({
+      from: '2016-01-01',
+      to: '2018-12-31',
+    }),
+    parentName: faker.person.fullName(),
+    parentEmail: faker.internet.email(),
+    parentPhone: faker.phone.number(),
+    photoUrl: faker.image.avatar(),
+    // status: faker.helpers.arrayElement(['present', 'absent'])
+  }));
+};
+
+const defaultStudents: Student[] =
+  generateFakeStudents(CLASS_SIZE);
 
 @Injectable({
   providedIn: 'root',
@@ -57,12 +49,17 @@ export class StudentsService {
   }
 
   private loadFromStorage() {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
+    const stored = localStorage.getItem(
+      this.STORAGE_KEY
+    );
     if (stored) {
       try {
         this.studentsSignal.set(JSON.parse(stored));
       } catch (e) {
-        console.error('Error loading students from storage:', e);
+        console.error(
+          'Error loading students from storage:',
+          e
+        );
         this.studentsSignal.set([...defaultStudents]);
       }
     } else {
@@ -74,9 +71,15 @@ export class StudentsService {
 
   private saveToStorage() {
     try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.studentsSignal()));
+      localStorage.setItem(
+        this.STORAGE_KEY,
+        JSON.stringify(this.studentsSignal())
+      );
     } catch (e) {
-      console.error('Error saving students to storage:', e);
+      console.error(
+        'Error saving students to storage:',
+        e
+      );
     }
   }
 
@@ -91,11 +94,15 @@ export class StudentsService {
   }
 
   getById(id: string) {
-    return this.studentsSignal().find(s => s.id === id);
+    return this.studentsSignal().find(
+      s => s.id === id
+    );
   }
 
   update(student: Student) {
-    const index = this.studentsSignal().findIndex(s => s.id === student.id);
+    const index = this.studentsSignal().findIndex(
+      s => s.id === student.id
+    );
     if (index !== -1) {
       this.studentsSignal.update(students => {
         const updated = [...students];
@@ -109,7 +116,7 @@ export class StudentsService {
   }
 
   delete(student: Student) {
-    this.studentsSignal.update(students => 
+    this.studentsSignal.update(students =>
       students.filter(s => s.id !== student.id)
     );
     this.saveToStorage();
@@ -120,11 +127,17 @@ export class StudentsService {
     if (!student.id) {
       student.id = Date.now().toString();
     }
-    this.studentsSignal.update(students => [...students, { ...student }]);
+    this.studentsSignal.update(students => [
+      ...students,
+      { ...student },
+    ]);
     this.saveToStorage();
   }
 
-  updateAttendance(studentId: string, status: Student['status']) {
+  updateAttendance(
+    studentId: string,
+    status: Student['status']
+  ) {
     this.studentsSignal.update(students =>
       students.map(student =>
         student.id === studentId
@@ -145,7 +158,7 @@ export class StudentsService {
     this.studentsSignal.update(students =>
       students.map(student => ({
         ...student,
-        status: undefined
+        status: undefined,
       }))
     );
     this.saveToStorage();
