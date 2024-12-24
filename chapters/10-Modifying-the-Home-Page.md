@@ -74,7 +74,7 @@ export class HomeComponent {}
 ```
 
 > [!TIP]
-> In Angular Material v18, each component is standalone. This means we import only the specific components we need, leading to better tree-shaking and smaller bundle sizes.
+> In Angular Material, each component is standalone. This means we import only the specific components we need, leading to better tree-shaking and smaller bundle sizes.
 
 > [!INFO]
 > **What is Tree Shaking?**
