@@ -22,11 +22,12 @@ import {
   ActivatedRoute,
   Router,
 } from '@angular/router';
+import { WebcamComponent } from '../shared/webcam/webcam.component';
 import {
   Student,
   StudentsService,
-} from '../students.service';
-import { WebcamComponent } from '../shared/webcam/webcam.component';
+} from '../students.interface';
+import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
   selector: 'app-student-details',
@@ -52,7 +53,7 @@ import { WebcamComponent } from '../shared/webcam/webcam.component';
 export class StudentDetailsComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private studentsService = inject(StudentsService);
+  private studentsService = inject(STUDENTS_SERVICE);
   private snackBar = inject(MatSnackBar);
 
   student: Student = {
@@ -83,16 +84,28 @@ export class StudentDetailsComponent {
 
   onSubmit() {
     if (this.student.id) {
-      this.studentsService.update(this.student);
-      this.snackBar.open(
-        'Student updated successfully',
-        'Close',
-        {
-          duration: 3000,
-        }
+      const updateSignal = this.studentsService.update(
+        this.student
       );
+      if (updateSignal()) {
+        this.snackBar.open(
+          'Student updated successfully',
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
+        this.router.navigate(['/roster']);
+      } else {
+        this.snackBar.open(
+          'Error updating student',
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
+      }
     }
-    this.router.navigate(['/roster']);
   }
 
   onCancel() {

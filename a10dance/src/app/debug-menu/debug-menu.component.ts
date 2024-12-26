@@ -3,7 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StudentsService } from '../students.service';
+import { StudentsService } from '../students.interface';
+import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
   selector: 'app-debug-menu',
@@ -56,7 +57,7 @@ import { StudentsService } from '../students.service';
   ],
 })
 export class DebugMenuComponent {
-  private studentsService = inject(StudentsService);
+  private studentsService = inject<StudentsService>(STUDENTS_SERVICE);
   private snackBar = inject(MatSnackBar);
 
   seedData() {

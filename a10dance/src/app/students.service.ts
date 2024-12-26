@@ -2,12 +2,15 @@ import {
   Injectable,
   computed,
   signal,
+  InjectionToken,
 } from '@angular/core';
 import { faker } from '@faker-js/faker';
 import {
   Student,
   StudentsService,
 } from './students.interface';
+
+export type { Student, StudentsService } from './students.interface';
 
 const CLASS_SIZE = 25;
 
@@ -32,8 +35,10 @@ const generateFakeStudents = (
 const defaultStudents: Student[] =
   generateFakeStudents(CLASS_SIZE);
 
+export const STUDENTS_SERVICE = new InjectionToken<StudentsService>('STUDENTS_SERVICE');
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LocalStorageStudentsService
   implements StudentsService

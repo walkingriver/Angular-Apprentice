@@ -26,6 +26,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { DebugMenuComponent } from './debug-menu/debug-menu.component';
+import { STUDENTS_SERVICE, LocalStorageStudentsService } from './students.service';
 
 interface NavItem {
   title: string;
@@ -59,6 +60,10 @@ interface NavItem {
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
+  ],
+  providers: [
+    LocalStorageStudentsService,
+    { provide: STUDENTS_SERVICE, useExisting: LocalStorageStudentsService }
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

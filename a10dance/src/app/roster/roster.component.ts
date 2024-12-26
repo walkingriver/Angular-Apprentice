@@ -33,7 +33,8 @@ import { StudentActionsBottomSheet } from '../student-actions/student-actions.bo
 import {
   Student,
   StudentsService,
-} from '../students.service';
+} from '../students.interface';
+import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
   selector: 'app-roster',
@@ -71,7 +72,7 @@ import {
 export class RosterComponent {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
-  private studentsService = inject(StudentsService);
+  private studentsService = inject<StudentsService>(STUDENTS_SERVICE);
   private bottomSheet = inject(MatBottomSheet);
   private breakpointObserver = inject(
     BreakpointObserver
