@@ -1,19 +1,15 @@
-import { Injectable, signal } from '@angular/core';
+import {
+  Injectable,
+  computed,
+  signal,
+} from '@angular/core';
 import { faker } from '@faker-js/faker';
+import {
+  Student,
+  StudentsService,
+} from './students.interface';
 
-export interface Student {
-  id: string;
-  firstName: string;
-  lastName: string;
-  birthDate?: Date;
-  parentName?: string;
-  parentEmail?: string;
-  parentPhone?: string;
-  photoUrl?: string;
-  status?: 'present' | 'absent';
-}
-
-const CLASS_SIZE = 50;
+const CLASS_SIZE = 25;
 
 const generateFakeStudents = (
   count: number
@@ -30,7 +26,6 @@ const generateFakeStudents = (
     parentEmail: faker.internet.email(),
     parentPhone: faker.phone.number(),
     photoUrl: faker.image.avatar(),
-    // status: faker.helpers.arrayElement(['present', 'absent'])
   }));
 };
 
@@ -40,32 +35,31 @@ const defaultStudents: Student[] =
 @Injectable({
   providedIn: 'root',
 })
-export class StudentsService {
+export class LocalStorageStudentsService
+  implements StudentsService
+{
   private readonly STORAGE_KEY = 'a10dance_students';
-  private studentsSignal = signal<Student[]>([]);
+  private _students = signal<Student[]>([]);
+  readonly students = computed(() => this._students());
 
   constructor() {
     this.loadFromStorage();
   }
 
   private loadFromStorage() {
-    const stored = localStorage.getItem(
-      this.STORAGE_KEY
-    );
-    if (stored) {
-      try {
-        this.studentsSignal.set(JSON.parse(stored));
-      } catch (e) {
-        console.error(
-          'Error loading students from storage:',
-          e
-        );
-        this.studentsSignal.set([...defaultStudents]);
+    try {
+      const stored = localStorage.getItem(
+        this.STORAGE_KEY
+      );
+      if (stored) {
+        this._students.set(JSON.parse(stored));
+      } else {
+        this._students.set(defaultStudents);
+        this.saveToStorage();
       }
-    } else {
-      // First time use - initialize with default data
-      this.studentsSignal.set([...defaultStudents]);
-      this.saveToStorage();
+    } catch (e) {
+      console.error('Error loading from storage:', e);
+      this._students.set(defaultStudents);
     }
   }
 
@@ -73,72 +67,83 @@ export class StudentsService {
     try {
       localStorage.setItem(
         this.STORAGE_KEY,
-        JSON.stringify(this.studentsSignal())
+        JSON.stringify(this._students())
       );
+      return true;
     } catch (e) {
-      console.error(
-        'Error saving students to storage:',
-        e
-      );
+      console.error('Error saving to storage:', e);
+      return false;
     }
   }
 
-  // For components that need the signal
   getStudentsSignal() {
-    return this.studentsSignal.asReadonly();
+    return this.students;
   }
 
-  // For components that need a snapshot
   getAll() {
-    return [...this.studentsSignal()];
+    return [...this._students()];
   }
 
   getById(id: string) {
-    return this.studentsSignal().find(
-      s => s.id === id
-    );
+    return this._students().find(s => s.id === id);
   }
 
   update(student: Student) {
-    const index = this.studentsSignal().findIndex(
-      s => s.id === student.id
-    );
-    if (index !== -1) {
-      this.studentsSignal.update(students => {
-        const updated = [...students];
-        updated[index] = { ...student };
-        return updated;
-      });
-      this.saveToStorage();
-      return true;
-    }
-    return false;
+    const signal = computed(() => {
+      const index = this._students().findIndex(
+        s => s.id === student.id
+      );
+      if (index !== -1) {
+        this._students.update(students => {
+          const updated = [...students];
+          updated[index] = { ...student };
+          return updated;
+        });
+        if (this.saveToStorage()) {
+          return student;
+        }
+      }
+      return null;
+    });
+    return signal;
   }
 
   delete(student: Student) {
-    this.studentsSignal.update(students =>
-      students.filter(s => s.id !== student.id)
-    );
-    this.saveToStorage();
+    const signal = computed(() => {
+      this._students.update(students =>
+        students.filter(s => s.id !== student.id)
+      );
+      if (this.saveToStorage()) {
+        return undefined;
+      }
+      return student;
+    });
+    return signal;
   }
 
   add(student: Student) {
-    // Ensure unique ID
-    if (!student.id) {
-      student.id = Date.now().toString();
-    }
-    this.studentsSignal.update(students => [
-      ...students,
-      { ...student },
-    ]);
-    this.saveToStorage();
+    const signal = computed(() => {
+      // Ensure unique ID
+      if (!student.id) {
+        student.id = Date.now().toString();
+      }
+      this._students.update(students => [
+        ...students,
+        { ...student },
+      ]);
+      if (this.saveToStorage()) {
+        return student;
+      }
+      return null;
+    });
+    return signal;
   }
 
   updateAttendance(
     studentId: string,
     status: Student['status']
   ) {
-    this.studentsSignal.update(students =>
+    this._students.update(students =>
       students.map(student =>
         student.id === studentId
           ? { ...student, status }
@@ -148,14 +153,15 @@ export class StudentsService {
     this.saveToStorage();
   }
 
-  // Debug Functions
   seedSampleData() {
-    this.studentsSignal.set([...defaultStudents]);
+    this._students.set(
+      generateFakeStudents(CLASS_SIZE)
+    );
     this.saveToStorage();
   }
 
   resetAttendance() {
-    this.studentsSignal.update(students =>
+    this._students.update(students =>
       students.map(student => ({
         ...student,
         status: undefined,
@@ -165,7 +171,7 @@ export class StudentsService {
   }
 
   clearAllData() {
-    this.studentsSignal.set([]);
+    this._students.set([]);
     this.saveToStorage();
   }
 }
