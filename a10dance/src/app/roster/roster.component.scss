@@ -43,7 +43,10 @@
   &:last-child {
     border-bottom: none;
   }
+}
 
+// Add hover effect only to data rows, not header
+.mat-mdc-row {
   &:hover {
     background: var(
       --mat-table-hover-state-layer-color,
