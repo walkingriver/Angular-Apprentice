@@ -19,6 +19,10 @@ mat-sidenav-container {
 mat-sidenav-content {
   display: flex;
   flex-direction: column;
+
+  &:not(.is-mobile) {
+    margin-left: 240px;
+  }
 }
 
 .content {
@@ -29,11 +33,15 @@ mat-sidenav-content {
 }
 
 .toolbar-spacer {
-  flex: 1 1 auto;
+  flex: 1;
+}
+
+.menu-button {
+  margin-right: 1rem;
 }
 
 .active-link {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.1);
 
   mat-icon {
     color: var(--mat-sidenav-container-text-color);

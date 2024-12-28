@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatButton,
   MatIconButton,
@@ -27,6 +27,9 @@ import {
 } from '@angular/router';
 import { DebugMenuComponent } from './debug-menu/debug-menu.component';
 import { STUDENTS_SERVICE, LocalStorageStudentsService } from './students.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface NavItem {
   title: string;
@@ -69,6 +72,8 @@ interface NavItem {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  private breakpointObserver = inject(BreakpointObserver);
+
   navItems: NavItem[] = [
     {
       title: 'Home',
@@ -81,4 +86,11 @@ export class AppComponent {
       icon: 'people',
     },
   ];
+
+  isMobile = toSignal(
+    this.breakpointObserver
+      .observe([Breakpoints.HandsetPortrait])
+      .pipe(map((result) => result.matches)),
+    { initialValue: false }
+  );
 }

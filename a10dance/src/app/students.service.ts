@@ -1,8 +1,8 @@
 import {
   Injectable,
+  InjectionToken,
   computed,
   signal,
-  InjectionToken,
 } from '@angular/core';
 import { faker } from '@faker-js/faker';
 import {
@@ -10,7 +10,10 @@ import {
   StudentsService,
 } from './students.interface';
 
-export type { Student, StudentsService } from './students.interface';
+export type {
+  Student,
+  StudentsService,
+} from './students.interface';
 
 const CLASS_SIZE = 25;
 
@@ -35,10 +38,13 @@ const generateFakeStudents = (
 const defaultStudents: Student[] =
   generateFakeStudents(CLASS_SIZE);
 
-export const STUDENTS_SERVICE = new InjectionToken<StudentsService>('STUDENTS_SERVICE');
+export const STUDENTS_SERVICE =
+  new InjectionToken<StudentsService>(
+    'STUDENTS_SERVICE'
+  );
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalStorageStudentsService
   implements StudentsService
@@ -114,34 +120,32 @@ export class LocalStorageStudentsService
   }
 
   delete(student: Student) {
-    const signal = computed(() => {
-      this._students.update(students =>
-        students.filter(s => s.id !== student.id)
-      );
+    this._students.update(students => 
+      students.filter(s => s.id !== student.id)
+    );
+    return computed(() => {
       if (this.saveToStorage()) {
         return undefined;
       }
       return student;
     });
-    return signal;
   }
 
   add(student: Student) {
-    const signal = computed(() => {
-      // Ensure unique ID
-      if (!student.id) {
-        student.id = Date.now().toString();
-      }
-      this._students.update(students => [
-        ...students,
-        { ...student },
-      ]);
+    // Ensure unique ID
+    if (!student.id) {
+      student.id = Date.now().toString();
+    }
+    this._students.update(students => [
+      ...students,
+      { ...student },
+    ]);
+    return computed(() => {
       if (this.saveToStorage()) {
         return student;
       }
       return null;
     });
-    return signal;
   }
 
   updateAttendance(

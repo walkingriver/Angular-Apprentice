@@ -201,8 +201,8 @@
 <mat-sidenav-container>
   <mat-sidenav
     #sidenav
-    [mode]="'side'"
-    [opened]="true"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
     class="app-sidenav"
   >
     <mat-toolbar>
@@ -215,6 +215,7 @@
           mat-list-item
           [routerLink]="item.route"
           routerLinkActive="active-link"
+          (click)="isMobile() && sidenav.close()"
         >
           <mat-icon matListItemIcon>{{
             item.icon
@@ -227,15 +228,18 @@
     </mat-nav-list>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content [class.is-mobile]="isMobile()">
     <mat-toolbar>
-      <button
+      @if (isMobile()) {
+
+        <button
         mat-icon-button
         (click)="sidenav.toggle()"
         class="menu-button"
-      >
+        >
         <mat-icon>menu</mat-icon>
       </button>
+    }
       <span class="toolbar-spacer"></span>
     </mat-toolbar>
 
