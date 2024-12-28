@@ -4,6 +4,7 @@ import {
   provideRouter,
   Routes,
   TitleStrategy,
+  withComponentInputBinding,
 } from '@angular/router';
 import { AppTitleStrategy } from './core/title.strategy';
 
@@ -41,7 +42,7 @@ export const routes: Routes = [
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     {
       provide: TitleStrategy,
       useClass: AppTitleStrategy,
