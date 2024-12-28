@@ -120,7 +120,7 @@ export class LocalStorageStudentsService
   }
 
   delete(student: Student) {
-    this._students.update(students => 
+    this._students.update(students =>
       students.filter(s => s.id !== student.id)
     );
     return computed(() => {
@@ -150,7 +150,7 @@ export class LocalStorageStudentsService
 
   updateAttendance(
     studentId: string,
-    status: Student['status']
+    status: 'absent' | 'present'
   ) {
     this._students.update(students =>
       students.map(student =>

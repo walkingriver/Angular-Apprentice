@@ -112,7 +112,8 @@ export class RosterComponent {
   }
 
   markPresent(student: Student) {
-    this.studentsService.updateAttendance(student.id, 'present');
+    // TODO: Implement date-based attendance
+    // this.studentsService.updateAttendance(student.id, 'present');
     this.snackBar.open(
       `Marked ${student.firstName} as present`,
       'Dismiss',
@@ -121,7 +122,8 @@ export class RosterComponent {
   }
 
   markAbsent(student: Student) {
-    this.studentsService.updateAttendance(student.id, 'absent');
+    // TODO: Implement date-based attendance
+    // this.studentsService.updateAttendance(student.id, 'absent');
     this.snackBar.open(
       `Marked ${student.firstName} as absent`,
       'Dismiss',

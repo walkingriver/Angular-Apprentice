@@ -9,7 +9,6 @@ export interface Student {
   parentEmail?: string;
   parentPhone?: string;
   photoUrl?: string;
-  status?: 'present' | 'absent';
 }
 
 export interface StudentsService {
@@ -25,7 +24,7 @@ export interface StudentsService {
   update(student: Student): Signal<Student | null>;
   delete(student: Student): Signal<Student | undefined>;
   add(student: Student): Signal<Student | null>;
-  updateAttendance(studentId: string, status: Student['status']): void;
+  updateAttendance(studentId: string, status: 'present' | 'absent'): void;
 
   // Debug operations
   seedSampleData(): void;
