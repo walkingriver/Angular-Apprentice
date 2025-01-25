@@ -10,16 +10,15 @@ import {
 } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-confirm-dialog',
-  standalone: true,
-  imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatButton,
-  ],
-  template: `
+    selector: 'app-confirm-dialog',
+    imports: [
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+        MatButton,
+    ],
+    template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>{{
       data.message
@@ -37,14 +36,14 @@ import {
       </button>
     </mat-dialog-actions>
   `,
-  styles: [
-    `
+    styles: [
+        `
       mat-dialog-actions {
         justify-content: flex-end;
         gap: 8px;
       }
     `,
-  ],
+    ]
 })
 export class ConfirmDialogComponent {
   constructor(

@@ -38,7 +38,6 @@ import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
   selector: 'app-roster',
-  standalone: true,
   imports: [
     // Material Table
     MatTable,
@@ -72,7 +71,9 @@ import { STUDENTS_SERVICE } from '../students.service';
 export class RosterComponent {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
-  private studentsService = inject<StudentsService>(STUDENTS_SERVICE);
+  private studentsService = inject<StudentsService>(
+    STUDENTS_SERVICE
+  );
   private bottomSheet = inject(MatBottomSheet);
   private breakpointObserver = inject(
     BreakpointObserver

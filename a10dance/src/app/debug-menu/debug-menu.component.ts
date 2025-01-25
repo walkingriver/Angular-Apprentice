@@ -7,14 +7,13 @@ import { StudentsService } from '../students.interface';
 import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
-  selector: 'app-debug-menu',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-  ],
-  template: `
+    selector: 'app-debug-menu',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+    ],
+    template: `
     <button
       mat-icon-button
       [matMenuTriggerFor]="menu"
@@ -40,8 +39,8 @@ import { STUDENTS_SERVICE } from '../students.service';
       </button>
     </mat-menu>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .debug-button {
         position: fixed;
         bottom: 16px;
@@ -54,7 +53,7 @@ import { STUDENTS_SERVICE } from '../students.service';
         }
       }
     `,
-  ],
+    ]
 })
 export class DebugMenuComponent {
   private studentsService = inject<StudentsService>(STUDENTS_SERVICE);

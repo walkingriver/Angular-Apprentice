@@ -8,10 +8,9 @@ import { MatListModule } from '@angular/material/list';
 import { Student } from '../students.interface';
 
 @Component({
-  selector: 'app-student-actions',
-  standalone: true,
-  imports: [MatListModule, MatIconModule],
-  template: `
+    selector: 'app-student-actions',
+    imports: [MatListModule, MatIconModule],
+    template: `
     <mat-nav-list>
       <h3 matSubheader>
         {{ data.student.firstName }}
@@ -47,8 +46,8 @@ import { Student } from '../students.interface';
       </a>
     </mat-nav-list>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .warn-item {
         color: var(--mdc-theme-error);
       }
@@ -60,7 +59,7 @@ import { Student } from '../students.interface';
         color: var(--mdc-theme-on-surface-variant);
       }
     `,
-  ],
+    ]
 })
 export class StudentActionsBottomSheet {
   private bottomSheetRef = inject(

@@ -1,4 +1,9 @@
+import {
+  BreakpointObserver,
+  Breakpoints,
+} from '@angular/cdk/layout';
 import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   MatButton,
   MatIconButton,
@@ -25,11 +30,12 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { DebugMenuComponent } from './debug-menu/debug-menu.component';
-import { STUDENTS_SERVICE, LocalStorageStudentsService } from './students.service';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { DebugMenuComponent } from './debug-menu/debug-menu.component';
+import {
+  LocalStorageStudentsService,
+  STUDENTS_SERVICE,
+} from './students.service';
 
 interface NavItem {
   title: string;
@@ -39,7 +45,6 @@ interface NavItem {
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
     DebugMenuComponent,
     // Material Sidenav
@@ -66,13 +71,18 @@ interface NavItem {
   ],
   providers: [
     LocalStorageStudentsService,
-    { provide: STUDENTS_SERVICE, useExisting: LocalStorageStudentsService }
+    {
+      provide: STUDENTS_SERVICE,
+      useExisting: LocalStorageStudentsService,
+    },
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  private breakpointObserver = inject(BreakpointObserver);
+  private breakpointObserver = inject(
+    BreakpointObserver
+  );
 
   navItems: NavItem[] = [
     {
@@ -90,7 +100,7 @@ export class AppComponent {
   isMobile = toSignal(
     this.breakpointObserver
       .observe([Breakpoints.HandsetPortrait])
-      .pipe(map((result) => result.matches)),
+      .pipe(map(result => result.matches)),
     { initialValue: false }
   );
 }

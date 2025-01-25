@@ -23,15 +23,11 @@ import {
   Router,
 } from '@angular/router';
 import { WebcamComponent } from '../shared/webcam/webcam.component';
-import {
-  Student,
-  StudentsService,
-} from '../students.interface';
+import { Student } from '../students.interface';
 import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
   selector: 'app-student-details',
-  standalone: true,
   imports: [
     NgIf,
     FormsModule,

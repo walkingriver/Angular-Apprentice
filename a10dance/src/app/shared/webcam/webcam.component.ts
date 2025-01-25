@@ -2,10 +2,9 @@ import { Component, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-webcam',
-  standalone: true,
-  imports: [MatButtonModule],
-  template: `
+    selector: 'app-webcam',
+    imports: [MatButtonModule],
+    template: `
     <div class="webcam-container">
       @if (!photo() || isRetaking()) {
         <video #video
@@ -34,7 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
       }
     </div>
   `,
-  styles: [`
+    styles: [`
     .webcam-container {
       display: flex;
       flex-direction: column;
