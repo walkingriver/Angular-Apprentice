@@ -26,7 +26,7 @@ export const routes: Routes = [
     title: 'Roster',
   },
   {
-    path: 'student/:id',
+    path: 'student/:studentId',
     loadComponent: () =>
       import(
         './student-details/student-details.component'

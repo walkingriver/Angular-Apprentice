@@ -1,5 +1,10 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  Signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   MatButton,
@@ -52,6 +57,8 @@ export class StudentDetailsComponent {
   private studentsService = inject(STUDENTS_SERVICE);
   private snackBar = inject(MatSnackBar);
 
+  studentId: Signal<string> = input.required();
+
   student: Student = {
     id: '',
     firstName: '',
@@ -66,42 +73,44 @@ export class StudentDetailsComponent {
   showCamera = false;
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      const foundStudent =
-        this.studentsService.getById(id);
-      if (foundStudent) {
-        this.student = { ...foundStudent };
-      } else {
-        this.router.navigate(['/roster']);
-      }
+    try {
+      this.student = this.studentsService.getById(
+        this.studentId()
+      );
+    } catch (error) {
+      this.snackBar.open(
+        'Student not found',
+        'Close',
+        { duration: 3000 }
+      );
+      this.router.navigate(['/roster']);
     }
   }
 
   onSubmit() {
-    if (this.student.id) {
-      const updateSignal = this.studentsService.update(
-        this.student
-      );
-      if (updateSignal()) {
-        this.snackBar.open(
-          'Student updated successfully',
-          'Close',
-          {
-            duration: 3000,
-          }
-        );
-        this.router.navigate(['/roster']);
-      } else {
-        this.snackBar.open(
-          'Error updating student',
-          'Close',
-          {
-            duration: 3000,
-          }
-        );
-      }
-    }
+    // if (this.student.id) {
+    //   const updateSignal = this.studentsService.update(
+    //     this.student
+    //   );
+    //   if (updateSignal()) {
+    //     this.snackBar.open(
+    //       'Student updated successfully',
+    //       'Close',
+    //       {
+    //         duration: 3000,
+    //       }
+    //     );
+    //     this.router.navigate(['/roster']);
+    //   } else {
+    //     this.snackBar.open(
+    //       'Error updating student',
+    //       'Close',
+    //       {
+    //         duration: 3000,
+    //       }
+    //     );
+    //   }
+    // }
   }
 
   onCancel() {

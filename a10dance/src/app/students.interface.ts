@@ -13,18 +13,19 @@ export interface Student {
 
 export interface StudentsService {
   // Signal access
-  students: Signal<Student[]>;
-  getStudentsSignal(): Signal<Student[]>;
-
-  // Data access
-  getAll(): Student[];
-  getById(id: string): Student | undefined;
+  getStudents(): Signal<Student[]>;
+  getById(id: string): Student;
 
   // Mutations
-  update(student: Student): Signal<Student | null>;
-  delete(student: Student): Signal<Student | undefined>;
-  add(student: Student): Signal<Student | null>;
-  updateAttendance(studentId: string, status: 'present' | 'absent'): void;
+  add(student: Student): void;
+  update(student: Student): void;
+  delete(student: Student): void;
+
+  // Attendance
+  updateAttendance(
+    studentId: string,
+    status: 'present' | 'absent'
+  ): void;
 
   // Debug operations
   seedSampleData(): void;

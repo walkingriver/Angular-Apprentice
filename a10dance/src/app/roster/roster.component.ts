@@ -79,7 +79,9 @@ export class RosterComponent {
     BreakpointObserver
   );
 
-  students = this.studentsService.getStudentsSignal();
+  // `students` is a Signal, meaning we get notified
+  // whenever its value changes.
+  students = this.studentsService.getStudents();
 
   displayedColumns = ['avatar', 'name', 'actions'];
 
