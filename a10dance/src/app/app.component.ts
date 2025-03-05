@@ -4,13 +4,9 @@ import {
 } from '@angular/cdk/layout';
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  MatButton,
-  MatIconButton,
-} from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
-  MatList,
   MatListItem,
   MatListItemIcon,
   MatListItemTitle,
@@ -21,10 +17,7 @@ import {
   MatSidenavContainer,
   MatSidenavContent,
 } from '@angular/material/sidenav';
-import {
-  MatToolbar,
-  MatToolbarRow,
-} from '@angular/material/toolbar';
+import { MatToolbar } from '@angular/material/toolbar';
 import {
   RouterLink,
   RouterLinkActive,
@@ -53,13 +46,10 @@ interface NavItem {
     MatSidenavContent,
     // Material Toolbar
     MatToolbar,
-    MatToolbarRow,
     // Material Icons & Buttons
     MatIcon,
-    MatButton,
     MatIconButton,
     // Material List
-    MatList,
     MatListItem,
     MatListItemIcon,
     MatListItemTitle,

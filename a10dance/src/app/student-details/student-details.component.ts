@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   Component,
   inject,
@@ -6,10 +5,7 @@ import {
   Signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  MatButton,
-  MatIconButton,
-} from '@angular/material/button';
+import { MatButton } from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -34,14 +30,12 @@ import { STUDENTS_SERVICE } from '../students.service';
 @Component({
   selector: 'app-student-details',
   imports: [
-    NgIf,
     FormsModule,
     MatFormField,
     MatLabel,
     MatError,
     MatInput,
     MatButton,
-    MatIconButton,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,

@@ -59,8 +59,6 @@ import { STUDENTS_SERVICE } from '../students.service';
     MatIconButton,
     // Components
     RouterLink,
-    StudentActionsBottomSheet,
-    ConfirmDialogComponent,
   ],
   host: {
     class: 'app-roster',

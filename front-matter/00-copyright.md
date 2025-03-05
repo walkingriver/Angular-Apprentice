@@ -1,8 +1,7 @@
-# Pair Programming with Grok by X 
-## Harnessing AI Insights for Galactic Development
+# Angular Apprentice
+## Building Web Applications - Angular Adventures for Aspiring Developers
 
-<div custom-style="Normal">
-Copyright © 2024 by Michael D. Callaghan. All rights reserved.
+Copyright &copy; 2025 by Michael D. Callaghan. All rights reserved.
 
 No part of this book may be reproduced, stored in a retrieval system, or transmitted in any form or by any means, electronic, mechanical, photocopying, recording, or otherwise, without the prior written permission of the publisher, except for brief quotations used in critical articles and reviews.
 
@@ -16,5 +15,4 @@ In no event will the author or publisher be liable for any loss or damage includ
 
 If you find any errors or inaccuracies, please contact the publisher.
 
-Cover design by Michael D. Callaghan
-</div>
+Cover design by Michael D. Callaghan</div>

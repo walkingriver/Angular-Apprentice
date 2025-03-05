@@ -1,0 +1,506 @@
+Write
+
+Michael D. Callaghan
+Your membership will expire on March 16, 2025Reactivate membership
+
+Top highlight
+Angular v18 is now available!
+
+Minko Gechev
+Angular Blog
+Minko Gechev
+·
+Following
+Published in
+Angular Blog
+·
+13 min read
+·
+May 22, 2024
+5.2K
+
+36
+
+
+
+
+Today we are excited to share the next milestone in the evolution of Angular! Over the past three releases we’ve
+introduced a lot of new features and improvements. This time we focused on polishing the work we shipped by graduating
+many of the new APIs to stable, addressing common developer requests, and experimentally releasing one of the most
+desired roadmap projects: zoneless change detection.
+Image showing the Angular logo on a white black ground with red gradient shapes in the corners. Under the Angular logo
+there’s a text saying “v18 is now available”
+The highlights of this release include:
+Experimental support for zoneless change detection
+Angular.dev is now the new home for Angular developers
+Material 3, deferrable views, built-in control flow are now stable and incorporate a series of improvements
+Server-side rendering improvements such as i18n hydration support, better debugging, hydration support in Angular
+Material, and event replay powered by the same library as Google Search.
+For a visual overview, make sure you check the video from our release event:
+
+Evolving change detection
+Historically, a library called zone.js has been responsible for triggering Angular’s change detection. This library came
+with a number of developer experience and performance downsides. We’ve been working for several years towards a way of
+using Angular that doesn’t rely on zone.js, and we’re incredibly excited to share the first experimental APIs for
+zoneless!
+You can try the experimental zoneless support in Angular starting today! Add provideExperimentalZonelessChangeDetection
+to your application bootstrap:
+bootstrapApplication(App, {
+providers: [
+provideExperimentalZonelessChangeDetection()
+]
+});
+After adding the provider, remove zone.js from your polyfills in angular.json.
+Moving forward, zoneless opens many doors for developers:
+Improving composability for micro-frontends and interoperability with other frameworks
+Faster initial render and runtime
+Smaller bundle size and faster page loads
+More readable stack traces
+Simpler debugging
+The best way to use zoneless in your components is with signals:
+@Component({
+...
+template: `
+<h1>Hello from {{ name() }}!</h1>
+<button (click)="handleClick()">Go Zoneless</button>
+`,
+})
+export class App {
+protected name = signal('Angular');
+
+handleClick() {
+this.name.set('Zoneless Angular');
+}
+}
+In the example above, clicking the button invokes the handleClick method, which updates the signal value and updates the
+UI. This works similarly to an application using zone.js, with few differences. With zone.js, Angular ran change
+detection any time application state might have changed. Without zones, Angular limits this checking to fewer triggers,
+such as signal updates. This change also includes a new scheduler with coalescing to avoid checking for changes multiple
+times consecutively.
+When the user clicks on the button above, for example, Angular will run change detection only once thanks to the
+scheduler’s coalescing. Learn more zoneless in our documentation.
+Updating to zoneless
+Angular has been going through an exciting evolution lately and zoneless is a core part of it. While evolving the
+framework we’re making sure that all existing APIs continue to work as expected and there’s a good interoperability
+story with everything new that we introduce to Angular.
+Zoneless is another example of our approach to interoperability. On top of that, we wanted to make sure that moving
+existing applications to zoneless is as simple as possible. If your components are compatible with Angular’s
+ChangeDetectionStrategy.OnPush change detection strategy, they should be mostly compatible with zoneless as well which
+will make their transition seamless!
+Coalescing by default
+Starting in v18, we’re using the same scheduler for zoneless apps and apps using zone.js with coalescing enabled. To
+reduce the number of change detection cycles in new zone.js apps, we’ve also enabled zone coalescing by default.
+This behavior is enabled only for new applications because it can cause bugs in apps reliant on the previous change
+detection behavior. Coalescing reduces unnecessary change detection cycles and significantly improves performance for
+some applications.
+To opt into event coalescing for existing projects, configure your NgZone provider in
+bootstrapApplicationbootstrapApplication:
+bootstrapApplication(App, {
+providers: [
+provideZoneChangeDetection({ eventCoalescing: true })
+]
+});
+Native await for zoneless apps
+Zone.js intercepts many browser calls to plug Angular’s change detection in. Unfortunately, async/await is one of the
+APIs that zone.js can’t monkey patch and therefore we need to downlevel it to promises via the Angular CLI. That’s
+suboptimal because all modern browsers support async/await which are more expressive than promises and optimized by the
+JavaScript runtime.
+Today, if you create an app that uses the experimental zoneless change detection Angular CLI will use the native
+async/await without downleveling it to promises. This will improve debugging and make your bundles smaller.
+Components support zoneless
+We enabled zoneless support in the Angular CDK and Angular Material. This also helped us to discover and polish some of
+the rough edges with the zoneless model.
+New home for Angular developers
+Over the past 18 months we worked hard on angular.dev to deliver an intuitive, hands-on getting started journey and
+improved in-depth guides. Today, we’re glad to announce that angular.dev is the official documentation website for
+Angular!
+On top of the new, modern look and feel you can find an interactive hands-on tutorial based on WebContainers,
+interactive playground with examples, improved search powered by Algolia, refreshed guides, simplified navigation, and
+much more!
+Gif showing the scrolling animation of the home page of Angular.dev. It starts with the Angular logo and ends with the
+playground.
+Home page of Angular.dev
+All requests to angular.io now automatically redirect to angular.dev. To make sure all existing links continue to work,
+we’re forwarding developers to v17.angular.io.
+Go to angular.dev to check it out!
+Material 3 is now stable!
+A couple of months ago, we introduced experimental support for Material 3. After addressing developers’ feedback and
+polishing our Material 3 components, we’re excited to graduate them to stable!
+Together with this, we also refreshed material.angular.io with the new Material 3 themes and documentation.
+Screenshot showing the new design of material.angular.io
+You can find how to use Angular Material 3 in your app today in our guide!
+Signal APIs in developer preview
+In Angular versions 17.1 and 17.2 we announced the new signal inputs, signal-based queries, and a new output syntax.
+Find how to use the APIs in our signals guide. Over the next months we’ll continue iterating over the implementation
+based on your feedback until we graduate them to stable.
+Deferrable views are now stable
+Over the past six months, we’ve heard a lot of excitement about deferrable views and how they enable developers to
+effortlessly improve their apps’ Core Web Vitals. For example, Bill.com shared that by using @defer they reduced the
+bundle size of one of their apps with 50%. Today, deferrable views are now stable! You can use them in your applications
+and libraries.
+Built-in control flow is now stable
+Together with deferrable views, in v17 we also announced the new, built-in control flow with improved performance. We’ve
+seen significant adoption of this new syntax and, after addressing community feedback, we’re happy to announce this API
+as stable!
+During the preview, we further improved the control flow’s type checking, enabled more ergonomic implicit variable
+aliasing, and set guardrails for certain performance-related anti-patterns.
+Improvements in server-side rendering
+About a year ago we introduced hydration and graduated it to stable in v17. Based on the public HTTPArchive dataset 76%
+of Angular v17 apps that use prerendering or server-side rendering are already using hydration.
+There was one main blocker to get even more people to take advantage of hydration — lack of i18n support. After
+collaborating with the Chrome Aurora team, we’re excited to share that hydration for i18n blocks is available in
+developer preview mode in v18!
+Event replay
+Less than two months ago, we announced the long-term ongoing project that aims to converge Angular and Google’s internal
+framework Wiz. As a reminder, Angular and Wiz have been serving two different segments of apps in the past — Wiz was
+mostly used for consumer focused apps, hyper focused on performance and Angular has been focused on productivity and
+developer experience.
+As a result of the convergence efforts, Wiz deeply integrated Angular Signals in their rendering model. At ng-conf we
+shared how YouTube is now using Angular Signals. In the same way, Angular is now bringing more and more performance
+centric features such as partial hydration that I’ll share more about in a little bit.
+In both cases, we’re using your feature requests and other requirements as a motivation to converge essential features
+of both frameworks.
+An image showing the Angular and the Wiz frameworks logos connected with a line in the middle.
+Today, we’re happy to share that one of the core libraries running on Google.com — event dispatch (previously known as
+jsaction), is now in the Angular monorepo. Starting from v18, event dispatch powers the event replay when using hybrid
+rendering.
+Most developers will not interact with event dispatch directly, so let us look into why event replay is useful. Below
+you can find a mock of a simple ecommerce website. We’ve introduced artificial loading delays to simulate a very slow
+network connection. Imagine that while the page is loading and it has not been hydrated yet the user wants to add
+multiple headphones to their cart. If the page hasn’t been hydrated yet, and thus is not interactive, all the user
+events would be lost. Starting in v18 using event dispatch, Angular will start recording the user events. Once the
+application is hydrated, event dispatch replays them and we end up with six items in the cart.
+A gif showing the event replay functionality. The user clicks on the “Add to cart” 4 times, which triggers hydration.
+Once Angular hydrates the user interface the 4 event the framework replays the events which adds 4 items to the cart.
+Event replay with event dispatch in Angular
+The event replay feature is available in v18 in developer preview. You can enable it using withEventReplay(), for
+example:
+bootstrapApplication(App, {
+providers: [
+provideClientHydration(withEventReplay())
+]
+});
+Improved debugging experience
+We updated Angular DevTools to visualize Angular’s hydration process. Next to each component you can find an icon
+representing the component’s hydration status. To preview which components Angular hydrated on the page you can also
+enable an overlay mode. If your app has any hydration errors, Angular DevTools will visualize them in the component
+explorer.
+A gif showing the hydration functionality in Angular DevTools. The user opens the component inspector of Angular
+DevTools and sees a hydration error under one of the components.
+Angular DevTools hydration debugging
+Big thanks to our community contributor Matthieu Riegler for adding this feature!
+Hydration support in CDK and Material
+In v17 some Angular Material and CDK components were opted-out of hydration, which caused their rerendering. Starting
+v18, all components and primitives are fully hydration compatible.
+Our plans for partial hydration
+We announced partial hydration at ng-conf and Google I/O. It’s a technique that allows you to hydrate your app
+incrementally after server-side rendering. Incremental hydration of your application enables loading less JavaScript
+upfront and improves your application’s performance.
+Partial hydration builds on top of the same foundation as deferrable views. Instead of rendering the @placeholder block
+on the server as it happens today, you’ll be able to enable a mode where Angular will render the main content of the
+@defer block on the server. On the client, Angular will download the associated JavaScript and hydrate a deferred block
+only when the trigger conditions specified in a template are met. For example, here’s a hypothetical API:
+@defer (render on server; on viewport) {
+<app-calendar />
+}
+The block above will render the calendar component on the server. Once it reaches the client, Angular will download the
+corresponding JavaScript and hydrate the calendar making it interactive only after it enters the viewport.
+We’ve been actively prototyping partial hydration and we’re in a state in which it’s already usable with interactivity
+triggers. We’re currently working with partners evaluating the importance of data triggers, such as a component passing
+receiving properties or changing binding values.
+If you’re building a performance critical application at scale and you’d like to join our early access program to shape
+the future of partial hydration, email us on devrel@angular.io.
+Robust hosting for your apps with Firebase App Hosting
+With the growing complexity of the web platform, the hosting of your application has a critical role when it comes down
+to performance, reliability, productivity, and scale. Apps using hybrid rendering have different hosting requirements
+for server-side rendering, prerendering, and client-side rendering. Managing this complexity manually could be
+cumbersome. Firebase App Hosting now handles all this transparently for developers!
+Logo of Firebase App Hosting
+Firebase announced App Hosting at Google I/O this year. App Hosting streamlines the development and deployment of
+dynamic Angular applications, offering built-in framework support, GitHub integration, and integration with other
+Firebase products like Authentication, Cloud Firestore, and Vertex AI for Firebase.
+We’ve been working with Firebase for a better part of a year now on ensuring smooth developer experience with Angular.
+Check their quickstart to get started with App Hosting today!
+And there’s more…
+Together with the large initiatives we’re moving forward, we always spend time addressing common developer needs. Here
+are some of the highlights from v18:
+Specifying a fallback content for ng-content
+One of the most upvoted issues we’ve had was specifying default content for ng-content. In v18 it is now available!
+Here’s a quick example:
+@Component({
+selector: 'app-profile',
+template: `
+<ng-content select=".greeting">Hello </ng-content>
+
+<ng-content>Unknown user</ng-content>
+`,
+})
+export class Profile {}
+Now we can use the component:
+<app-profile>
+    <span class="greeting">Good morning </span>
+</app-profile>
+Which will result in:
+<span class="greeting">Good morning </span>
+Unknown user
+Unified control state change events
+FormControl, FormGroup and FormArray classes from Angular forms now expose a property called events, which allows you to
+subscribe to a stream of events for this form control. Using it you can track changes in value, touch state, pristine
+status, and the control status.
+Now you can use:
+const nameControl = new FormControl<string|null>('name', Validators.required);
+    nameControl.events.subscribe(event => {
+    // process the individual events
+    });
+    This feature request had over 440 thumbs up on GitHub. Thanks to our community contributor Matthieu Riegler who made
+    it available to everyone!
+    Automating the migration to the application builder
+    In Angular v17 we announced “application builder” as stable and enabled it by default for new projects. Under the
+    hood it uses Vite with esbuild to replace the previous webpack experience.
+    For the majority of apps, developers were able to update to the new build system by updating their angular.json.
+    Over the past 6 months we collected more feedback from folks and polished the update experience to enable everyone
+    to move to the new build experience and receive an edit/refresh boost.
+    You can find the tooling we developed to automate your update experience in our update guide.
+    Since webpack is not on the critical path of the new build system, we made the dependency on webpack optional, which
+    allowed us to reduce the total number of dependencies for the Angular CLI by over 50%! This change will speed up
+    your Angular CLI install time.
+    Route redirects as functions
+    To enable higher flexibility when dealing with redirects, in Angular v18 redirectTo now accepts a function which
+    returns a string. For example, if you’d like to redirect to a route that depends on some runtime state you can
+    implement a more complicated logic in a function:
+    const routes: Routes = [
+    { path: "first-component", component: FirstComponent },
+    {
+    path: "old-user-page",
+    redirectTo: ({ queryParams }) => {
+    const errorHandler = inject(ErrorHandler);
+    const userIdParam = queryParams['userId'];
+    if (userIdParam !== undefined) {
+    return `/user/${userIdParam}`;
+    } else {
+    errorHandler.handleError(new Error('Attempted navigation to user page without user ID.'));
+    return `/not-found`;
+    }
+    },
+    },
+    { path: "user/:userId", component: OtherComponent },
+    ];
+    TypeScript 5.4
+    Last but not least, we updated the dependency on TypeScript letting you take advantage of all the latest TypeScript
+    5.4 features!
+    Community highlights
+    With the innovation happening in Angular we’ve also been seeing a ton of advancements in the community!
+    Popular state management libraries such as ngrx, ngxs, and rxAngular are already adopting Angular signals and
+    enabling fine-grained reactivity in components.
+    Two months ago the Angular GDE, Brandon Roberts, released version 1.0 of Analog.js — a community driven meta
+    framework for Angular. It provides some neat features such as file-based routing, API routes, first-class markdown
+    support and more. The Analog.js team has been experimenting with a single-file component format that the community
+    has been loving!
+    It has been also exciting to see popular libraries from other ecosystems building their Angular adapters. Chau Tran,
+    Arnoud de Vries, and Corbin Crutchley shipped TanStack Store, TanStack Query, and TanStack Forms support for
+    Angular!
+    We’re also thrilled we were part of so many Angular community conferences around the world and looking forward to
+    what’s coming up later this year. Organizing a conference with hundreds of attendees and dozens of speakers is not
+    an easy job, shout out to all who managed to make this hard task a reality this year including ng-conf, Angular
+    Belgrade, ng-de, ng-be, NGPoland, ngRome, NG Kenya, ngIndia, Angular TLV! If we’ve missed any conferences, please
+    share them in the comments.
+    In addition to this, we received contributions from over 290 people since v16! Thanks to everyone who helped make
+    Angular better with code, issues, content, organizing a community, or helping in a way they found possible 🙏
+    Reflecting on our progress
+    As part of the Angular renaissance we delivered a lot over the past two years and there’s a lot of more innovation
+    to come. In this section I wanted to take the opportunity to look at the present and celebrate where we are at.
+    While evolving Angular to a truly reactive framework with Signals and introducing advanced hybrid rendering
+    features, we’ve been always staying true to our mission to enable developers to deliver web applications with
+    confidence. We’re at a place where YouTube, the second biggest website in the world, uses Angular’s reactivity
+    primitives and we’re teaming up as part of a larger working group to add Signals to the web platform.
+    We’re also working closely with the authors of tools such as Vite, Nx, Cypress, Puppeteer, Storybook, and many
+    others to improve developer experience for everyone. At the same time we’re so fortunate to have a community of
+    passionate developers, community organizers, authors, and speakers who push the boundaries of what’s possible with
+    Angular.
+    Thank you all for being part of the Angular renaissance!
+    Angular
+    Angular V18
+    Latest Updates
+    5.2K
+
+    36
+
+
+
+    Angular Blog
+    Published in Angular Blog
+    56K Followers
+    ·
+    Last published Jan 13, 2025
+    The latest news and tips from the Angular team
+    Following
+    Minko Gechev
+    Written by Minko Gechev
+    43K Followers
+    ·
+    1 Following
+    Product and DevRel lead for Angular at Google.
+    Following
+    Responses (36)
+    Michael D. Callaghan
+    Michael D. Callaghan
+    What are your thoughts?﻿
+    Cancel
+    Respond
+    Respond
+
+    Also publish to my profile
+    Lars Rye Jeppesen
+    Lars Rye Jeppesen
+    May 22, 2024
+
+    Minko, you and the rest of the team rocks beyond belief. We went zoneless from V18 RC1 and it has just worked
+    flawlessly. Signals for the win.. amazing amazing
+    66
+    Reply
+    Sebastián Rojas Ricaurte
+    Sebastián Rojas Ricaurte
+    May 22, 2024
+
+    I tried the quickstart of Firebase App Hopsting you suggested and the deployment it's a not ending task, 20 minutes
+    and still running without new logs.
+    Please, please, provide a detail tutorial.
+    26
+
+    4 replies
+    Reply
+    Michal Gasparik
+    Michal Gasparik
+    May 23, 2024
+
+    Perfect Progress! Cheers Angular Team!
+    19
+    Reply
+    See all responses
+    More from Minko Gechev and Angular Blog
+    Angular Tools for High Performance
+    Angular Blog
+    In
+    Angular Blog
+    by
+    Minko Gechev
+    Aug 28, 2019
+    2.3K
+    10
+
+
+    Discontinued Long Term Support for AngularJS
+    Angular Blog
+    In
+    Angular Blog
+    by
+    Mark Thompson (@marktechson)
+    Jan 11, 2022
+    737
+    6
+
+
+    Support for isolatedModules available in angular v18.2
+    Angular Blog
+    In
+    Angular Blog
+    by
+    Angular
+    Aug 19, 2024
+    575
+    4
+
+
+    Angular CLI Strict Mode
+    Angular Blog
+    In
+    Angular Blog
+    by
+    Minko Gechev
+    Aug 26, 2020
+    1.2K
+    12
+
+
+    See all from Minko Gechev
+    See all from Angular Blog
+    Recommended from Medium
+    Upgrading to Angular version 19
+    SekrabGarage
+    In
+    SekrabGarage
+    by
+    Ayyash Ayyash
+    Dec 19, 2024
+    21
+    1
+
+
+    Advanced Structural Design Patterns in Angular
+    Towards Dev
+    In
+    Towards Dev
+    by
+    Nadeem Ur-Rehman
+
+    Jan 16
+    60
+
+
+    Lists
+
+
+
+    General Coding Knowledge
+    20 stories
+    ·
+    1882 saves
+    Angular 19: The Ultimate Guide for Developers in 2025
+    Sparkle web
+    Sparkle web
+    Jan 17
+    4
+
+
+    RxJS ang Signals
+    CoreTEQ
+    In
+    CoreTEQ
+    by
+    Vyacheslav Borodin
+    4d ago
+    473
+    9
+
+
+    Stop Using ::ng-deep… What to do Instead
+    ITNEXT
+    In
+    ITNEXT
+    by
+    Brian Treese
+
+    Dec 19, 2024
+    220
+    4
+
+
+    Angular 19: Transforming HTTP API Calls with Signals and Resources
+    Balram Chavan
+    Balram Chavan
+    Jan 1
+    138
+    5
+
+
+    See more recommendations
+    Help
+    Status
+    About
+    Careers
+    Press
+    Blog
+    Privacy
+    Terms
+    Text to speech
+    Teams

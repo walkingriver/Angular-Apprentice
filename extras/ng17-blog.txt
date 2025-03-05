@@ -1,0 +1,521 @@
+
+Write
+
+Michael D. Callaghan
+Your membership will expire on March 16, 2025Reactivate membership
+
+Top highlight
+Introducing Angular v17
+
+Minko Gechev
+Angular Blog
+Minko Gechev
+·
+Following
+Published in
+Angular Blog
+·
+17 min read
+·
+Nov 8, 2023
+5.1K
+
+51
+
+
+
+
+Last month marked the 13th anniversary of Angular’s red shield. AngularJS was the starting point for a new wave of JavaScript frameworks emerging to support the increasing need for rich web experiences. Today with a new look and a set of forward-thinking features we bring everyone along to the future with version 17, setting new standards for performance and developer experience.
+Visual with the latest Angular logo with the label “Angular” over a gradient.
+In v17 we’re happy to introduce:
+Deferrable views which brings performance and developer experience to the next level
+Up to 90% faster runtime with a built-in control flow loops in public benchmarks
+Up to 87% faster builds for hybrid rendering and 67% for client-side rendering
+Fresh new look reflecting the future-looking features of Angular
+Brand new interactive learning journey
+…and dozens of other features and improvements!
+Future-looking identity
+Angular’s renaissance has been going with full steam for the past couple of versions. We’ve been picking up momentum with improvements such as signal-based reactivity, hydration, standalone components, directive composition, and dozens of other features. Despite the rapid evolution of Angular, its branding has not been able to catch up — it has been almost identical since the early days of AngularJS.
+Today, the framework you love, battle tested by millions of developers gets a new look reflecting its future-looking developer experience and performance!
+Animation that starts with the original red shield Angular logo and then morphs into the new hexagonal logo with a purple-to-pink gradient and bolder letter A.
+Future-looking documentation
+Together with the new brand we also developed a new home for Angular’s documentation — angular.dev. For the new documentation website we have new structure, new guides, improved content, and built a platform for an interactive learning journey that will let you learn Angular and the Angular CLI at your own pace, directly in the browser.
+The new interactive learning experience is powered by WebContainers and lets you use the power of the Angular CLI in any modern web browser!
+Gif showing the new interactive Angular tutorial using Web Containers.
+Interactive Angular tutorial with WebContainers
+Today we’re launching a beta preview of angular.dev and planning to make it the default website for Angular in v18. You can learn more about Angular’s new look and angular.dev in “Announcing angular.dev.”
+Now let me dig into the features from v17 that we can’t wait to tell you about!
+Built-in control flow
+To improve developer experience, we’ve released a new block template syntax that gives you powerful features with simple, declarative APIs. Under the hood, the Angular compiler transforms the syntax to efficient JavaScript instructions that could perform control flow, lazy loading, and more.
+We used the new block syntax for an optimized, built-in control flow. After running user studies we identified that a lot of developers struggle with *ngIf, *ngSwitch, and *ngFor. Working with Angular since 2016 and being part of the Angular team for the past 5 years, I personally still have to look up the syntax of *ngFor and trackBy. After collecting feedback from the community, partners, and running UX research studies, we developed a new, built-in control flow for Angular!
+The built-in control flow enables:
+More ergonomic syntax that is closer to JavaScript, thus more intuitive requiring fewer documentation lookups
+Better type checking thanks to more optimal type narrowing
+It’s a concept that primarily exists at build-time, which reduces the runtime footprint (making it “disappearing”) which could drop your bundle size by up to 30 kilobytes and further improve your Core Web Vital scores
+It is automatically available in your templates without additional imports
+Significant performance improvements that we’ll cover in a little bit
+Conditional statements
+Let’s look at a side by side comparison with *ngIf:
+<div *ngIf="loggedIn; else anonymousUser">
+  The user is logged in
+</div>
+<ng-template #anonymousUser>
+  The user is not logged in
+</ng-template>
+With the built-in if statement, this condition will look like:
+@if (loggedIn) {
+  The user is logged in
+} @else {
+  The user is not logged in
+}
+Being able to provide the content for @else directly is a major simplification compared to the else clause of the legacy *ngIf alternative. The current control flow also makes it trivial to have @else if, which historically has been impossible.
+The improved ergonomics is even more visible with *ngSwitch:
+<div [ngSwitch]="accessLevel">
+  <admin-dashboard *ngSwitchCase="admin"/>
+  <moderator-dashboard *ngSwitchCase="moderator"/>
+  <user-dashboard *ngSwitchDefault/>
+</div>
+which with the built-in control flow turns into:
+@switch (accessLevel) {
+  @case ('admin') { <admin-dashboard/> }
+  @case ('moderator') { <moderator-dashboard/> }
+  @default { <user-dashboard/> }
+}
+The new control flow enables significantly better type-narrowing in the individual branches in @switch which is not possible in *ngSwitch.
+Built-in for loop
+One of my most favorite updates is the built-in for loop that we introduced, which on top of the developer experience improvements pushes Angular’s rendering speed to another level!
+Its basic syntax is:
+@for (user of users; track user.id) {
+  {{ user.name }}
+} @empty {
+  Empty list of users
+}
+We often see performance problems in apps due to the lack of trackBy function in *ngFor. A few differences in @for are that track is mandatory to ensure fast diffing performance. In addition, it’s way easier to use since it’s just an expression rather than a method in the component’s class. The built-in @for loop also has a shortcut for collections with zero items via an optional @empty block.
+The @for statement uses a new diffing algorithm and has more optimal implementation compared to *ngFor, which makes it up to 90% faster runtime for community framework benchmarks!
+Community benchmarks showing the performance improvements introduced by the new control flow. Row swapping became significantly faster compared to previous benchmarks and there are visible improvements in all other categories.
+A comparison of the performance of the built-in for statement versus *ngFor from the js-framework-benchmarks from https://krausest.github.io/js-framework-benchmark/current.html
+Give it a try!
+The built-in control flow is available in v17 under developer preview today!
+One of the design goals of the built-in control flow was to enable completely automated migration. To try it in your existing projects use the following migration:
+ng generate @angular/core:control-flow
+What’s next?
+You can already use the built-in control flow with the latest language service and we worked closely with JetBrains to enable better support in their products. We’re also in contact with Sosuke Suzuki from Prettier to ensure proper formatting of Angular templates.
+There are still some differences between how the built-in control flow handles content projection compared to *ngIf, *ngFor, and *ngSwitch, and we’ll be working on them over the next months. Aside from that, we’re confident in the implementation and stability of the built-in control flow so you can give it a try today! We’d like to keep it under developer preview until the next major release so that we can open the door for potential backward incompatible fixes in case we find opportunities to further enhance developer experience.
+Deferrable views
+Now let’s talk about the future of lazy loading! Leveraging the new block syntax we developed a new, powerful mechanism you can use to make your apps faster. At the beginning of the blog post, I said that deferrable views bring performance and developer experience to the next level because they enable declarative and powerful deferred loading with unprecedented ergonomics.
+The visual shows a component tree where we defer the loading of the left subtree.
+Component tree where we defer the loading of the left subtree
+Let’s suppose you have a blog and you’d like to lazily load the list of user comments. Currently, you’d have to use ViewContainerRef while also managing all the complexity for cleanups, managing loading errors, showing a placeholder, etc. Taking care of various corner cases may result in some non-trivial code, which will be hard to test and debug.
+The new deferrable views, allow you to lazily load the list of comments and all their transitive dependencies with a single line of declarative code:
+@defer {
+  <comment-list />
+}
+The most incredible part is that this all happens via a compile-time transformation: Angular abstracts all the complexity by finding components, directive and pipes used inside of a @defer block, generating dynamic imports and managing the process of loading and switching between states.
+Starting to lazily load a component when a certain DOM element enters the viewport involves a lot of more non-trivial logic and the IntersectionObserver API. Angular makes using IntersectionObservers as simple as adding a deferrable view trigger!
+@defer (on viewport) {
+  <comment-list />
+} @placeholder {
+  <!-- A placeholder content to show until the comments load -->
+  <img src="comments-placeholder.png">
+}
+In the example above, Angular first renders the contents of the placeholder block. When it becomes visible in the viewport, the loading of the <comment-list/> component starts. Once the loading is completed, Angular removes the placeholder and renders the component.
+There are also blocks for loading and error states:
+@defer (on viewport) {
+  <comment-list/>
+} @loading {
+  Loading…
+} @error {
+  Loading failed :(
+} @placeholder {
+  <img src="comments-placeholder.png">
+}
+That’s it! There’s a ton of complexity under the hood that Angular manages for you.
+Deferrable views offer a few more triggers:
+on idle — lazily load the block when the browser is not doing any heavy lifting
+on immediate — start lazily loading automatically, without blocking the browser
+on timer(<time>) — delay loading with a timer
+on viewport and on viewport(<ref>) — viewport also allows to specify a reference for an anchor element. When the anchor element is visible, Angular will lazily load the component and render it
+on interaction and on interaction(<ref>) — enables you to initiate lazy loading when the user interacts with a particular element
+on hover and on hover(<ref>) — triggers lazy loading when the user hovers an element
+when <expr> — enables you to specify your own condition via a boolean expression
+Deferrable views also provide the ability to prefetch the dependencies ahead of rendering them. Adding prefetching is as simple as adding a prefetch statement to the defer block and supports all the same triggers.
+@defer (on viewport; prefetch on idle) {
+  <comment-list />
+}
+Deferrable views are available in developer preview in v17 today! Learn more about the feature in this guide.
+What’s next?
+Deferrable views are ready to use and we strongly encourage you to give them a try! The reason we’re keeping them in developer preview is so we can collect more feedback and introduce changes in the API surface until we lock them to following semantic versioning like the rest of the framework.
+Currently, server-side rendering will render the specified placeholder. Once the framework loads the application and hydrates it, deferrable views will work as we described above.
+As the next step, we’ll explore rendering the content within the defer block on the server and enable partial hydration on the client. In this scenario, the client will not download the code for the deferred view until the trigger requests it. At this point, Angular will download the associated JavaScript and hydrate only this part of the view.
+There will be a lot of exciting interoperability with signals as well, so stay tuned!
+Revamped hybrid rendering experience
+Today, we bring server-side rendering (SSR) and static-site generation (SSG or prerendering) closer to developers with a prompt in ng new:
+A gif showing the new prompt for enabling server-side rendering and static site generation when you create a new Angular project.
+Prompt for SSR and SSG in a new Angular app
+This is a change we’ve been wanting to make for quite some time now, but first we wanted to be confident in Angular’s SSR developer experience.
+Alternatively, you can enable SSR in new projects with:
+ng new my-app --ssr
+Hydration graduating from developer preview
+Over the past 6 months we saw thousands of applications adopting hydration. Today, we’re happy to announce that hydration is out of developer preview and enabled by default in all new apps using server-side rendering!
+New @angular/ssr package
+We moved the Angular Universal repository to the Angular CLI repository and made server-side rendering an even more integral part of our tooling offering!
+Starting today, to add hybrid rendering support to your existing application run:
+ng add @angular/ssr
+This command will generate the server entry point, add SSR and SSG build capabilities, and enable hydration by default. @angular/ssr provides equivalent functionality to @nguniversal/express-engine which is currently in maintenance mode. If you’re using the express-engine, Angular CLI will automatically update your code to @angular/ssr.
+Virgin Media O2 observed a 112% increase in sales after moving to the latest Angular Hybrid rendering solution from their legacy platform. With an average reduction in Cumulative Layout Shift of 99.4% by using NgOptimizedImage alongside Angular SSR with DOM Hydration.
+Deploying your app with SSR
+To further enhance developer experience, we worked closely with cloud providers to enable smooth deployment to their platforms.
+Firebase will now automatically recognize and deploy your Angular application with near-zero configuration, with the early preview of its new framework-aware CLI.
+firebase experiments:enable webframeworks
+firebase init hosting
+firebase deploy
+The framework-aware CLI recognizes use of SSR, i18n, Image Optimization and more — enabling you to serve performant web apps on cost-effective, serverless infrastructure.
+For those with complex Angular monorepos or who simply prefer native tooling, AngularFire allows for deployment to Firebase with ng deploy:
+ng add @angular/fire
+ng deploy
+To enable deployment to edge workers, we enabled ECMAScript module support in Angular’s server-side rendering, introduced a fetch backend for HttpClient, and worked with CloudFlare to streamline the process.
+New lifecycle hooks
+To improve the performance of Angular’s SSR and SSG, in the long-term we’d like to move away from DOM emulation and direct DOM manipulations. At the same time, throughout most applications’ lifecycle they need to interact with elements to instantiate third-party libraries, measure element size, etc.
+To enable this, we developed a set of new lifecycle hooks:
+afterRender — register a callback to be invoked each time the application finishes rendering
+afterNextRender — register a callback to be invoked the next time the application finishes rendering
+Only the browser will invoke these hooks, which enables you to plug custom DOM logic safely directly inside your components. For example, if you’d like to instantiate a charting library you can use afterNextRender:
+@Component({
+  selector: 'my-chart-cmp',
+  template: `<div #chart>{{ ... }}</div>`,
+})
+export class MyChartCmp {
+  @ViewChild('chart') chartRef: ElementRef;
+  chart: MyChart|null;
+
+  constructor() {
+    afterNextRender(() => {
+      this.chart = new MyChart(this.chartRef.nativeElement);
+    }, {phase: AfterRenderPhase.Write});
+  }
+}
+Each hook supports a phase value (e.g. read, write) which Angular will use to schedule callbacks to reduce layout thrash and improve performance.
+Vite and esbuild the default for new projects
+Logo of Vite followed by a plus sign and the logo of esbuild.
+Vite and esbuild power the ng serve and ng build commands
+We wouldn’t have been able to enable SSR in Angular from the start without the fundamental changes we made in Angular CLI’s build pipeline!
+In v16 we introduced developer preview of the esbuild plus Vite powered build experience. Since then a lot of developers experimented with it and some enterprise partners, reported 67% build time improvement in some of their apps! Today, we’re happy to announce that the new application builder graduates from developer preview and is enabled by default for all new applications!
+In addition, we updated the build pipeline when using hybrid rendering. With SSR & SSG you can observe up to 87% speed improvement in ng build and 80% faster edit-refresh loop in for ng serve.
+A bar chart showing the a comparison of the new application builder that uses esbuild and vite, versus the legacy application builder. The comparison is for the ng build, ng serve commands and incremental rebuilds in ng serve. As of right now, ng build is over 80% faster.
+Comparison of the new esbuild + vite build pipeline versus the webpack-based legacy pipeline
+In a future minor version we’ll ship schematics to automatically migrate existing projects using hybrid rendering (client-side rendering with SSG or SSR). If you’d like to test the new application builder today check this guide in our documentation.
+Dependency injection debugging in DevTools
+Last year, we showed a preview of dependency injection debugging capabilities in Angular DevTools. Over the past few months, we implemented brand new debugging APIs that allow us to plug into the framework’s runtime and inspect the injector tree.
+Based on these APIs we built an inspection user interface that allows you to preview the:
+Dependencies of your components in the component inspector
+Injector tree and dependency resolution path
+Providers declared within the individual injectors
+You can find a quick preview of the features in the animation below. Learn more about Angular DevTools on angular.io.
+Gif showing the new dependency injection debugging functionality in Angular DevTools.
+Inspection of component dependencies and injector tree
+As the next step, we’ll polish the UI and work on better visualization of the injector hierarchies, providers, and their resolution.
+Standalone APIs from the start
+After collecting feedback for standalone components, directives and pipes over the past year and a half, and polishing their DevEx, we are confident to enable them from the start in all new applications. All the ng generate commands will now scaffold standalone components, directives, and pipes.
+Together with this, we also revisited the entire documentation on angular.io and angular.dev to ensure consistent learning experience, development practices and recommendations.
+We’ll keep NgModules for the foreseeable future, but seeing the benefits of the new standalone APIs we’d strongly recommend you to move your projects to them gradually. We also have a schematic available that will automate most of this for you:
+ng generate @angular/core:standalone
+For more information, check our migration guide.
+Next steps in reactivity
+The new signal-based reactive system of Angular has been one of the biggest shifts we’ve made in the framework. To ensure backward compatibility and interoperability with Zone.js-based change detection, we’ve been working hard on prototyping and designing a path forward.
+Today, we’re happy to announce that the Angular Signals implementation graduates developer preview. For now, we’ll keep the effect function under developer preview so that we can further iterate on its semantics.
+In the next couple of months we’ll start landing features such as signal-based inputs, view queries, and more. By next May in Angular v18, we’ll have a lot of features that further improve developer experience with Signals.
+Next steps on testing
+We’re continuing to experiment with Jest and make sure we build a solution which is performant, flexible, and intuitive enough to meet developers’ needs. We’re also starting to experiment with Web Test Runner and have an open PR for an initial implementation. In the immediate future, we will likely focus on Web Test Runner first in order to unblock projects which are eager to move off of Karma.
+Next steps for Material 3
+We’ve been working hard with the Material Design team at Google to refactor the internals of Angular Material to incorporate design tokens, a system that will provide significantly more customization options for the components and enable Material 3 support. While we’re not quite ready to ship design token and M3 support for v17, we expect to ship these features soon in a v17 minor release.
+In Q4 2022 we announced the new MDC-based Angular Material components and the deprecation of the legacy components which have equivalent functionality, but different DOM structure and styles. We deprecated legacy components in v15 to be removed in v17. Even though they’ll not be part of the Angular Material v17 package, you can still update your apps to Angular v17 and use the v16 Angular Material package. This will be an option until v18, after which Angular Material v16 will no longer be compatible with newer versions of Angular. We’re also working with our partners from HeroDevs who are going to offer paid never-ending support in case you can’t perform a migration just yet.
+Quality of life improvements
+Together with all these future-looking features, we shipped a series of smaller developer experience enhancements from our backlog!
+Experimental view transitions support
+The View Transitions API enables smooth transitions when changing the DOM. In the Angular router we now provide direct support for this API via the withViewTransitions feature. Using this, you can use the browser’s native capabilities for creating animated transitions between routes.
+You can add this feature to your app today by configuring it in the router’s provider declaration during bootstrap:
+bootstrapApplication(App, {
+  providers: [
+    provideRouter(routes, withViewTransitions()),
+  ]
+});
+withViewTransitions accepts an optional configuration object with a property onViewTransitionCreated, which is a callback that provides you some extra control:
+Decide if you’d like to skip particular animations
+Add classes to the document to customize the animation and remove these classes when the animation completes
+etc.
+Automatic preconnect in the image directive
+The Angular image directive now automatically generates preconnect links for domains that you’ve provided as an argument to the image loader. If the image directive can’t automatically identify an origin and does not detect a preconnect link for the LCP image, it will warn during development.
+Learn more about this feature in the image directive guide.
+Defer loading of the animations module
+This feature can shave 60KBs from your initial bundle (16KBs gzipped). The community contributor Matthieu Riegler proposed and implemented a feature that allows you to lazily load the animation module via an async provider function:
+import { provideAnimationsAsync } from '@angular/platform-browser/animations-async';
+
+bootstrapApplication(RootCmp, {
+  providers: [provideAnimationsAsync()]
+});
+Input value transforms
+A common pattern is having a component which receives a boolean input. This, however, sets constraints on how you can pass a value to such a component. For example if we have the following definition of an Expander component:
+@Component({
+  standalone: true,
+  selector: 'my-expander',
+  template: `…`
+})
+export class Expander {
+  @Input() expanded: boolean = false;
+}
+…and we try to use it as:
+<my-expander expanded/>
+You’ll get an error that “string is not assignable to boolean”. Input value transforms allow you to fix this by configuring the input decorator:
+@Component({
+  standalone: true,
+  selector: 'my-expander',
+  template: `…`
+})
+export class Expander {
+  @Input({ transform: booleanAttribute }) expanded: boolean = false;
+}
+You can find the original feature requests on GitHub — Boolean properties as HTML binary attributes and Boolean properties as HTML binary attributes.
+Style and styleUrls as strings
+Angular components support multiple stylesheets per component. However, the vast majority of cases when I want to style my components I create an array with a single element pointing to the inline styles or referencing an external stylesheet. A new feature enables you to switch from:
+@Component({
+  styles: [`
+    ...
+  `]
+})
+...
+@Component({
+  styleUrls: ['styles.css']
+})
+...
+…to the simpler and more logical:
+@Component({
+  styles: `
+    ...
+  `
+})
+...
+@Component({
+  styleUrl: 'styles.css'
+})
+...
+We still support multiple stylesheets when you use an array. This is more ergonomic, more intuitive, and plays better with automated formatting tools.
+Community schematics
+To support the development of community schematics we shipped a couple of utility methods as part of @schematics/angular/utility. Now you can import an expression directly into the root of an Angular app and add a provider to the root of an Angular app, plus the already existing feature of adding dependency to package.json.
+You can learn more in the schematics guide in the documentation.
+Training Angular developers
+We collaborated with SoloLearn, an interactive EdTech platform, to develop a new Angular training based on the recent “Introduction to Angular” course we developed. They created an interactive learning journey which reached over 70k people over the past two months!
+Visual showing the interactive learning experience in Sololearn. It shows three mocks — the first one with a screen “Welcome to Angular”, the second and the third one are showing sample exercises in the Sololearn platform.
+Screenshots from the Angular course by SoloLearn
+Learn more in our recent announcement.
+Community highlights
+We’d like to thank the 346 contributors who made Angular v17 so special! A few of the highlights we’d like to list:
+HttpClient now can use fetch as a backend which is one of the features enabling Angular to run in an edge worker. We’d like to thank to Matthieu Riegler for the help
+Matthieu also enabled the customization of HttpTransferCache which allows specification of headers, filter, and caching for post requests
+Cédric Exbrayat introduced support for namedChunks in the new application builder
+Angular Challenges by Thomas Laforge’s is an excellent resource that has been helping Angular developers to get to the next level
+AnalogJS has been steadily growing and approaching its 1.0. Congratulations to Brandon Roberts for his tremendous work!
+Congratulations to Santosh Yadav for reaching 1 million views on his Angular for beginners course
+Building the future with Angular
+Over the past six months we’ve been continuing the Angular renaissance by releasing features for even better developer experience and performance. Today we’re happy to reflect this momentum in Angular’s refreshed brand and learning experience with angular.dev.
+In the next release cycle expect a lot of evolution in Angular’s signal-based reactivity, hybrid rendering, and learning journey.
+We’re proud to be part of your journey building the future with Angular! Thank you!
+Angular
+Web Development
+Typescript
+JavaScript
+5.1K
+
+51
+
+
+
+Angular Blog
+Published in Angular Blog
+56K Followers
+·
+Last published Jan 13, 2025
+The latest news and tips from the Angular team
+Following
+Minko Gechev
+Written by Minko Gechev
+43K Followers
+·
+1 Following
+Product and DevRel lead for Angular at Google.
+Following
+Responses (51)
+Michael D. Callaghan
+Michael D. Callaghan
+What are your thoughts?﻿
+Cancel
+Respond
+Respond
+
+Also publish to my profile
+Mario B
+Mario B
+Nov 8, 2023
+
+Wow!
+I checked out Vue a few years ago and was blown away by the simplicity and elegancy of a lot of it's concepts (like reactive primitives). For a real project a framework is only as successful as it's ecosystem imo and the experience was…more
+124
+
+2 replies
+Reply
+Mark Goho
+Mark Goho
+Nov 8, 2023
+
+I would love to see that <div> added back in to the control flow example
+@if (loggedIn) {
+<div>The user is logged in</div>
+} @else {
+The user is not logged in
+}...more
+25
+
+2 replies
+Reply
+Gradignan Bx
+Gradignan Bx
+Nov 8, 2023
+
+Bravo !
+41
+Reply
+See all responses
+More from Minko Gechev and Angular Blog
+Angular Tools for High Performance
+Angular Blog
+In
+Angular Blog
+by
+Minko Gechev
+Aug 28, 2019
+2.3K
+10
+
+
+Discontinued Long Term Support for AngularJS
+Angular Blog
+In
+Angular Blog
+by
+Mark Thompson (@marktechson)
+Jan 11, 2022
+737
+6
+
+
+Support for isolatedModules available in angular v18.2
+Angular Blog
+In
+Angular Blog
+by
+Angular
+Aug 19, 2024
+575
+4
+
+
+Angular CLI Strict Mode
+Angular Blog
+In
+Angular Blog
+by
+Minko Gechev
+Aug 26, 2020
+1.2K
+12
+
+
+See all from Minko Gechev
+See all from Angular Blog
+Recommended from Medium
+Upgrading to Angular version 19
+SekrabGarage
+In
+SekrabGarage
+by
+Ayyash Ayyash
+Dec 19, 2024
+21
+1
+
+
+Zoneless Angular: Performance Boosts in Angular 19
+Ankit Sahu
+Ankit Sahu
+Nov 23, 2024
+3
+
+
+Lists
+
+
+
+General Coding Knowledge
+20 stories
+·
+1882 saves
+
+
+Stories to Help You Grow as a Software Developer
+19 stories
+·
+1572 saves
+
+
+
+Coding & Development
+11 stories
+·
+983 saves
+An image by the author.
+iPhone displaying the new intelligent Siri
+
+Tech & Tools
+22 stories
+·
+388 saves
+Angular 19: The Ultimate Guide for Developers in 2025
+Sparkle web
+Sparkle web
+Jan 17
+4
+
+
+🎉 Highlight: Key New Features in Angular 19
+Rajat Gupta
+Rajat Gupta
+Nov 23, 2024
+8
+
+
+Angular 19 SCSS, Angular Material & Tailwind made easy
+Anuroop Suresh
+Anuroop Suresh
+Dec 5, 2024
+2
+1
+
+
+Exploring Angular 19 Render Modes: Seamless Client, Server, and Pre-rendering Strategies
+Saurabh Singh
+Saurabh Singh
+Dec 2, 2024
+20
+1
+
+
+See more recommendations
+Help
+Status
+About
+Careers
+Press
+Blog
+Privacy
+Terms
+Text to speech
+Teams

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import {
   MatCard,
   MatCardContent,
@@ -22,7 +21,6 @@ import { RouterLink } from '@angular/router';
     MatCardTitle,
     MatCardSubtitle,
     MatCardImage,
-    MatButton,
   ],
 })
 export class HomeComponent {}

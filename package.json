@@ -8,11 +8,11 @@
   "scripts": {
     "split-md": "awk '/^# / { header = $0; sub(/^# /, \"\", header); gsub(/[^a-zA-Z0-9 ]/, \"\", header); gsub(/ /, \"-\", header); n++; } { if (n) print > (sprintf(\"%02d-%s.md\", n, header)); }' $1",
     "convert-md": "pandoc -o ./output/$npm_package_name.md --resource-path=chapters $1",
-    "convert-d2d": "pandoc -o ./output/$npm_package_name.epub --resource-path=chapters --reference-doc=custom-reference.docx ./front-matter/*.md ./chapters/*.md ./back-matter/*.md title.yaml",
-    "convert-epub": "pandoc -o ./output/$npm_package_name.epub --resource-path=chapters --toc --toc-depth=1 ./front-matter/*.md ./chapters/*.md ./back-matter/*.md title.yaml",
-    "convert-pdf": "pandoc -o ./output/$npm_package_name.pdf --resource-path=chapters --toc --toc-depth=1 ./front-matter/*.md ./chapters/*.md ./back-matter/*.md title.yaml",
-    "convert-word": "pandoc -o ./output/$npm_package_name.docx --resource-path=chapters --reference-doc=custom-reference.docx --toc --toc-depth=1 ./front-matter/*.md ./chapters/*.md ./back-matter/*.md title.yaml",
-    "convert-kdp": "pandoc -o ./output/$npm_package_name.kdp.docx --resource-path=chapters --reference-doc=custom-reference.docx ./front-matter/*.md ./chapters/*.md ./back-matter/*.md title.yaml",
+    "convert-d2d": "pandoc -o ./output/$npm_package_name.epub --resource-path=chapters --metadata-file=title.yaml --reference-doc=custom-reference.docx ./front-matter/*.md ./chapters/*.md ./back-matter/*.md",
+    "convert-epub": "pandoc -o ./output/$npm_package_name.epub --resource-path=chapters --metadata-file=title.yaml --toc --toc-depth=1 ./front-matter/*.md ./chapters/*.md ./back-matter/*.md",
+    "convert-pdf": "pandoc -o ./output/$npm_package_name.pdf --pdf-engine=xelatex --resource-path=chapters --metadata-file=title.yaml --toc --toc-depth=1 ./front-matter/*.md ./chapters/*.md ./back-matter/*.md",
+    "convert-word": "pandoc -o ./output/$npm_package_name.docx --resource-path=chapters --metadata-file=title.yaml --reference-doc=custom-reference.docx --toc --toc-depth=1 ./front-matter/*.md ./chapters/*.md ./back-matter/*.md",
+    "convert-kdp": "pandoc -o ./output/$npm_package_name.kdp.docx --resource-path=chapters --metadata-file=title.yaml --reference-doc=custom-reference.docx ./front-matter/*.md ./chapters/*.md ./back-matter/*.md",
     "test": "node sample-code/test.js"
   },
   "keywords": [],

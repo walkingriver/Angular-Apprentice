@@ -1,0 +1,36 @@
+Subject: Special Invitation: Review My New Angular Book (Free Copy Inside!)
+
+As someone who has previously enjoyed my Angular-focused content, I wanted to reach out to you with a special opportunity.
+
+I'm excited to announce my latest book, "Angular Apprentice," and I'd love to have you as one of our early reviewers!
+
+Why This Book Is Different
+Unlike traditional Angular books that focus on isolated concepts, Angular Apprentice guides you through building A10dance - a complete student attendance tracking application. You'll learn Angular's core concepts by implementing real features that users need, starting with TypeScript fundamentals and progressing through components, services, and advanced features.
+
+What's Inside:
+• A practical TypeScript primer focused on Angular development
+• Step-by-step building of a real application from scratch
+• Hands-on experience with components and navigation
+• Working with forms and validation in a real context
+• Implementing data management through services
+• Adding features like camera integration and avatars
+• Complete source code and deployment guidance
+
+As a Thank You
+Because you've been a supporter of my previous work, I'd like to offer you a free copy of Angular Apprentice in exchange for your honest review.
+
+What I'm Looking For:
+• Your genuine thoughts on the book's approach and content
+• Feedback on how well the examples work for learning
+• Suggestions for improvements
+• A review posted on Gumroad and Amazon within 30 days
+
+To Get Your Free Copy:
+Visit https://walkingriver.gumroad.com/l/review-team and join my review team. Once you're signed up, you'll be able to select Angular Apprentice as your review copy.
+
+Thank you for being part of my Angular community. Your insights will help make this book even more valuable for future readers.
+
+Best regards,
+[Your name]
+
+P.S. This offer is limited to ensure I can give proper attention to each reviewer's feedback, so please claim your copy soon if you're interested!
