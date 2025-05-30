@@ -1,5 +1,5 @@
 # Angular Apprentice
-## Building Web Applications - Angular Adventures for Aspiring Developers
+## A Beginner's Guide to Building Web Applications with Angular and Angular Material
 
 Copyright &copy; 2025 by Michael D. Callaghan. All rights reserved.
 
@@ -13,6 +13,6 @@ While every effort has been made to ensure the accuracy of the information conta
 
 In no event will the author or publisher be liable for any loss or damage including without limitation, indirect or consequential loss or damage, or any loss or damage whatsoever arising from loss of data or profits arising out of, or in connection with, the use of this book.
 
-If you find any errors or inaccuracies, please contact the publisher.
+If you find any errors or inaccuracies, please contact the author.
 
-Cover design by Michael D. Callaghan</div>
+Cover design by Michael D. Callaghan

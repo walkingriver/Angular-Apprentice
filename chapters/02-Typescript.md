@@ -1,8 +1,8 @@
 # Quick Introduction to TypeScript
 
-The **Angular Acolyte** will need to understand TypeScript. This is a brief introduction to give you the foundation you'll need.
+TypeScript is fundamental to Angular, so understanding TypeScript is crucial. This chapter provides a concise introduction, laying the foundation for your journey ahead.
 
-At my day job, I was asked by my leadership to provide an introduction to TypeScript, Angular, and Node to a group of experienced software developers. Many of these folks are "Senior" or higher, a few with more years of experience than I have. Despite their combined 200+ years of development, they have not used these technologies. This chapter is what I showed them: **An Introduction to TypeScript for Experienced Developers**.
+As I mentioned in the last chapter, a few years ago, I found myself in an interesting position at work. Our leadership tasked me with introducing TypeScript, Angular, and Node to a group of seasoned software developers. These weren't just any developers - many held senior positions, and some even surpassed my years of experience. Yet, despite their collective decades (centuries?) of development expertise, these technologies were new territory for them. What follows is the essence of that introduction: **A Primer on TypeScript for Experienced Developers**. It's designed to bridge the gap between traditional programming knowledge and the modern world of TypeScript.
 
 ## TypeScript Playground
 
@@ -235,6 +235,89 @@ Likewise, the call to `getMyIpAddress` works the same way. Execution is halted a
 
 Using `async` and `await` is wonderful in that your code looks more traditional, but you should never forget there are promises underneath the magic.
 
+## Union Types
+
+Union types allow a variable to be one of several types. This is useful when a value could come from different sources or could be of different types. You use the pipe symbol (`|`) to separate the types.
+
+```typescript
+let id: string | number;
+id = 101; // OK
+id = "202"; // Also OK
+id = true; // Error: Type 'boolean' is not assignable to type 'string | number'
+```
+
+Union types are particularly useful for function parameters that can accept different types of input.
+
+## Intersection Types
+
+Intersection types combine multiple types into one. This allows you to add together existing types to get a single type that has all the features you need. You use the ampersand symbol (`&`) to create intersection types.
+
+```typescript
+interface Employee {
+  employeeId: number;
+  name: string;
+}
+
+interface Manager {
+  managerId: number;
+  department: string;
+}
+
+type ManagerEmployee = Employee & Manager;
+
+// This object must have all properties from both types
+const storeManager: ManagerEmployee = {
+  employeeId: 12345,
+  name: "Jane Smith",
+  managerId: 5,
+  department: "Sales"
+};
+```
+
+## Optional Chaining
+
+Optional chaining (`?.`) is a feature that allows you to safely access nested properties and methods without having to check if each reference in the chain is valid. If any part of the chain is `null` or `undefined`, the expression short-circuits and returns `undefined` instead of throwing an error.
+
+```typescript
+type User = {
+  name: string;
+  address?: {
+    street?: string;
+    city?: string;
+  };
+};
+
+const user: User = {
+  name: "John"
+};
+
+// Without optional chaining - prone to errors
+// const city = user.address && user.address.city;
+
+// With optional chaining - safe and concise
+const city = user.address?.city; // undefined
+```
+
+Optional chaining works with function calls as well:
+
+```typescript
+const result = someObject.someMethod?.(); // Only calls the method if it exists
+```
+
+## Nullish Coalescing
+
+The nullish coalescing operator (`??`) provides a way to provide a default value for `null` or `undefined` without treating other falsy values like `0` or empty string as nullish.
+
+```typescript
+// Using || (logical OR) - treats all falsy values as nullish
+const count = userCount || 10; // If userCount is 0, count will be 10
+
+// Using ?? (nullish coalescing) - only treats null and undefined as nullish
+const count = userCount ?? 10; // If userCount is 0, count will be 0
+```
+
+This is particularly useful when working with forms or API responses where `0`, empty strings, or `false` are valid values that should not be replaced with defaults.
+
 ## Some are More Equal Than Others
 
 When are values equal? The answer may surprise you. While not specific to TypeScript, this topic has bitten many new JavaScript and TypeScript developers. Consider the following example.
@@ -311,4 +394,13 @@ mike = { email: "2345@company.com", firstName: "Bob", lastName: "Johnson" };
 
 ## What Next?
 
-There is a lot more to TypeScript. For more information, visit [www.typescriptlang.org](http://www.typescriptlang.org)
+This chapter has provided a solid foundation in TypeScript, covering essential concepts like types, interfaces, generics, and modern JavaScript features. However, TypeScript offers much more depth and advanced functionality. To further enhance your TypeScript skills, consider exploring:
+
+1. Advanced Types: Conditional types, mapped types, and type inference
+2. Decorators: Enhancing classes and their members
+3. Modules and Namespaces: Organizing and structuring your code
+4. Advanced Configuration: Customizing the TypeScript compiler options
+
+For comprehensive documentation, tutorials, and the latest updates, visit the official TypeScript website at [www.typescriptlang.org](http://www.typescriptlang.org). Additionally, explore open-source projects on GitHub to see how TypeScript is used in real-world applications.
+
+Remember, mastering TypeScript is an ongoing journey. Regular practice and staying updated with the latest features will help you become a proficient TypeScript developer.

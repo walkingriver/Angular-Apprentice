@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
 Angular promotes separation of concerns, encapsulating UI functionality within components. Let's explore this:
 
-- **Standalone Components**: Angular 18 and later support standalone components, which means you don't need to declare them in an NgModule. This simplifies component creation and reduces boilerplate.
+- **Standalone Components**: Angular 18 and later support standalone components, which means you don't need to declare them in an NgModule. This simplifies component creation and reduces boilerplate. Starting with Angular 19, `standalone` becomes the default, so you may not see it included. 
 
 - **Decorator**: The `@Component` decorator provides Angular with metadata about how the component should act.
 

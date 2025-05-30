@@ -46,3 +46,6 @@ Thumbs.db
 # Compiled output
 /out-tsc
 /out-tsc-e2e
+
+# Other
+extras/
