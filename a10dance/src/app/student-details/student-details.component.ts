@@ -1,47 +1,42 @@
 import {
   Component,
+  computed,
   inject,
   input,
-  Signal,
+  linkedSignal,
+  resource,
+  signal,
+  type Signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MatError,
-  MatFormField,
-  MatFormFieldModule,
-  MatLabel,
-} from '@angular/material/form-field';
-import {
-  MatInput,
-  MatInputModule,
-} from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   ActivatedRoute,
   Router,
+  RouterLink,
 } from '@angular/router';
 import { WebcamComponent } from '../shared/webcam/webcam.component';
-import { Student } from '../students.interface';
+import { type Student } from '../students.interface';
 import { STUDENTS_SERVICE } from '../students.service';
 
 @Component({
   selector: 'app-student-details',
+  standalone: true,
   imports: [
     FormsModule,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatInput,
-    MatButton,
+    MatButtonModule,
+    MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule,
+    MatProgressSpinnerModule,
+    RouterLink,
     WebcamComponent,
   ],
-  providers: [provideNativeDateAdapter()],
   templateUrl: './student-details.component.html',
   styleUrls: ['./student-details.component.scss'],
 })
@@ -51,72 +46,168 @@ export class StudentDetailsComponent {
   private studentsService = inject(STUDENTS_SERVICE);
   private snackBar = inject(MatSnackBar);
 
-  studentId: Signal<string> = input.required();
+  // 📝 Required input signal for student ID
+  readonly studentId: Signal<string> =
+    input.required();
 
-  student: Student = {
-    id: '',
-    firstName: '',
-    lastName: '',
-    birthDate: undefined,
-    parentName: '',
-    parentEmail: '',
-    parentPhone: '',
-    photoUrl: '',
-  };
+  // 🎯 Form state signals
+  readonly student = linkedSignal(
+    () =>
+      this.loadStudent.value() ?? {
+        id: '',
+        firstName: '',
+        lastName: '',
+        birthDate: undefined,
+        parentName: '',
+        parentEmail: '',
+        parentPhone: '',
+        photoUrl: '',
+      }
+  );
+  readonly isLoading = computed(() =>
+    this.loadStudent.isLoading()
+  );
+  readonly showCamera = signal(false);
+  readonly formErrors = signal<Record<string, string>>(
+    {}
+  );
 
-  showCamera = false;
+  // 🔄 Form validation computed signal
+  readonly isValid = computed(() => {
+    const student = this.student();
+    const hasFirstName = !!student.firstName?.trim();
+    const hasLastName = !!student.lastName?.trim();
+    return hasFirstName && hasLastName;
+  });
 
-  ngOnInit() {
-    try {
-      this.student = this.studentsService.getById(
-        this.studentId()
+  loadStudent = resource({
+    request: () => ({ id: this.studentId() }),
+    loader: ({ request }) => {
+      return Promise.resolve(
+        this.studentsService.getById(request.id)
       );
-    } catch (error) {
+    },
+  });
+
+  // 📝 Form update methods
+  updateField(fieldName: keyof Student, value: any) {
+    this.student.update(s => ({
+      ...s,
+      [fieldName]: value,
+    }));
+  }
+
+  // 🔍 Form validation helper
+  private validateForm(form: NgForm): string[] {
+    const errors: Record<string, string> = {};
+    const errorMessages: string[] = [];
+    let hasErrors = false;
+
+    if (
+      form.form.get('firstName')?.hasError('required')
+    ) {
+      const message = 'First name is required';
+      errors['firstName'] = message;
+      errorMessages.push(message);
+      hasErrors = true;
+    }
+
+    if (
+      form.form.get('lastName')?.hasError('required')
+    ) {
+      const message = 'Last name is required';
+      errors['lastName'] = message;
+      errorMessages.push(message);
+      hasErrors = true;
+    }
+
+    if (
+      form.form.get('parentEmail')?.hasError('email')
+    ) {
+      const message =
+        'Please enter a valid email address';
+      errors['parentEmail'] = message;
+      errorMessages.push(message);
+      hasErrors = true;
+    }
+
+    this.formErrors.set(errors);
+
+    if (hasErrors) {
       this.snackBar.open(
-        'Student not found',
+        'Please fix the form errors',
         'Close',
         { duration: 3000 }
       );
-      this.router.navigate(['/roster']);
+    }
+
+    return errorMessages;
+  }
+
+  // 📝 Form submission handler
+  async onSubmit(form: NgForm): Promise<boolean> {
+    if (!form.valid || !this.isValid()) {
+      const errors = this.validateForm(form);
+      // Announce form errors to screen readers
+      if (errors.length > 0) {
+        const errorMessage = `Form has ${errors.length} error${errors.length > 1 ? 's' : ''}: ${errors.join(', ')}`;
+        this.announceToScreenReader(errorMessage);
+      }
+      return false;
+    }
+
+    this.isLoading.set(true);
+    try {
+      await this.studentsService.update(
+        this.student()
+      );
+      this.snackBar.open(
+        'Student updated successfully! 🎉',
+        'Close',
+        {
+          duration: 3000,
+        }
+      );
+      await this.router.navigate(['/roster']);
+      return true;
+    } catch (error) {
+      const errorMessage =
+        'Error updating student: Please try again';
+      this.snackBar.open(errorMessage, 'Close', {
+        duration: 3000,
+      });
+      this.announceToScreenReader(errorMessage);
+      return false;
+    } finally {
+      this.isLoading.set(false);
     }
   }
 
-  onSubmit() {
-    // if (this.student.id) {
-    //   const updateSignal = this.studentsService.update(
-    //     this.student
-    //   );
-    //   if (updateSignal()) {
-    //     this.snackBar.open(
-    //       'Student updated successfully',
-    //       'Close',
-    //       {
-    //         duration: 3000,
-    //       }
-    //     );
-    //     this.router.navigate(['/roster']);
-    //   } else {
-    //     this.snackBar.open(
-    //       'Error updating student',
-    //       'Close',
-    //       {
-    //         duration: 3000,
-    //       }
-    //     );
-    //   }
-    // }
+  // 📢 Screen reader announcements
+  private announceToScreenReader(
+    message: string
+  ): void {
+    // Create a live region for screen reader announcements
+    const liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', 'polite');
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.classList.add('cdk-visually-hidden');
+    document.body.appendChild(liveRegion);
+
+    // Set the message and remove after announcement
+    liveRegion.textContent = message;
+    setTimeout(() => {
+      document.body.removeChild(liveRegion);
+    }, 3000);
   }
 
-  onCancel() {
-    this.router.navigate(['/roster']);
-  }
-
+  // 📸 Camera controls
   toggleCamera() {
-    this.showCamera = !this.showCamera;
+    this.showCamera.update(show => !show);
   }
 
-  handlePhoto(photoData: string) {
-    this.student.photoUrl = photoData;
-    this.showCamera = false;
+  onPhotoTaken(photoUrl: string) {
+    this.updateField('photoUrl', photoUrl);
+    this.showCamera.set(false);
   }
 }

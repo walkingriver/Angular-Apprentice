@@ -1,28 +1,36 @@
-<div class="student-details">
-  <h2>Student Details</h2>
+<div class="student-details" role="main">
+  <h1>Student Details</h1>
+
+  @if (isLoading()) {
+    <mat-progress-spinner 
+      mode="indeterminate"
+      aria-label="Loading student details"
+      aria-busy="true"
+    ></mat-progress-spinner>
+  }
 
   <form
     #studentForm="ngForm"
-    (ngSubmit)="onSubmit()"
+    (ngSubmit)="onSubmit(studentForm)"
     class="student-form"
+    aria-label="Student information form"
   >
-    <div class="form-row">
+    <div class="form-row" role="group" aria-label="Student name">
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
         <input
           matInput
           required
-          [(ngModel)]="student.firstName"
+          [ngModel]="student()['firstName']"
+          (ngModelChange)="updateField('firstName', $event)"
           name="firstName"
           #firstName="ngModel"
           placeholder="Enter first name"
+          [attr.aria-invalid]="firstName.invalid && (firstName.dirty || firstName.touched)"
+          aria-required="true"
+          aria-label="First name"
         />
-        @if (
-          firstName.invalid &&
-          (firstName.dirty || firstName.touched)
-        ) {
-          <mat-error>First name is required</mat-error>
-        }
+        <mat-error role="alert">{{ formErrors()['firstName'] || 'First name is required' }}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -30,132 +38,135 @@
         <input
           matInput
           required
-          [(ngModel)]="student.lastName"
+          [ngModel]="student()['lastName']"
+          (ngModelChange)="updateField('lastName', $event)"
           name="lastName"
           #lastName="ngModel"
           placeholder="Enter last name"
+          [attr.aria-invalid]="lastName.invalid && (lastName.dirty || lastName.touched)"
+          aria-required="true"
+          aria-label="Last name"
         />
-        @if (
-          lastName.invalid &&
-          (lastName.dirty || lastName.touched)
-        ) {
-          <mat-error>Last name is required</mat-error>
-        }
+        <mat-error role="alert">{{ formErrors()['lastName'] || 'Last name is required' }}</mat-error>
       </mat-form-field>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" role="group" aria-label="Birth date">
       <mat-form-field appearance="outline">
-        <mat-label>Choose a date</mat-label>
+        <mat-label>Birth Date</mat-label>
         <input
           matInput
-          [(ngModel)]="student.birthDate"
+          [ngModel]="student()['birthDate']"
+          (ngModelChange)="updateField('birthDate', $event)"
           name="birthDate"
           [matDatepicker]="picker"
+          [attr.aria-label]="'Birth date in format ' + (student()['birthDate'] ? student()['birthDate'] : 'MM/DD/YYYY')"
+          aria-label="Birth date"
         />
-        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-hint id="dateFormat">MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle
           matIconSuffix
           [for]="picker"
+          aria-label="Open date picker"
         ></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <mat-datepicker #picker aria-describedby="dateFormat"></mat-datepicker>
       </mat-form-field>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" role="group" aria-label="Parent or guardian information">
       <mat-form-field appearance="outline">
         <mat-label>Parent/Guardian Name</mat-label>
         <input
           matInput
-          [(ngModel)]="student.parentName"
+          [ngModel]="student()['parentName']"
+          (ngModelChange)="updateField('parentName', $event)"
           name="parentName"
           placeholder="Enter parent/guardian name"
+          aria-label="Parent or guardian full name"
         />
       </mat-form-field>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" role="group" aria-label="Parent contact information">
       <mat-form-field appearance="outline">
         <mat-label>Parent Email</mat-label>
         <input
           matInput
-          matNativeControl
           type="email"
-          [(ngModel)]="student.parentEmail"
+          [ngModel]="student()['parentEmail']"
+          (ngModelChange)="updateField('parentEmail', $event)"
           name="parentEmail"
           #parentEmail="ngModel"
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
           placeholder="Enter parent email"
+          [attr.aria-invalid]="parentEmail.invalid && (parentEmail.dirty || parentEmail.touched)"
+          aria-label="Parent email address"
+          email
         />
-        @if (
-          parentEmail.invalid &&
-          (parentEmail.dirty || parentEmail.touched)
-        ) {
-          <mat-error
-            >Please enter a valid email
-            address</mat-error
-          >
-        }
+        <mat-error role="alert">{{ formErrors()['parentEmail'] || 'Please enter a valid email address' }}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Parent Phone</mat-label>
         <input
           matInput
-          matNativeControl
           type="tel"
-          [(ngModel)]="student.parentPhone"
+          [ngModel]="student()['parentPhone']"
+          (ngModelChange)="updateField('parentPhone', $event)"
           name="parentPhone"
-          #parentPhone="ngModel"
-          pattern="^\+?[\d\s-]{10,}$"
           placeholder="Enter parent phone"
+          aria-label="Parent phone number"
         />
-        @if (
-          parentPhone.invalid &&
-          (parentPhone.dirty || parentPhone.touched)
-        ) {
-          <mat-error
-            >Please enter a valid phone
-            number</mat-error
-          >
-        }
       </mat-form-field>
     </div>
 
-    <div class="form-row photo-section">
-      @if (student.photoUrl) {
-        <img [src]="student.photoUrl" alt="Student photo" class="student-photo">
+    <div class="form-row photo-section" role="group" aria-label="Student photo">
+      @if (student()['photoUrl']) {
+        <img
+          [src]="student()['photoUrl']"
+          alt="Student photo"
+          class="student-photo"
+          role="img"
+          aria-label="Student photo"
+        />
       }
-      
-      @if (showCamera) {
-        <app-webcam (photoTaken)="handlePhoto($event)"></app-webcam>
+
+      @if (showCamera()) {
+        <app-webcam
+          (photoTaken)="onPhotoTaken($event)"
+          aria-label="Camera view for taking student photo"
+        ></app-webcam>
       }
-      
+
       <button
-        mat-raised-button
-        color="primary"
         type="button"
+        mat-raised-button
+        color="accent"
         (click)="toggleCamera()"
+        [attr.aria-label]="showCamera() ? 'Cancel taking photo' : 'Take new student photo'"
       >
-        {{ showCamera ? 'Cancel' : (student.photoUrl ? 'Change Photo' : 'Add Photo') }}
+        {{ showCamera() ? 'Cancel Photo' : 'Take Photo' }}
       </button>
     </div>
 
     <div class="form-actions">
       <button
-        mat-button
-        type="button"
-        (click)="onCancel()"
-      >
-        Cancel
-      </button>
-      <button
+        type="submit"
         mat-raised-button
         color="primary"
-        type="submit"
-        [disabled]="!studentForm.form.valid"
+        [attr.aria-disabled]="!studentForm.valid || !isValid() || isLoading()"
+        [attr.aria-busy]="isLoading()"
+        aria-label="Save student information"
       >
-        Save
+        {{ isLoading() ? 'Saving...' : 'Save' }}
+      </button>
+
+      <button
+        type="button"
+        mat-button
+        [routerLink]="['/roster']"
+        aria-label="Cancel and return to roster"
+      >
+        Cancel
       </button>
     </div>
   </form>
