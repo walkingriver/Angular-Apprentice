@@ -164,7 +164,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Simplify TmdbService (removed custom createResource, use basic HttpClient)
 - [x] Consolidate mock data into single file (data/mock-series.ts)
 - [x] Update series-list component to use SeriesService
-- [ ] Ensure mock data works standalone
+- [x] Ensure mock data works standalone (TypeScript compiles, requires Node.js v20.19+)
 - [ ] Complete TMDb API integration
 - [ ] Upgrade to Angular 21 when available
 
