@@ -52,8 +52,8 @@ These are app-agnostic and mostly solid. Light updates needed.
 
 | Chapter | Topic                    | Key Concepts                                             |
 | ------- | ------------------------ | -------------------------------------------------------- |
-| 08      | Introducing Ends-Well    | App overview, what we'll build, screenshots              |
-| 09      | Creating the Project     | `ng new`, adding Material, theme selection               |
+| 08      | Introducing Ends-Well    | App overview, what we'll build, design principles intro  |
+| 09      | Creating the Project     | `ng new`, adding Material, theme selection, a11y intro   |
 | 10      | The Home Page            | Hero section, featured shows, Material Cards             |
 | 11      | Series List Page         | Grid layout, responsive cards, routing                   |
 | 12      | Search & Filtering       | Form inputs, signals for reactive state                  |
@@ -141,7 +141,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 
 ### Files to Keep in Place
 
-| File                                           | Reason                                       |
+| File                                           | Reason                                       |****
 | ---------------------------------------------- | -------------------------------------------- |
 | `chapters/19-Understanding-Form-Validators.md` | Content is app-agnostic, adapt for ends-well |
 
@@ -231,12 +231,33 @@ Throughout the book, use info boxes/sidebars to explain important concepts witho
 
 | Topic | Where to Include | Key Points |
 | --- | --- | --- |
-| **Principle of Least Surprise** | Ch 8-9 (design decisions) | Users expect apps to behave like other apps they've used. Logo clicks to home, search icon means search, etc. Follow platform conventions—don't reinvent navigation. |
-| **Accessibility (a11y)** | Ch 10-11 (clickable elements) | Explain why we use semantic elements (`<a>`, `<button>`) instead of adding `(click)` to `<div>` or `<span>`. Screen readers, keyboard navigation, focus states. Angular allows click handlers anywhere, but semantic HTML is essential for accessibility. |
+| **Principle of Least Surprise** | Ch 8 (design decisions) | Users expect apps to behave like other apps they've used. Logo clicks to home, search icon means search, etc. Follow platform conventions—don't reinvent navigation. |
 | **Why Signals?** | Ch 12 (first signal usage) | Brief comparison to BehaviorSubject/state management. Signals are simpler, synchronous, and integrate with zoneless. |
 | **localStorage Limits** | Ch 16 (persistence) | ~5MB limit, synchronous API, JSON serialization. When to use vs IndexedDB or backend. |
 | **Environment Files** | Ch 17a (API keys) | Never commit secrets. Use environment.local.ts pattern, .gitignore it. |
 | **Observable vs Signal** | Ch 18 (HttpClient) | HttpClient returns Observables. When to convert to signals vs use async pipe. |
+
+---
+
+## Accessibility (a11y) & WCAG
+
+**Introduce in Chapter 9** with a brief section explaining:
+- What accessibility means and why it matters (legal, ethical, practical)
+- WCAG guidelines overview (Perceivable, Operable, Understandable, Robust)
+- How Angular Material helps (built-in ARIA, focus management, keyboard support)
+
+**Then reference throughout with callout boxes:**
+
+| Chapter | a11y Callout | Key Point |
+| --- | --- | --- |
+| Ch 10 | Semantic HTML | Why we use `<a>` for navigation and `<button>` for actions, not `(click)` on `<div>`. Screen readers announce element roles. |
+| Ch 11 | Image alt text | Card images need descriptive alt attributes. Decorative images get `alt=""`. |
+| Ch 12 | Form labels | Every input needs a `<mat-label>`. Placeholders are not labels. |
+| Ch 14 | Focus management | When navigating to detail page, consider where focus should land. |
+| Ch 15 | Button states | Disabled buttons need `aria-disabled`. Toggle buttons need `aria-pressed`. |
+| Ch 19 | Color contrast | Don't rely on color alone to convey meaning (error states, ratings). |
+
+**Consistent pattern:** Each callout is a small info box titled "Accessibility Note" that explains the decision without interrupting the tutorial flow.
 
 ---
 
