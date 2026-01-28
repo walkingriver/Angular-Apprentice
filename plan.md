@@ -1,0 +1,200 @@
+# Angular Apprentice: Book Completion Plan
+
+## Vision
+
+| Aspect               | Decision                                           |
+| -------------------- | -------------------------------------------------- |
+| **Target Version**   | Angular 21 (or 22 if timing aligns)                |
+| **Audience**         | HTML-literate beginners curious about Angular      |
+| **Demo App**         | Ends-Well (TV series discovery)                    |
+| **Tone**             | Short, practical, appetite-whetting—not exhaustive |
+| **Estimated Length** | ~30-35K words                                      |
+
+---
+
+## Strategy: App First, Then Chapters
+
+**Why app-first:**
+
+1. Know exactly what code to teach—no guessing or revising later
+2. The app becomes the "working reference" for each chapter
+3. Easier to identify the natural teaching progression
+4. Catch any Angular 21/22 breaking changes before writing prose
+
+**Workflow:**
+
+1. Finalize ends-well architecture and features (mock data)
+2. Add TMDb API integration
+3. Write chapters that walk through building it step-by-step
+4. Each chapter's code should match a git commit/tag for readers
+
+---
+
+## Book Structure
+
+### Part 1: Foundations (Chapters 1-7)
+
+These are app-agnostic and mostly solid. Light updates needed.
+
+| Chapter | File                                    | Status  | Work Needed                                 |
+| ------- | --------------------------------------- | ------- | ------------------------------------------- |
+| 01      | `01-Introduction.md`                    | ✅ Keep | Update version history for Angular 20/21/22 |
+| 02      | `02-Typescript.md`                      | ✅ Keep | Minor review, already good                  |
+| 03      | `03-Getting-Started.md`                 | ✅ Keep | Verify CLI commands for v21+                |
+| 04      | `04-Gentle-Introduction-to-Angular-.md` | ✅ Keep | Good as-is                                  |
+| 05      | `05-angular-cli.md`                     | ✅ Keep | Update any deprecated flags                 |
+| 06      | `06-Your-First-Angular-App.md`          | ✅ Keep | Verify with latest CLI                      |
+| 07      | `07-Project-Structure.md`               | ✅ Keep | Update for any v21 changes                  |
+
+### Part 2: Building Ends-Well (Chapters 8-18)
+
+**Complete rewrite** using the TV series app instead of A10Dance.
+
+| Chapter | Topic                 | Key Concepts                                             |
+| ------- | --------------------- | -------------------------------------------------------- |
+| 08      | Introducing Ends-Well | App overview, what we'll build, screenshots              |
+| 09      | Creating the Project  | `ng new`, adding Material, theme selection               |
+| 10      | The Home Page         | Hero section, featured shows, Material Cards             |
+| 11      | Series List Page      | Grid layout, responsive cards, routing                   |
+| 12      | Search & Filtering    | Form inputs, signals for reactive state                  |
+| 13      | Sorting & Pagination  | Material Paginator, computed signals                     |
+| 14      | Series Detail Page    | Route parameters, tabs, expansion panels                 |
+| 15      | Shared Components     | Header, footer, component reuse                          |
+| 16      | Navigation & Layout   | Toolbar, responsive sidenav, active routes               |
+| 17      | Services & Mock Data  | TvSeries interface, SeriesService, mock data             |
+| 18      | Connecting to TMDb    | HttpClient, environment config, API keys, error handling |
+
+### Part 3: Finishing Touches (Chapters 19-20)
+
+| Chapter | Topic               | Key Concepts                                     |
+| ------- | ------------------- | ------------------------------------------------ |
+| 19      | Form Validation     | Validators, error display, Material error states |
+| 20      | Polish & Next Steps | Loading states, snackbars, where to learn more   |
+
+### Appendix (Optional Bonus Content)
+
+| Topic         | Source                        | Notes                               |
+| ------------- | ----------------------------- | ----------------------------------- |
+| Camera/WebRTC | `19-camera-implementation.md` | Optional bonus for advanced readers |
+
+---
+
+## Ends-Well App: Work Needed
+
+The app is already in good shape (Angular 20, signals, Material). Here's what needs attention:
+
+| Task                        | Priority | Notes                                                |
+| --------------------------- | -------- | ---------------------------------------------------- |
+| Upgrade to Angular 21+      | High     | When available, or note 20→21 path                   |
+| Wire up TMDb API fully      | High     | Currently stubbed; needs API key config              |
+| Simplify for teaching       | Medium   | Remove over-engineering, keep code beginner-readable |
+| Add loading/error states    | Medium   | Good teaching moments                                |
+| Ensure mock data fallback   | Medium   | For chapters before API integration                  |
+| Create git tags per chapter | Low      | Nice-to-have for readers                             |
+
+---
+
+## Cleanup: Files and Folders to Remove
+
+The following items are no longer needed and should be removed:
+
+### Folders to Delete
+
+| Folder             | Reason                                                     |
+| ------------------ | ---------------------------------------------------------- |
+| `a10dance/`        | Old demo app, replaced by ends-well                        |
+| `a10dance-server/` | Backend for old demo app, no longer needed                 |
+| `_rejected/`       | Contains rejected content (`naming-conventions-atomic.md`) |
+
+### Chapter Files to Remove
+
+| File                                                        | Reason                                                      |
+| ----------------------------------------------------------- | ----------------------------------------------------------- |
+| `chapters/01a-angular-20.md`                                | Placeholder with no content; merge relevant notes into Ch 1 |
+| `chapters/08-A10Dance--The-Demo-App.md`                     | Will be rewritten for ends-well                             |
+| `chapters/09-Creating-the-New-Project-.md`                  | Will be rewritten for ends-well                             |
+| `chapters/10-Modifying-the-Home-Page.md`                    | Will be rewritten for ends-well                             |
+| `chapters/11-Custom-Students-Service.md`                    | Will be rewritten for ends-well                             |
+| `chapters/12-Adding-the-Roster-Page.md`                     | Will be rewritten for ends-well                             |
+| `chapters/13-Implementing-a-Student-Roster.md`              | Will be rewritten for ends-well                             |
+| `chapters/14-Adding-Functionality-to-the-Student-Roster.md` | Will be rewritten for ends-well                             |
+| `chapters/15-Adding-Student-Details.md`                     | Will be rewritten for ends-well                             |
+| `chapters/16-Basic-Navigation-Menu.md`                      | Will be rewritten for ends-well                             |
+| `chapters/17-Adding-Page-Titles.md`                         | Will be rewritten for ends-well                             |
+| `chapters/18-Creating-the-Student-Details-Page.md`          | Will be rewritten for ends-well                             |
+| `chapters/19-camera-implementation.md`                      | Move to appendix folder, not delete                         |
+| `chapters/20-roster-avatars.md`                             | A10Dance-specific, will be rewritten                        |
+
+### Files to Keep (for reference during rewrite)
+
+| File                                           | Reason                                       |
+| ---------------------------------------------- | -------------------------------------------- |
+| `chapters/19-Understanding-Form-Validators.md` | Content is app-agnostic, adapt for ends-well |
+
+### Suggested Cleanup Approach
+
+1. **Archive first**: Move deleted content to a git branch or tag before removing
+2. **Keep form validators**: The content is reusable
+3. **Move camera chapter**: Create `appendix/` folder and relocate
+
+---
+
+## Execution Phases
+
+### Phase 1: Cleanup
+
+- [x] Create this plan document
+- [ ] Remove deprecated folders (`a10dance/`, `a10dance-server/`, `_rejected/`)
+- [ ] Remove A10Dance chapter files (8-18, 20)
+- [ ] Move camera chapter to `appendix/`
+- [ ] Remove placeholder `01a-angular-20.md`
+
+### Phase 2: App Prep
+
+- [ ] Audit ends-well for teachability
+- [ ] Simplify any overly complex patterns
+- [ ] Ensure mock data works standalone
+- [ ] Complete TMDb API integration
+- [ ] Upgrade to Angular 21 when available
+
+### Phase 3: Foundation Updates (Ch 1-7)
+
+- [ ] Update Ch 1 with Angular 20/21/22 version history
+- [ ] Review Ch 2 TypeScript content
+- [ ] Verify all CLI commands in Ch 3, 5, 6
+- [ ] Update Ch 7 for any v21 structural changes
+
+### Phase 4: New Chapters (Ch 8-18)
+
+- [ ] Write chapters in order, building the app progressively
+- [ ] Each chapter = one logical feature
+- [ ] Include complete code listings
+- [ ] Match code to specific git commits/tags
+
+### Phase 5: Final Chapters (Ch 19-20)
+
+- [ ] Adapt form validation content for ends-well
+- [ ] Write conclusion/next steps chapter
+
+### Phase 6: Polish
+
+- [ ] Consistent formatting across all chapters
+- [ ] Code review all examples
+- [ ] Final read-through for voice consistency
+- [ ] Prepare appendix content
+
+---
+
+## Open Questions
+
+- [ ] TMDb API key management: Should readers get their own key, or use a demo key?
+- [ ] Angular 21 vs 22: Finalize target version when release dates are clearer
+- [ ] Chapter git tags: Worth the effort for readers?
+
+---
+
+## Notes
+
+- Current word count: ~25K words (will change significantly with rewrite)
+- Writing style: Conversational, tutorial-based, practical with info boxes
+- The ends-well app already uses modern patterns (signals, zoneless, standalone)
