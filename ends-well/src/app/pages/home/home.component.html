@@ -12,16 +12,16 @@
   <section class="featured">
     <h2>Top Rated Series That End Well</h2>
     <div class="series-grid">
-      @for (series of featuredSeries; track series.id) {
+      @for (series of featuredSeries(); track series.id) {
         <mat-card class="series-card">
-          <div class="card-image" [style.backgroundImage]="'url(' + series.image + ')'"></div>
+          <div class="card-image" [style.backgroundImage]="'url(' + series.posterPath + ')'"></div>
           <mat-card-content>
             <h3>{{ series.title }}</h3>
             <div class="series-meta">
-              <span class="year">{{ series.year }}</span>
+              <span class="year">{{ series.yearStarted }}–{{ series.yearEnded }}</span>
               <div class="rating">
                 <mat-icon>star</mat-icon>
-                <span>{{ series.rating }}</span>
+                <span>{{ series.averageRating }}</span>
               </div>
             </div>
           </mat-card-content>
