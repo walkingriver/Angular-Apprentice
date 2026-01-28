@@ -106,36 +106,42 @@ The following items are no longer needed and should be removed:
 | `a10dance-server/` | Backend for old demo app, no longer needed                 |
 | `_rejected/`       | Contains rejected content (`naming-conventions-atomic.md`) |
 
+### Chapter Files to Archive
+
+Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
+
+| File                                                        | Reference Value                         |
+| ----------------------------------------------------------- | --------------------------------------- |
+| `08-A10Dance--The-Demo-App.md`                              | App intro structure                     |
+| `09-Creating-the-New-Project-.md`                           | Project setup patterns                  |
+| `10-Modifying-the-Home-Page.md`                             | Home page with Material Cards           |
+| `11-Custom-Students-Service.md`                             | Service patterns, Faker.js usage        |
+| `12-Adding-the-Roster-Page.md`                              | List page setup                         |
+| `13-Implementing-a-Student-Roster.md`                       | Material table, responsive patterns     |
+| `14-Adding-Functionality-to-the-Student-Roster.md`          | CRUD, dialogs, snackbars                |
+| `15-Adding-Student-Details.md`                              | Signals explanation                     |
+| `16-Basic-Navigation-Menu.md`                               | Sidenav, toolbar, navigation            |
+| `17-Adding-Page-Titles.md`                                  | Custom TitleStrategy                    |
+| `18-Creating-the-Student-Details-Page.md`                   | Forms with Material                     |
+| `20-roster-avatars.md`                                      | Avatar/image handling                   |
+
 ### Chapter Files to Remove
 
-| File                                                        | Reason                                                      |
-| ----------------------------------------------------------- | ----------------------------------------------------------- |
-| `chapters/01a-angular-20.md`                                | Placeholder with no content; merge relevant notes into Ch 1 |
-| `chapters/08-A10Dance--The-Demo-App.md`                     | Will be rewritten for ends-well                             |
-| `chapters/09-Creating-the-New-Project-.md`                  | Will be rewritten for ends-well                             |
-| `chapters/10-Modifying-the-Home-Page.md`                    | Will be rewritten for ends-well                             |
-| `chapters/11-Custom-Students-Service.md`                    | Will be rewritten for ends-well                             |
-| `chapters/12-Adding-the-Roster-Page.md`                     | Will be rewritten for ends-well                             |
-| `chapters/13-Implementing-a-Student-Roster.md`              | Will be rewritten for ends-well                             |
-| `chapters/14-Adding-Functionality-to-the-Student-Roster.md` | Will be rewritten for ends-well                             |
-| `chapters/15-Adding-Student-Details.md`                     | Will be rewritten for ends-well                             |
-| `chapters/16-Basic-Navigation-Menu.md`                      | Will be rewritten for ends-well                             |
-| `chapters/17-Adding-Page-Titles.md`                         | Will be rewritten for ends-well                             |
-| `chapters/18-Creating-the-Student-Details-Page.md`          | Will be rewritten for ends-well                             |
-| `chapters/19-camera-implementation.md`                      | Move to appendix folder, not delete                         |
-| `chapters/20-roster-avatars.md`                             | A10Dance-specific, will be rewritten                        |
+| File                           | Reason                                                      |
+| ------------------------------ | ----------------------------------------------------------- |
+| `chapters/01a-angular-20.md`   | Placeholder with no content; merge relevant notes into Ch 1 |
 
-### Files to Keep (for reference during rewrite)
+### Chapter Files to Relocate
+
+| File                               | Destination  | Reason                 |
+| ---------------------------------- | ------------ | ---------------------- |
+| `chapters/19-camera-implementation.md` | `appendix/`  | Optional bonus content |
+
+### Files to Keep in Place
 
 | File                                           | Reason                                       |
 | ---------------------------------------------- | -------------------------------------------- |
 | `chapters/19-Understanding-Form-Validators.md` | Content is app-agnostic, adapt for ends-well |
-
-### Suggested Cleanup Approach
-
-1. **Archive first**: Move deleted content to a git branch or tag before removing
-2. **Keep form validators**: The content is reusable
-3. **Move camera chapter**: Create `appendix/` folder and relocate
 
 ---
 
@@ -144,8 +150,8 @@ The following items are no longer needed and should be removed:
 ### Phase 1: Cleanup
 
 - [x] Create this plan document
-- [ ] Remove deprecated folders (`a10dance/`, `a10dance-server/`, `_rejected/`)
-- [ ] Remove A10Dance chapter files (8-18, 20)
+- [x] Remove deprecated folders (`a10dance/`, `a10dance-server/`, `_rejected/`)
+- [x] Archive A10Dance chapter files (8-18, 20) to `_archive/a10dance-chapters/`
 - [ ] Move camera chapter to `appendix/`
 - [ ] Remove placeholder `01a-angular-20.md`
 
