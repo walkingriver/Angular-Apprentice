@@ -136,6 +136,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Comment Section -->
+      <div class="comment-section">
+        <mat-form-field appearance="outline" class="comment-field">
+          <mat-label>Your thoughts on this series</mat-label>
+          <textarea
+            matInput
+            [value]="userComment()"
+            (input)="onCommentChange($any($event.target).value)"
+            placeholder="What did you think? How was the ending?"
+            rows="3"
+          ></textarea>
+          <mat-hint>Your notes are saved automatically</mat-hint>
+        </mat-form-field>
+      </div>
     </div>
 
     <!-- Back Button -->

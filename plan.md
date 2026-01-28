@@ -225,8 +225,23 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 
 ---
 
+## Sidebar Topics
+
+Throughout the book, use info boxes/sidebars to explain important concepts without derailing the main flow. These are teaching moments that reinforce best practices.
+
+| Topic | Where to Include | Key Points |
+| --- | --- | --- |
+| **Accessibility (a11y)** | Ch 10-11 (clickable elements) | Explain why we use semantic elements (`<a>`, `<button>`) instead of adding `(click)` to `<div>` or `<span>`. Screen readers, keyboard navigation, focus states. Angular allows click handlers anywhere, but semantic HTML is essential for accessibility. |
+| **Why Signals?** | Ch 12 (first signal usage) | Brief comparison to BehaviorSubject/state management. Signals are simpler, synchronous, and integrate with zoneless. |
+| **localStorage Limits** | Ch 16 (persistence) | ~5MB limit, synchronous API, JSON serialization. When to use vs IndexedDB or backend. |
+| **Environment Files** | Ch 17a (API keys) | Never commit secrets. Use environment.local.ts pattern, .gitignore it. |
+| **Observable vs Signal** | Ch 18 (HttpClient) | HttpClient returns Observables. When to convert to signals vs use async pipe. |
+
+---
+
 ## Notes
 
 - Current word count: ~25K words (will change significantly with rewrite)
-- Writing style: Conversational, tutorial-based, practical with info boxes
+- Writing style: Conversational, tutorial-based, practical with info boxes/sidebars
 - The ends-well app already uses modern patterns (signals, zoneless, standalone)
+- Emphasize accessibility throughout—use semantic HTML elements

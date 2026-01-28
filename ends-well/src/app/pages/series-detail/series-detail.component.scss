@@ -216,6 +216,15 @@
       color: #666;
     }
   }
+
+  .comment-section {
+    margin-top: 1.5rem;
+
+    .comment-field {
+      width: 100%;
+      max-width: 600px;
+    }
+  }
 }
 
 // Back section

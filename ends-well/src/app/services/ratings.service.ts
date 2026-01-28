@@ -2,12 +2,14 @@ import { Injectable, signal, computed } from '@angular/core';
 
 /**
  * User rating for a TV series.
- * Stores whether the user thinks the series ended well and an optional star rating.
+ * Stores whether the user thinks the series ended well, an optional star rating,
+ * and personal comments/notes.
  */
 export interface UserRating {
   seriesId: string;
   endedWell: boolean | null; // true = ended well, false = ended poorly, null = not rated
   starRating: number | null; // 1-5 stars, null = not rated
+  comment: string; // User's personal notes about the series
   ratedAt: Date;
 }
 
@@ -57,6 +59,13 @@ export class RatingsService {
   }
 
   /**
+   * Get the user's comment for a series.
+   */
+  getComment(seriesId: string): string {
+    return this.getRating(seriesId)?.comment ?? '';
+  }
+
+  /**
    * Set whether the series ended well.
    */
   setEndedWell(seriesId: string, endedWell: boolean | null): void {
@@ -71,6 +80,13 @@ export class RatingsService {
       throw new Error('Star rating must be between 1 and 5');
     }
     this.updateRating(seriesId, { starRating });
+  }
+
+  /**
+   * Set the user's comment for a series.
+   */
+  setComment(seriesId: string, comment: string): void {
+    this.updateRating(seriesId, { comment });
   }
 
   /**
@@ -95,7 +111,7 @@ export class RatingsService {
    */
   private updateRating(
     seriesId: string,
-    updates: Partial<Pick<UserRating, 'endedWell' | 'starRating'>>
+    updates: Partial<Pick<UserRating, 'endedWell' | 'starRating' | 'comment'>>
   ): void {
     const existing = this.getRating(seriesId);
     const newRating: UserRating = {
@@ -103,6 +119,7 @@ export class RatingsService {
       endedWell: updates.endedWell !== undefined ? updates.endedWell : existing?.endedWell ?? null,
       starRating:
         updates.starRating !== undefined ? updates.starRating : existing?.starRating ?? null,
+      comment: updates.comment !== undefined ? updates.comment : existing?.comment ?? '',
       ratedAt: new Date(),
     };
 

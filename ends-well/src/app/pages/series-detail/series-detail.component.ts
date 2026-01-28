@@ -1,4 +1,5 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { SeriesService } from '../../services/series';
 import { RatingsService } from '../../services/ratings.service';
@@ -14,6 +17,7 @@ import { TvSeries } from '../../models/tv-series.model';
 @Component({
   selector: 'app-series-detail',
   imports: [
+    FormsModule,
     RouterModule,
     MatButtonModule,
     MatIconModule,
@@ -21,6 +25,8 @@ import { TvSeries } from '../../models/tv-series.model';
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './series-detail.component.html',
   styleUrls: ['./series-detail.component.scss'],
@@ -40,6 +46,7 @@ export class SeriesDetailComponent implements OnInit {
   // User rating signals
   userEndedWell = signal<boolean | null>(null);
   userStarRating = signal<number | null>(null);
+  userComment = signal<string>('');
 
   // Star rating array for template iteration
   readonly stars = [1, 2, 3, 4, 5];
@@ -98,9 +105,11 @@ export class SeriesDetailComponent implements OnInit {
     if (rating) {
       this.userEndedWell.set(rating.endedWell);
       this.userStarRating.set(rating.starRating);
+      this.userComment.set(rating.comment);
     } else {
       this.userEndedWell.set(null);
       this.userStarRating.set(null);
+      this.userComment.set('');
     }
   }
 
@@ -135,6 +144,14 @@ export class SeriesDetailComponent implements OnInit {
         duration: 2000,
       });
     }
+  }
+
+  onCommentChange(comment: string): void {
+    const series = this.series();
+    if (!series) return;
+
+    this.userComment.set(comment);
+    this.ratingsService.setComment(series.id, comment);
   }
 
   onWatchTrailer(): void {
