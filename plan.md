@@ -197,11 +197,30 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 
 ---
 
+## Reader Code Strategy
+
+**Approach:** Use git tags on the `ends-well/` folder so readers can follow along.
+
+| Tag Format | Example | Description |
+| --- | --- | --- |
+| `chapter-XX-start` | `chapter-08-start` | State before chapter begins |
+| `chapter-XX-end` | `chapter-08-end` | State after chapter is complete |
+
+**Workflow for writing chapters:**
+1. Checkout the current end state
+2. Make incremental changes as described in the chapter
+3. Tag the final state as `chapter-XX-end`
+4. That becomes `chapter-(XX+1)-start`
+
+**Alternative:** Could create a separate `ends-well-tutorial/` folder that starts empty and builds up chapter by chapter, keeping `ends-well/` as the finished reference. Decide based on complexity.
+
+---
+
 ## Open Questions
 
 - [ ] TMDb API key management: Should readers get their own key, or use a demo key?
 - [ ] Angular 21 vs 22: Finalize target version when release dates are clearer
-- [ ] Chapter git tags: Worth the effort for readers?
+- [ ] Separate tutorial folder vs tags on existing folder?
 
 ---
 
