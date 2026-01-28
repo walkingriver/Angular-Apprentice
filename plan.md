@@ -161,7 +161,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Fix duplicate components (app.component.ts vs app.ts, two series-list)
 - [x] Standardize on @for/@if syntax (remove *ngFor/*ngIf)
 - [x] Remove zoneless change detection (too advanced for beginners)
-- [ ] Simplify createResource pattern in TmdbService
+- [x] Simplify TmdbService (removed custom createResource, use basic HttpClient)
 - [ ] Consolidate mock data into single file
 - [ ] Fix inconsistent service usage
 - [ ] Ensure mock data works standalone
