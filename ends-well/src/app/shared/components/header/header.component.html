@@ -6,15 +6,16 @@
     
     <!-- Desktop Navigation -->
     <nav class="desktop-nav">
-      <a 
-        *ngFor="let item of navItems" 
-        [routerLink]="item.path" 
-        mat-button 
-        class="nav-link"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: true}">
-        {{ item.label }}
-      </a>
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          mat-button
+          class="nav-link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}">
+          {{ item.label }}
+        </a>
+      }
     </nav>
     
     <!-- Mobile Menu Button -->
@@ -32,16 +33,17 @@
 <div class="mobile-menu" [class.open]="isMenuOpen">
   <div class="container">
     <nav class="mobile-nav">
-      <a 
-        *ngFor="let item of navItems" 
-        [routerLink]="item.path" 
-        mat-button 
-        class="mobile-nav-link"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: true}"
-        (click)="isMenuOpen = false">
-        {{ item.label }}
-      </a>
+      @for (item of navItems; track item.path) {
+        <a
+          [routerLink]="item.path"
+          mat-button
+          class="mobile-nav-link"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}"
+          (click)="isMenuOpen = false">
+          {{ item.label }}
+        </a>
+      }
     </nav>
   </div>
 </div>

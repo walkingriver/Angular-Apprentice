@@ -64,9 +64,11 @@ const ITEMS_PER_PAGE = 12;
         <mat-form-field appearance="outline" class="sort-field">
           <mat-label>Sort by</mat-label>
           <mat-select [(value)]="currentSort" (selectionChange)="onSortChange()">
-            <mat-option *ngFor="let option of sortOptions" [value]="option.value">
-              {{ option.label }}
-            </mat-option>
+            @for (option of sortOptions; track option.value) {
+              <mat-option [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </div>
