@@ -8,10 +8,10 @@ import { TvSeries } from '../models/tv-series.model';
  * obtaining your own API key from https://www.themoviedb.org/settings/api
  */
 const posterPlaceholder = (title: string) =>
-  `assets/images/poster-placeholder.jpg`;
+  `/assets/images/poster-placeholder.jpg`;
 
 const backdropPlaceholder = (title: string) =>
-  `assets/images/backdrop-placeholder.jpg`;
+  `/assets/images/backdrop-placeholder.jpg`;
 
 /**
  * Mock data for TV series - used for development and teaching.
