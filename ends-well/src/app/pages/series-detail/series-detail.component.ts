@@ -1,13 +1,9 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 import { SeriesService } from '../../services/series';
 import { TvSeries } from '../../models/tv-series.model';
@@ -16,14 +12,10 @@ import { TvSeries } from '../../models/tv-series.model';
   selector: 'app-series-detail',
   imports: [
     RouterModule,
-    DatePipe,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    MatTabsModule,
     MatProgressSpinnerModule,
-    MatExpansionModule,
-    MatChipsModule,
   ],
   templateUrl: './series-detail.component.html',
   styleUrls: ['./series-detail.component.scss'],

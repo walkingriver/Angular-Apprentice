@@ -12,16 +12,16 @@
         Go Back
       </button>
     </div>
-  } @else if (series(); as s) {
+  } @else if (series()) {
     <!-- Hero Section with Backdrop -->
-    <div class="series-backdrop" [style.backgroundImage]="'url(' + s.backdropPath + ')'">
+    <div class="series-backdrop" [style.backgroundImage]="'url(' + series()!.backdropPath + ')'">
       <div class="backdrop-overlay">
         <div class="hero-content">
           <div class="series-poster">
-            <img [src]="s.posterPath" [alt]="s.title" class="poster-image" />
+            <img [src]="series()!.posterPath" [alt]="series()!.title" class="poster-image" />
           </div>
           <div class="series-info">
-            <h1 class="series-title">{{ s.title }}</h1>
+            <h1 class="series-title">{{ series()!.title }}</h1>
             <p class="series-years">{{ releaseYear() }}</p>
 
             <div class="series-meta">
@@ -29,38 +29,38 @@
                 <mat-icon>star</mat-icon>
                 {{ rating() }}
               </span>
-              @if (s.seasons) {
-                <span class="seasons">{{ s.seasons }} Seasons</span>
+              @if (series()!.seasons) {
+                <span class="seasons">{{ series()!.seasons }} Seasons</span>
               }
-              @if (s.episodes) {
-                <span class="episodes">{{ s.episodes }} Episodes</span>
+              @if (series()!.episodes) {
+                <span class="episodes">{{ series()!.episodes }} Episodes</span>
               }
-              @if (s.network) {
-                <span class="network">{{ s.network }}</span>
+              @if (series()!.network) {
+                <span class="network">{{ series()!.network }}</span>
               }
             </div>
 
-            @if (s.genres?.length) {
+            @if (series()!.genres?.length) {
               <div class="genres">
-                @for (genre of s.genres; track genre) {
+                @for (genre of series()!.genres; track genre) {
                   <span class="genre-chip">{{ genre }}</span>
                 }
               </div>
             }
 
             <div class="overview">
-              <p>{{ s.description }}</p>
+              <p>{{ series()!.description }}</p>
             </div>
 
-            @if (s.starring?.length) {
+            @if (series()!.starring?.length) {
               <div class="starring">
-                <strong>Starring:</strong> {{ s.starring?.join(', ') }}
+                <strong>Starring:</strong> {{ series()!.starring?.join(', ') }}
               </div>
             }
 
-            @if (s.createdBy?.length) {
+            @if (series()!.createdBy?.length) {
               <div class="created-by">
-                <strong>Created by:</strong> {{ s.createdBy?.join(', ') }}
+                <strong>Created by:</strong> {{ series()!.createdBy?.join(', ') }}
               </div>
             }
 
