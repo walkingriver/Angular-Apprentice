@@ -1,8 +1,15 @@
 import { TvSeries } from '../models/tv-series.model';
 
+// Reliable placeholder for missing images
+const posterPlaceholder = (title: string) =>
+  `https://via.placeholder.com/500x750/1a1a2e/ffffff?text=${encodeURIComponent(title.replace(/ /g, '+'))}`;
+
+const backdropPlaceholder = (title: string) =>
+  `https://via.placeholder.com/1280x720/1a1a2e/ffffff?text=${encodeURIComponent(title.replace(/ /g, '+'))}`;
+
 /**
  * Mock data for TV series - used for development and teaching.
- * Uses actual TMDb image URLs for realistic appearance.
+ * Uses actual TMDb image URLs where available, placeholders otherwise.
  * In production, this would come from the TMDb API dynamically.
  */
 export const MOCK_SERIES: TvSeries[] = [
@@ -42,8 +49,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Comedy', 'Drama', 'Fantasy'],
     description:
       'Eleanor Shellstrop, an ordinary woman who, through an administrative error, enters the afterlife and must hide her morally imperfect behavior.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/qfYuMFy5ycPLkQb8qpPDMn1yxn8.jpg',
-    backdropPath: 'https://image.tmdb.org/t/p/original/nlsNr1BaWBmZRxWl0xn3VlgW7Pj.jpg',
+    posterPath: posterPlaceholder('The Good Place'),
+    backdropPath: backdropPlaceholder('The Good Place'),
     network: 'NBC',
     seasons: 4,
     episodes: 53,
@@ -66,8 +73,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Comedy', 'Mockumentary'],
     description:
       'A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/qWnJzyZhyGe71jBeiXmOwuNkNFa.jpg',
-    backdropPath: 'https://image.tmdb.org/t/p/original/vNpuAxGTl9HsUbHqam3E9CzqCvX.jpg',
+    posterPath: posterPlaceholder('The Office'),
+    backdropPath: backdropPlaceholder('The Office'),
     network: 'NBC',
     seasons: 9,
     episodes: 201,
@@ -114,8 +121,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Drama', 'Comedy'],
     description:
       'A chronicle of the lives of the Fisher family who run a funeral home in Los Angeles.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/xTdpRt4J7fB1NYIFV2fwhmQKxfb.jpg',
-    backdropPath: 'https://image.tmdb.org/t/p/original/mHM5q62BGWTY6XzX3Xqc16BlVfN.jpg',
+    posterPath: posterPlaceholder('Six Feet Under'),
+    backdropPath: backdropPlaceholder('Six Feet Under'),
     network: 'HBO',
     seasons: 5,
     episodes: 63,
@@ -138,8 +145,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Drama', 'Thriller', 'Crime'],
     description:
       'Two Soviet KGB officers pose as an idealistic American couple living in the suburbs of Washington D.C. during the Reagan era.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/tvMfXn1SwRT1HnLJsFvwEJEQAkV.jpg',
-    backdropPath: 'https://image.tmdb.org/t/p/original/lx7gINCRD6RfzBDjzNaP3dqS7tB.jpg',
+    posterPath: posterPlaceholder('The Americans'),
+    backdropPath: backdropPlaceholder('The Americans'),
     network: 'FX',
     seasons: 6,
     episodes: 75,
