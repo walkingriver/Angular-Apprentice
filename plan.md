@@ -50,19 +50,20 @@ These are app-agnostic and mostly solid. Light updates needed.
 
 **Complete rewrite** using the TV series app instead of A10Dance.
 
-| Chapter | Topic                 | Key Concepts                                             |
-| ------- | --------------------- | -------------------------------------------------------- |
-| 08      | Introducing Ends-Well | App overview, what we'll build, screenshots              |
-| 09      | Creating the Project  | `ng new`, adding Material, theme selection               |
-| 10      | The Home Page         | Hero section, featured shows, Material Cards             |
-| 11      | Series List Page      | Grid layout, responsive cards, routing                   |
-| 12      | Search & Filtering    | Form inputs, signals for reactive state                  |
-| 13      | Sorting & Pagination  | Material Paginator, computed signals                     |
-| 14      | Series Detail Page    | Route parameters, tabs, expansion panels                 |
-| 15      | Shared Components     | Header, footer, component reuse                          |
-| 16      | Navigation & Layout   | Toolbar, responsive sidenav, active routes               |
-| 17      | Services & Mock Data  | TvSeries interface, SeriesService, mock data             |
-| 18      | Connecting to TMDb    | HttpClient, environment config, API keys, error handling |
+| Chapter | Topic                    | Key Concepts                                             |
+| ------- | ------------------------ | -------------------------------------------------------- |
+| 08      | Introducing Ends-Well    | App overview, what we'll build, screenshots              |
+| 09      | Creating the Project     | `ng new`, adding Material, theme selection               |
+| 10      | The Home Page            | Hero section, featured shows, Material Cards             |
+| 11      | Series List Page         | Grid layout, responsive cards, routing                   |
+| 12      | Search & Filtering       | Form inputs, signals for reactive state                  |
+| 13      | Sorting & Pagination     | Material Paginator, computed signals                     |
+| 14      | Series Detail Page       | Route parameters, tabs, expansion panels                 |
+| 15      | Shared Components        | Header, footer, component reuse                          |
+| 16      | Navigation & Layout      | Toolbar, responsive sidenav, active routes               |
+| 17      | Services & Mock Data     | TvSeries interface, SeriesService, mock data             |
+| 17a     | Getting a TMDb API Key   | Sign up at themoviedb.org, create API key, environment config |
+| 18      | Connecting to TMDb       | HttpClient, Observable patterns, API integration, error handling |
 
 ### Part 3: Finishing Touches (Chapters 19-20)
 

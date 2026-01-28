@@ -1,15 +1,21 @@
 import { TvSeries } from '../models/tv-series.model';
 
-// Reliable placeholder for missing images
+/**
+ * Placeholder images for series without TMDb URLs.
+ *
+ * TODO: These placeholder URLs will be replaced with real TMDb image paths
+ * once we connect to the TMDb API. See Chapter XX for instructions on
+ * obtaining your own API key from https://www.themoviedb.org/settings/api
+ */
 const posterPlaceholder = (title: string) =>
-  `https://via.placeholder.com/500x750/1a1a2e/ffffff?text=${encodeURIComponent(title.replace(/ /g, '+'))}`;
+  `assets/images/poster-placeholder.jpg`;
 
 const backdropPlaceholder = (title: string) =>
-  `https://via.placeholder.com/1280x720/1a1a2e/ffffff?text=${encodeURIComponent(title.replace(/ /g, '+'))}`;
+  `assets/images/backdrop-placeholder.jpg`;
 
 /**
  * Mock data for TV series - used for development and teaching.
- * Uses actual TMDb image URLs where available, placeholders otherwise.
+ * Uses actual TMDb image URLs where available, local placeholders otherwise.
  * In production, this would come from the TMDb API dynamically.
  */
 export const MOCK_SERIES: TvSeries[] = [
