@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +33,6 @@ import { TvSeries } from '../../models/tv-series.model';
 })
 export class SeriesDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
   private readonly seriesService = inject(SeriesService);
   private readonly ratingsService = inject(RatingsService);
@@ -179,9 +178,5 @@ export class SeriesDetailComponent implements OnInit {
         duration: 3000,
       });
     }
-  }
-
-  goBack(): void {
-    this.router.navigate(['/series']);
   }
 }

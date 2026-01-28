@@ -8,9 +8,9 @@
     <div class="error-container">
       <mat-icon>error_outline</mat-icon>
       <p>{{ error() }}</p>
-      <button mat-raised-button color="primary" (click)="goBack()">
-        Go Back
-      </button>
+      <a mat-raised-button color="primary" routerLink="/series">
+        Browse All Series
+      </a>
     </div>
   } @else if (series()) {
     <!-- Hero Section with Backdrop -->
@@ -154,14 +154,4 @@
     </div>
 
   }
-
-  <!-- Sticky Footer - always visible -->
-  <footer class="sticky-footer">
-    <div class="footer-content">
-      <button mat-raised-button color="primary" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-        Back to Browse
-      </button>
-    </div>
-  </footer>
 </div>
