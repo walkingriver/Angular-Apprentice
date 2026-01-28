@@ -73,6 +73,16 @@
       margin: 0 0 0.5rem;
       font-size: 1.2rem;
       font-weight: 500;
+      
+      .title-link {
+        color: inherit;
+        text-decoration: none;
+        
+        &:hover {
+          color: #3f51b5;
+          text-decoration: underline;
+        }
+      }
     }
     
     .series-meta {

@@ -58,19 +58,20 @@ These are app-agnostic and mostly solid. Light updates needed.
 | 11      | Series List Page         | Grid layout, responsive cards, routing                   |
 | 12      | Search & Filtering       | Form inputs, signals for reactive state                  |
 | 13      | Sorting & Pagination     | Material Paginator, computed signals                     |
-| 14      | Series Detail Page       | Route parameters, tabs, expansion panels                 |
-| 15      | Shared Components        | Header, footer, component reuse                          |
-| 16      | Navigation & Layout      | Toolbar, responsive sidenav, active routes               |
+| 14      | Series Detail Page       | Route parameters, detail layout, metadata display        |
+| 15      | User Ratings             | "Ended Well?" toggle, star ratings, RatingsService       |
+| 16      | Persisting Data          | localStorage, loading/saving state, JSON serialization   |
 | 17      | Services & Mock Data     | TvSeries interface, SeriesService, mock data             |
 | 17a     | Getting a TMDb API Key   | Sign up at themoviedb.org, create API key, environment config |
 | 18      | Connecting to TMDb       | HttpClient, Observable patterns, API integration, error handling |
+| 19      | Navigation & Layout      | Toolbar, shared components, active routes                |
 
-### Part 3: Finishing Touches (Chapters 19-20)
+### Part 3: Finishing Touches (Chapters 20-21)
 
 | Chapter | Topic               | Key Concepts                                     |
 | ------- | ------------------- | ------------------------------------------------ |
-| 19      | Form Validation     | Validators, error display, Material error states |
-| 20      | Polish & Next Steps | Loading states, snackbars, where to learn more   |
+| 20      | Form Validation     | Validators, error display, Material error states |
+| 21      | Polish & Next Steps | Loading states, snackbars, where to learn more   |
 
 ### Appendix (Optional Bonus Content)
 

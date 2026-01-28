@@ -86,6 +86,58 @@
       </div>
     </div>
 
+    <!-- User Rating Section -->
+    <div class="rating-section">
+      <h2>Your Rating</h2>
+      
+      <div class="rating-controls">
+        <!-- Ended Well Toggle -->
+        <div class="ended-well-rating">
+          <label>Did it end well?</label>
+          <div class="toggle-buttons">
+            <button
+              mat-raised-button
+              [color]="userEndedWell() === true ? 'primary' : undefined"
+              (click)="onEndedWellChange(userEndedWell() === true ? null : true)"
+              matTooltip="This series had a satisfying ending"
+            >
+              <mat-icon>thumb_up</mat-icon>
+              Yes
+            </button>
+            <button
+              mat-raised-button
+              [color]="userEndedWell() === false ? 'warn' : undefined"
+              (click)="onEndedWellChange(userEndedWell() === false ? null : false)"
+              matTooltip="This series had a disappointing ending"
+            >
+              <mat-icon>thumb_down</mat-icon>
+              No
+            </button>
+          </div>
+        </div>
+
+        <!-- Star Rating -->
+        <div class="star-rating">
+          <label>Overall rating</label>
+          <div class="stars">
+            @for (star of stars; track star) {
+              <button
+                mat-icon-button
+                (click)="onStarRatingChange(star)"
+                [class.filled]="userStarRating() !== null && star <= userStarRating()!"
+                [matTooltip]="star + ' star' + (star > 1 ? 's' : '')"
+              >
+                <mat-icon>{{ userStarRating() !== null && star <= userStarRating()! ? 'star' : 'star_border' }}</mat-icon>
+              </button>
+            }
+            @if (userStarRating()) {
+              <span class="rating-text">{{ userStarRating() }}/5</span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Back Button -->
     <div class="back-section">
       <button mat-button (click)="goBack()">

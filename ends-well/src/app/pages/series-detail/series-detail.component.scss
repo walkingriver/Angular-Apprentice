@@ -142,6 +142,82 @@
   }
 }
 
+// User Rating Section
+.rating-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+
+  h2 {
+    margin: 0 0 1.5rem;
+    color: #333;
+    font-size: 1.5rem;
+  }
+
+  .rating-controls {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .ended-well-rating,
+  .star-rating {
+    label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      color: #555;
+    }
+  }
+
+  .toggle-buttons {
+    display: flex;
+    gap: 0.75rem;
+
+    button {
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .stars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    button {
+      color: #ccc;
+      transition: color 0.2s, transform 0.1s;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+
+      &.filled {
+        color: #ffc107;
+      }
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .rating-text {
+      margin-left: 0.5rem;
+      font-weight: 500;
+      color: #666;
+    }
+  }
+}
+
 // Back section
 .back-section {
   max-width: 1200px;
@@ -222,5 +298,15 @@
 
   .overview p {
     text-align: left;
+  }
+
+  .rating-section {
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    .rating-controls {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
   }
 }

@@ -16,7 +16,7 @@
         <mat-card class="series-card">
           <div class="card-image" [style.backgroundImage]="'url(' + series.posterPath + ')'"></div>
           <mat-card-content>
-            <h3>{{ series.title }}</h3>
+            <h3><a [routerLink]="['/series', series.id]" class="title-link">{{ series.title }}</a></h3>
             <div class="series-meta">
               <span class="year">{{ series.yearStarted }}–{{ series.yearEnded }}</span>
               <div class="rating">

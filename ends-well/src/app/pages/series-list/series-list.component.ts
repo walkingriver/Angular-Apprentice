@@ -81,7 +81,9 @@ interface SortOption {
                 </div>
               </div>
               <mat-card-content>
-                <h3 class="series-title">{{ series.title }}</h3>
+                <h3 class="series-title">
+                  <a [routerLink]="['/series', series.id]" class="title-link">{{ series.title }}</a>
+                </h3>
                 <div class="series-meta">
                   <span class="year">{{ series.yearStarted }}</span>
                   <span class="seasons">{{ series.seasons }} seasons</span>
@@ -204,6 +206,16 @@ interface SortOption {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+
+      .title-link {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+          color: #3f51b5;
+          text-decoration: underline;
+        }
+      }
     }
 
     .series-meta {

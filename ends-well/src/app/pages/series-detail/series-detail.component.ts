@@ -4,8 +4,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { SeriesService } from '../../services/series';
+import { RatingsService } from '../../services/ratings.service';
 import { TvSeries } from '../../models/tv-series.model';
 
 @Component({
@@ -16,6 +19,8 @@ import { TvSeries } from '../../models/tv-series.model';
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
   ],
   templateUrl: './series-detail.component.html',
   styleUrls: ['./series-detail.component.scss'],
@@ -25,11 +30,19 @@ export class SeriesDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
   private readonly seriesService = inject(SeriesService);
+  private readonly ratingsService = inject(RatingsService);
 
   // Signals
   series = signal<TvSeries | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+
+  // User rating signals
+  userEndedWell = signal<boolean | null>(null);
+  userStarRating = signal<number | null>(null);
+
+  // Star rating array for template iteration
+  readonly stars = [1, 2, 3, 4, 5];
 
   // Computed values
   rating = computed(() => {
@@ -47,11 +60,11 @@ export class SeriesDetailComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // Subscribe to route parameter changes
     this.route.paramMap.subscribe((params) => {
       const seriesId = params.get('id');
       if (seriesId) {
         this.loadSeriesDetails(seriesId);
+        this.loadUserRating(seriesId);
       }
     });
   }
@@ -68,7 +81,6 @@ export class SeriesDetailComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    // Simulate network delay for realistic UX
     setTimeout(() => {
       const foundSeries = this.seriesService.getSeriesById(id);
       if (foundSeries) {
@@ -79,6 +91,50 @@ export class SeriesDetailComponent implements OnInit {
       }
       this.loading.set(false);
     }, 500);
+  }
+
+  loadUserRating(seriesId: string): void {
+    const rating = this.ratingsService.getRating(seriesId);
+    if (rating) {
+      this.userEndedWell.set(rating.endedWell);
+      this.userStarRating.set(rating.starRating);
+    } else {
+      this.userEndedWell.set(null);
+      this.userStarRating.set(null);
+    }
+  }
+
+  onEndedWellChange(value: boolean | null): void {
+    const series = this.series();
+    if (!series) return;
+
+    this.userEndedWell.set(value);
+    this.ratingsService.setEndedWell(series.id, value);
+
+    const message =
+      value === true
+        ? `You rated "${series.title}" as ended well!`
+        : value === false
+          ? `You rated "${series.title}" as ended poorly.`
+          : `Cleared your "ended well" rating for "${series.title}"`;
+
+    this.snackBar.open(message, 'OK', { duration: 2000 });
+  }
+
+  onStarRatingChange(stars: number): void {
+    const series = this.series();
+    if (!series) return;
+
+    // Toggle off if clicking the same rating
+    const newRating = this.userStarRating() === stars ? null : stars;
+    this.userStarRating.set(newRating);
+    this.ratingsService.setStarRating(series.id, newRating);
+
+    if (newRating) {
+      this.snackBar.open(`You gave "${series.title}" ${newRating} star${newRating > 1 ? 's' : ''}`, 'OK', {
+        duration: 2000,
+      });
+    }
   }
 
   onWatchTrailer(): void {
@@ -109,6 +165,6 @@ export class SeriesDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/series']);
   }
 }
