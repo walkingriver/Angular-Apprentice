@@ -89,7 +89,7 @@
     <!-- User Rating Section -->
     <div class="rating-section">
       <h2>Your Rating</h2>
-      
+
       <div class="rating-controls">
         <!-- Ended Well Toggle -->
         <div class="ended-well-rating">
@@ -153,12 +153,15 @@
       </div>
     </div>
 
-    <!-- Back Button -->
-    <div class="back-section">
-      <button mat-button (click)="goBack()">
+  }
+
+  <!-- Sticky Footer - always visible -->
+  <footer class="sticky-footer">
+    <div class="footer-content">
+      <button mat-raised-button color="primary" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
         Back to Browse
       </button>
     </div>
-  }
+  </footer>
 </div>
