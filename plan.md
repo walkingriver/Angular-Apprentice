@@ -160,7 +160,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Audit ends-well for teachability
 - [x] Fix duplicate components (app.component.ts vs app.ts, two series-list)
 - [x] Standardize on @for/@if syntax (remove *ngFor/*ngIf)
-- [x] Remove zoneless change detection (too advanced for beginners)
+- [x] Use zoneless change detection (default in Angular 21+, works seamlessly with signals)
 - [x] Simplify TmdbService (removed custom createResource, use basic HttpClient)
 - [x] Consolidate mock data into single file (data/mock-series.ts)
 - [x] Update series-list component to use SeriesService
