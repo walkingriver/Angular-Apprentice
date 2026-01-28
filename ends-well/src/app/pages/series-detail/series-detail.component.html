@@ -6,74 +6,78 @@
     </div>
   } @else if (error()) {
     <div class="error-container">
+      <mat-icon>error_outline</mat-icon>
       <p>{{ error() }}</p>
-      <button mat-raised-button color="primary" (click)="loadSeriesDetails()">
-        Retry
+      <button mat-raised-button color="primary" (click)="goBack()">
+        Go Back
       </button>
     </div>
-  } @else if (series()) {
-    <div class="series-backdrop" [style.backgroundImage]="'url(' + series()?.backdropPath + ')'">
+  } @else if (series(); as s) {
+    <!-- Hero Section with Backdrop -->
+    <div class="series-backdrop" [style.backgroundImage]="'url(' + s.backdropPath + ')'">
       <div class="backdrop-overlay">
-        <div class="container">
+        <div class="hero-content">
           <div class="series-poster">
-            <img [src]="series()?.posterPath" [alt]="series()?.title" class="poster-image">
+            <img [src]="s.posterPath" [alt]="s.title" class="poster-image" />
           </div>
           <div class="series-info">
-            <h1 class="series-title">
-              {{ series()?.title }}
-              <span class="release-year">({{ releaseYear() }})</span>
-            </h1>
-            
+            <h1 class="series-title">{{ s.title }}</h1>
+            <p class="series-years">{{ releaseYear() }}</p>
+
             <div class="series-meta">
-              @if (series()?.voteAverage) {
-                <span class="rating">
-                  <mat-icon>star</mat-icon>
-                  {{ rating() }} ({{ series()?.voteCount }} votes)
-                </span>
+              <span class="rating">
+                <mat-icon>star</mat-icon>
+                {{ rating() }}
+              </span>
+              @if (s.seasons) {
+                <span class="seasons">{{ s.seasons }} Seasons</span>
               }
-              @if (series()?.status) {
-                <span class="status">
-                  {{ series()?.status }}
-                </span>
+              @if (s.episodes) {
+                <span class="episodes">{{ s.episodes }} Episodes</span>
               }
-              @if (series()?.episodeRunTime?.length) {
-                <span class="runtime">
-                  <mat-icon>schedule</mat-icon>
-                  {{ formattedRuntime() }}
-                </span>
+              @if (s.network) {
+                <span class="network">{{ s.network }}</span>
               }
             </div>
 
-            @if (series()?.genres?.length) {
+            @if (s.genres?.length) {
               <div class="genres">
-                @for (genre of series()?.genres; track genre.id) {
-                  <span class="genre">
-                    {{ genre.name }}
-                  </span>
+                @for (genre of s.genres; track genre) {
+                  <span class="genre-chip">{{ genre }}</span>
                 }
               </div>
             }
 
-            @if (series()?.tagline) {
-              <p class="tagline">
-                {{ series()?.tagline }}
-              </p>
-            }
-
             <div class="overview">
-              <h3>Overview</h3>
-              <p>{{ series()?.overview }}</p>
+              <p>{{ s.description }}</p>
             </div>
 
+            @if (s.starring?.length) {
+              <div class="starring">
+                <strong>Starring:</strong> {{ s.starring?.join(', ') }}
+              </div>
+            }
+
+            @if (s.createdBy?.length) {
+              <div class="created-by">
+                <strong>Created by:</strong> {{ s.createdBy?.join(', ') }}
+              </div>
+            }
+
             <div class="actions">
-              <button mat-raised-button color="primary" class="watch-trailer" (click)="onWatchTrailer()">
+              <button
+                mat-raised-button
+                color="primary"
+                class="watch-trailer"
+                (click)="onWatchTrailer()"
+              >
                 <mat-icon>play_arrow</mat-icon>
                 Watch Trailer
               </button>
-              <button mat-icon-button class="favorite" (click)="onAddToFavorites()">
+              <button mat-icon-button (click)="onAddToFavorites()">
                 <mat-icon>favorite_border</mat-icon>
               </button>
-              <button mat-icon-button class="bookmark" (click)="onAddToWatchlist()">
+              <button mat-icon-button (click)="onAddToWatchlist()">
                 <mat-icon>bookmark_border</mat-icon>
               </button>
             </div>
@@ -82,88 +86,12 @@
       </div>
     </div>
 
-    <div class="series-content">
-      <div class="container">
-        <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
-          <!-- Seasons Tab -->
-          <mat-tab label="Seasons">
-            @if (safeSeasons.length) {
-              <div class="seasons-container">
-                @for (season of safeSeasons; track season.id) {
-                  <mat-expansion-panel class="season-panel">
-                    <mat-expansion-panel-header>
-                      <mat-panel-title>
-                        <div class="season-header">
-                          <h3>{{ season.name }}</h3>
-                          <span class="episode-count">{{ season.episodeCount }} episodes</span>
-                        </div>
-                      </mat-panel-title>
-                      <mat-panel-description>
-                        {{ season.airDate | date: 'yyyy' }}
-                      </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div class="season-content">
-                      <div class="season-poster">
-                        <img [src]="season.posterPath" [alt]="season.name" class="season-image">
-                      </div>
-                      <div class="season-details">
-                        <p class="season-overview">{{ season.overview || 'No overview available.' }}</p>
-                        <button mat-button color="primary" class="view-season" 
-                                (click)="onViewSeason(series()?.id || 0, season.seasonNumber)">
-                          View All Episodes
-                        </button>
-                      </div>
-                    </div>
-                  </mat-expansion-panel>
-                }
-              </div>
-            } @else {
-              <p class="no-seasons">No season information available.</p>
-            }
-          </mat-tab>
-
-          <!-- Cast Tab -->
-          <mat-tab label="Cast">
-            @if (safeCast.length) {
-              <div class="cast-grid">
-                @for (cast of safeCast | slice:0:12; track cast.id) {
-                  <div class="cast-member">
-                    <div class="cast-image" [style.backgroundImage]="'url(' + cast.profilePath + ')'"></div>
-                    <div class="cast-info">
-                      <h4>{{ cast.name }}</h4>
-                      <p class="character">{{ cast.character }}</p>
-                    </div>
-                  </div>
-                }
-              </div>
-            } @else {
-              <p class="no-cast">No cast information available.</p>
-            }
-          </mat-tab>
-
-          <!-- Similar Shows Tab -->
-          <mat-tab label="Similar Shows">
-            @if (safeSimilarShows.length) {
-              <div class="similar-shows">
-                @for (show of safeSimilarShows | slice:0:6; track show.id) {
-                  <div class="similar-show" [routerLink]="['/series', show.id]">
-                    <div class="show-poster" [style.backgroundImage]="'url(' + show.posterPath + ')'"></div>
-                    <div class="show-info">
-                      <h4>{{ show.title }}</h4>
-                      <div class="show-rating">
-                        <mat-icon>star</mat-icon>
-                        <span>{{ show.voteAverage | number: '1.1-1' }}</span>
-                      </div>
-                    </div>
-                  </div>
-                }
-              </div>
-            } @else {
-              <p class="no-similar">No similar shows found.</p>
-            }
-          </mat-tab>
-        </mat-tab-group>
-      </div>
+    <!-- Back Button -->
+    <div class="back-section">
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Browse
+      </button>
     </div>
   }
 </div>
