@@ -281,6 +281,148 @@
   }
 }
 
+// Seasons section
+.seasons-container {
+  padding: 1rem 0;
+
+  .season-panel {
+    margin-bottom: 1rem;
+  }
+
+  .season-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .episode-count {
+      color: #666;
+      font-size: 0.9rem;
+      font-weight: normal;
+    }
+  }
+
+  .season-content {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+  }
+
+  .season-poster {
+    flex-shrink: 0;
+    width: 120px;
+
+    .season-image {
+      width: 100%;
+      border-radius: 4px;
+    }
+  }
+
+  .season-details {
+    flex: 1;
+
+    .season-overview {
+      margin: 0 0 1rem;
+      color: #444;
+      line-height: 1.6;
+    }
+  }
+}
+
+.no-seasons,
+.no-cast,
+.no-similar {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+}
+
+// Cast grid (in tabs)
+.cast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+
+  .cast-member {
+    text-align: center;
+
+    .cast-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      background-color: #eee;
+      margin: 0 auto 0.75rem;
+    }
+
+    h4 {
+      margin: 0 0 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .character {
+      color: #666;
+      font-size: 0.85rem;
+      margin: 0;
+    }
+  }
+}
+
+// Similar shows (in tabs)
+.similar-shows {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+
+  .similar-show {
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .show-poster {
+      width: 100%;
+      padding-bottom: 150%;
+      background-size: cover;
+      background-position: center;
+      background-color: #eee;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    .show-info {
+      h4 {
+        margin: 0 0 0.25rem;
+        font-size: 0.95rem;
+      }
+
+      .show-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: #ffc107;
+        font-size: 0.9rem;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}
+
 // Loading state
 .loading-container {
   display: flex;
@@ -292,6 +434,21 @@
   p {
     margin-top: 1.5rem;
     color: #666;
+    font-size: 1.1rem;
+  }
+}
+
+// Error state
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+
+  p {
+    color: #d32f2f;
     font-size: 1.1rem;
   }
 }

@@ -194,6 +194,10 @@ interface SortOption {
       width: 16px;
     }
 
+    mat-card-content {
+      padding-top: 16px;
+    }
+
     .series-title {
       margin: 0 0 8px 0;
       font-size: 1.1rem;

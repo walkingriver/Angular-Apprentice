@@ -1,5 +1,12 @@
 import { TvSeries } from '../models/tv-series.model';
 
+// Placeholder image generator for consistent mock data
+const placeholder = (title: string) =>
+  `https://placehold.co/500x750/1a1a2e/eee?text=${encodeURIComponent(title)}`;
+
+const backdropPlaceholder = (title: string) =>
+  `https://placehold.co/1280x720/1a1a2e/eee?text=${encodeURIComponent(title)}`;
+
 /**
  * Mock data for TV series - used for development and teaching.
  * In production, this would come from the TMDb API.
@@ -18,8 +25,7 @@ export const MOCK_SERIES: TvSeries[] = [
     description:
       "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.",
     posterPath: 'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
-    backdropPath:
-      'https://image.tmdb.org/t/p/original/h5UzYZquMwO9FVn15R2eY2KlOKnu.jpg',
+    backdropPath: 'https://image.tmdb.org/t/p/original/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg',
     network: 'AMC',
     seasons: 5,
     episodes: 62,
@@ -42,9 +48,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Comedy', 'Drama', 'Fantasy'],
     description:
       'Eleanor Shellstrop, an ordinary woman who, through an administrative error, enters the afterlife and must hide her morally imperfect behavior.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/qfYuMFy5ycPLkQb8qpPDMn1yxn8.jpg',
-    backdropPath:
-      'https://image.tmdb.org/t/p/original/nlsNr1BaWBmZRxWl0xn3VlgW7Pj.jpg',
+    posterPath: placeholder('The Good Place'),
+    backdropPath: backdropPlaceholder('The Good Place'),
     network: 'NBC',
     seasons: 4,
     episodes: 53,
@@ -67,9 +72,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Comedy', 'Mockumentary'],
     description:
       'A mockumentary on a group of typical office workers, where the workday consists of ego clashes, inappropriate behavior, and tedium.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/qWnJzyZhyGe71jBeiXmOwuNkNFa.jpg',
-    backdropPath:
-      'https://image.tmdb.org/t/p/original/qVygtf2IuTHKqt1UOGHxTW4dC8p.jpg',
+    posterPath: placeholder('The Office'),
+    backdropPath: backdropPlaceholder('The Office'),
     network: 'NBC',
     seasons: 9,
     episodes: 201,
@@ -92,9 +96,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Fantasy', 'Drama', 'Adventure'],
     description:
       'Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/u3bZgnGQ90T3uhsHjO1QNtSZKrQT.jpg',
-    backdropPath:
-      'https://image.tmdb.org/t/p/original/suopoADq0k8YZr4dQXcU6pToj6s.jpg',
+    posterPath: placeholder('Game of Thrones'),
+    backdropPath: backdropPlaceholder('Game of Thrones'),
     network: 'HBO',
     seasons: 8,
     episodes: 73,
@@ -117,9 +120,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Drama', 'Comedy'],
     description:
       'A chronicle of the lives of the Fisher family who run a funeral home in Los Angeles.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/eDVvDOC4n1R7rtwOqgZd1I1jdY8.jpg',
-    backdropPath:
-      'https://image.tmdb.org/t/p/original/5s6yZ3CuB9MRJpYVXnKgU1Idr1d.jpg',
+    posterPath: placeholder('Six Feet Under'),
+    backdropPath: backdropPlaceholder('Six Feet Under'),
     network: 'HBO',
     seasons: 5,
     episodes: 63,
@@ -142,9 +144,8 @@ export const MOCK_SERIES: TvSeries[] = [
     genres: ['Drama', 'Thriller', 'Crime'],
     description:
       'Two Soviet KGB officers pose as an idealistic American couple living in the suburbs of Washington D.C. during the Reagan era.',
-    posterPath: 'https://image.tmdb.org/t/p/w500/tvMfXn1SwRT1HnLJsFvwEJEQAkV.jpg',
-    backdropPath:
-      'https://image.tmdb.org/t/p/original/lVN8Dj9kP7tLVVEOYGG95WmOQ.jpg',
+    posterPath: placeholder('The Americans'),
+    backdropPath: backdropPlaceholder('The Americans'),
     network: 'FX',
     seasons: 6,
     episodes: 75,
