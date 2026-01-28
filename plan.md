@@ -163,7 +163,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Remove zoneless change detection (too advanced for beginners)
 - [x] Simplify TmdbService (removed custom createResource, use basic HttpClient)
 - [x] Consolidate mock data into single file (data/mock-series.ts)
-- [ ] Update series-list component to use SeriesService
+- [x] Update series-list component to use SeriesService
 - [ ] Ensure mock data works standalone
 - [ ] Complete TMDb API integration
 - [ ] Upgrade to Angular 21 when available
