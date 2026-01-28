@@ -15,10 +15,12 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   template: `
     <mat-toolbar color="primary">
-      <a routerLink="/" class="brand">Ends Well</a>
+      <a routerLink="/" class="brand" aria-label="Go to home page">
+        <mat-icon>movie</mat-icon>
+        Ends Well
+      </a>
       <span class="spacer"></span>
-      <a mat-button routerLink="/">Home</a>
-      <a mat-button routerLink="/series">Browse</a>
+      <a mat-button routerLink="/series" routerLinkActive="active">Browse All</a>
     </mat-toolbar>
 
     <main class="main-content">
@@ -37,10 +39,23 @@ import { MatButtonModule } from '@angular/material/button';
       text-decoration: none;
       color: inherit;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
     }
 
     .spacer {
       flex: 1 1 auto;
+    }
+
+    .active {
+      background: rgba(255, 255, 255, 0.15);
     }
 
     .main-content {

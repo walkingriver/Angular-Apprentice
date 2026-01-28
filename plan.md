@@ -231,6 +231,7 @@ Throughout the book, use info boxes/sidebars to explain important concepts witho
 
 | Topic | Where to Include | Key Points |
 | --- | --- | --- |
+| **Principle of Least Surprise** | Ch 8-9 (design decisions) | Users expect apps to behave like other apps they've used. Logo clicks to home, search icon means search, etc. Follow platform conventions—don't reinvent navigation. |
 | **Accessibility (a11y)** | Ch 10-11 (clickable elements) | Explain why we use semantic elements (`<a>`, `<button>`) instead of adding `(click)` to `<div>` or `<span>`. Screen readers, keyboard navigation, focus states. Angular allows click handlers anywhere, but semantic HTML is essential for accessibility. |
 | **Why Signals?** | Ch 12 (first signal usage) | Brief comparison to BehaviorSubject/state management. Signals are simpler, synchronous, and integrate with zoneless. |
 | **localStorage Limits** | Ch 16 (persistence) | ~5MB limit, synchronous API, JSON serialization. When to use vs IndexedDB or backend. |
