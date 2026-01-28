@@ -157,8 +157,13 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 
 ### Phase 2: App Prep
 
-- [ ] Audit ends-well for teachability
-- [ ] Simplify any overly complex patterns
+- [x] Audit ends-well for teachability
+- [x] Fix duplicate components (app.component.ts vs app.ts, two series-list)
+- [ ] Standardize on @for/@if syntax (remove *ngFor/*ngIf)
+- [ ] Remove zoneless change detection (too advanced for beginners)
+- [ ] Simplify createResource pattern in TmdbService
+- [ ] Consolidate mock data into single file
+- [ ] Fix inconsistent service usage
 - [ ] Ensure mock data works standalone
 - [ ] Complete TMDb API integration
 - [ ] Upgrade to Angular 21 when available
