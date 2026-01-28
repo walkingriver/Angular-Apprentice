@@ -152,7 +152,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Create this plan document
 - [x] Remove deprecated folders (`a10dance/`, `a10dance-server/`, `_rejected/`)
 - [x] Archive A10Dance chapter files (8-18, 20) to `_archive/a10dance-chapters/`
-- [ ] Move camera chapter to `appendix/`
+- [x] Move camera chapter to `appendix/`
 - [ ] Remove placeholder `01a-angular-20.md`
 
 ### Phase 2: App Prep
