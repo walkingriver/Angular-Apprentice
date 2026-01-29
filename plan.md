@@ -234,7 +234,7 @@ Throughout the book, use info boxes/sidebars to explain important concepts witho
 | **Principle of Least Surprise** | Ch 8 (design decisions) | Users expect apps to behave like other apps they've used. Logo clicks to home, search icon means search, etc. Follow platform conventions—don't reinvent navigation. |
 | **Why Signals?** | Ch 12 (first signal usage) | Brief comparison to BehaviorSubject/state management. Signals are simpler, synchronous, and integrate with zoneless. |
 | **localStorage Limits** | Ch 16 (persistence) | ~5MB limit, synchronous API, JSON serialization. When to use vs IndexedDB or backend. |
-| **Environment Files** | Ch 17a (API keys) | Never commit secrets. Use environment.local.ts pattern, .gitignore it. |
+| **Environment Files** | Ch 17a (API keys) | Never commit secrets. Use environment.local.ts pattern, .gitignore it. See "API Keys in Production" section below. |
 | **Observable vs Signal** | Ch 18 (HttpClient) | HttpClient returns Observables. When to convert to signals vs use async pipe. |
 
 ---
@@ -258,6 +258,60 @@ Throughout the book, use info boxes/sidebars to explain important concepts witho
 | Ch 19 | Color contrast | Don't rely on color alone to convey meaning (error states, ratings). |
 
 **Consistent pattern:** Each callout is a small info box titled "Accessibility Note" that explains the decision without interrupting the tutorial flow.
+
+---
+
+## API Keys in Production (Chapter 17a/18 Sidebar)
+
+**Important security topic** to address when teaching API integration:
+
+### The Problem
+
+Angular apps compile to JavaScript that runs in the browser. Any API key in your source code (including `environment.ts`) ends up in the bundled JavaScript, visible to anyone who:
+- Views page source
+- Opens browser DevTools
+- Inspects network requests
+
+### Development vs Production
+
+| Context | Approach | Risk Level |
+| --- | --- | --- |
+| **Local development** | Token in `environment.development.ts` (gitignored) | Low - only on your machine |
+| **Tutorials/demos** | Rate-limited or free-tier API key | Medium - abuse limited |
+| **Production apps** | Backend proxy or server-side calls | Required for security |
+
+### Recommended Production Patterns
+
+1. **Backend Proxy (Recommended)**
+   - Frontend calls your own backend API
+   - Backend adds the API key server-side
+   - Key never leaves the server
+   - Example: `/api/series/search?q=breaking` → backend calls TMDb with key
+
+2. **Server-Side Rendering (SSR)**
+   - Use Angular Universal or Analog
+   - API calls happen on the server
+   - Token stays server-side
+
+3. **Serverless Functions**
+   - Vercel/Netlify/AWS Lambda functions
+   - Small backend that holds the key
+   - Frontend calls the function
+
+4. **OAuth/User Auth**
+   - User authenticates with the API provider
+   - User's own token is used
+   - Not applicable for TMDb-style APIs
+
+### What We'll Do in This Book
+
+For learning purposes, we use the `environment.development.ts` approach with these safeguards:
+- File is gitignored (never committed)
+- Token only exists on developer's machine
+- Clear warnings in the code about production use
+- TMDb free tier has rate limits that reduce abuse impact
+
+**Production Note:** If you deploy this app publicly, implement a backend proxy or use serverless functions to protect your API key.
 
 ---
 
