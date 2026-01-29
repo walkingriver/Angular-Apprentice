@@ -87,16 +87,23 @@ export class SeriesDetailComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    setTimeout(() => {
-      const foundSeries = this.seriesService.getSeriesById(id);
-      if (foundSeries) {
-        this.series.set(foundSeries);
-        this.error.set(null);
-      } else {
-        this.error.set(`Series with ID "${id}" not found`);
-      }
-      this.loading.set(false);
-    }, 500);
+    // Use getSeriesDetails() which can fetch from TMDb if needed
+    this.seriesService.getSeriesDetails(id).subscribe({
+      next: (foundSeries) => {
+        if (foundSeries) {
+          this.series.set(foundSeries);
+          this.error.set(null);
+        } else {
+          this.error.set(`Series with ID "${id}" not found`);
+        }
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load series details:', err);
+        this.error.set('Failed to load series details');
+        this.loading.set(false);
+      },
+    });
   }
 
   loadUserRating(seriesId: string): void {
