@@ -1,6 +1,7 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -252,8 +253,10 @@ interface SortOption {
     }
   `,
 })
-export class SeriesListComponent {
+export class SeriesListComponent implements OnInit, OnDestroy {
   private seriesService = inject(SeriesService);
+  private destroy$ = new Subject<void>();
+  private searchSubject = new Subject<string>();
 
   // Search and sort state
   searchQuery = '';
@@ -272,27 +275,21 @@ export class SeriesListComponent {
   pageSize = signal(6);
 
   // Loading state
-  isLoading = this.seriesService.isLoading;
+  isLoading = signal(false);
 
-  // All series from the service
-  private allSeries = this.seriesService.seriesList;
+  // Search results (separate from base list)
+  private searchResults = signal<TvSeries[] | null>(null);
+
+  // Base series from the service
+  private baseSeries = this.seriesService.seriesList;
 
   // Filtered and sorted series
   filteredSeries = computed(() => {
-    let result = [...this.allSeries()];
-
-    // Apply search filter
-    if (this.searchQuery.trim()) {
-      const query = this.searchQuery.toLowerCase();
-      result = result.filter(
-        (series) =>
-          series.title.toLowerCase().includes(query) ||
-          series.genres?.some((g) => g.toLowerCase().includes(query))
-      );
-    }
+    // Use search results if available, otherwise use base series
+    let result = this.searchResults() ?? [...this.baseSeries()];
 
     // Apply sorting
-    result.sort((a, b) => {
+    result = [...result].sort((a, b) => {
       switch (this.currentSort) {
         case 'title_asc':
           return a.title.localeCompare(b.title);
@@ -318,12 +315,49 @@ export class SeriesListComponent {
     return this.filteredSeries().slice(startIndex, startIndex + this.pageSize());
   });
 
+  ngOnInit(): void {
+    // Set up debounced search
+    this.searchSubject
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((query) => this.performSearch(query));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   onSearch(): void {
-    this.currentPage.set(0); // Reset to first page on search
+    this.currentPage.set(0);
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  private performSearch(query: string): void {
+    if (!query.trim()) {
+      // Clear search results, show base list
+      this.searchResults.set(null);
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.seriesService.searchSeries(query).subscribe({
+      next: (results) => {
+        this.searchResults.set(results);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Search error:', err);
+        this.isLoading.set(false);
+      },
+    });
   }
 
   onSortChange(): void {
-    this.currentPage.set(0); // Reset to first page on sort change
+    this.currentPage.set(0);
   }
 
   onPageChange(event: PageEvent): void {

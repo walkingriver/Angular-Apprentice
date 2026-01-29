@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { Observable, of, delay, catchError, tap } from 'rxjs';
+import { Observable, of, delay, catchError, map, tap } from 'rxjs';
 import { TvSeries } from '../models/tv-series.model';
 import { MOCK_SERIES } from '../data/mock-series';
 import { TmdbService } from './tmdb.service';
@@ -156,24 +156,11 @@ export class SeriesService {
     // Use TMDb search if configured
     if (this._dataSource() === 'tmdb' && this.tmdbService.isConfigured) {
       return this.tmdbService.searchTvShows(query).pipe(
-        tap((response) => {
-          // Optionally update the list with search results
-        }),
+        map((response) => response.results),
         catchError((err) => {
           console.error('Search error:', err);
-          return of({ results: [], totalPages: 0 });
-        }),
-        // Extract just the results array
-        tap(() => {}),
-        // Map to just results
-        (obs) =>
-          new Observable<TvSeries[]>((subscriber) => {
-            obs.subscribe({
-              next: (response) => subscriber.next(response.results),
-              error: (err) => subscriber.error(err),
-              complete: () => subscriber.complete(),
-            });
-          })
+          return of([]);
+        })
       );
     }
 
