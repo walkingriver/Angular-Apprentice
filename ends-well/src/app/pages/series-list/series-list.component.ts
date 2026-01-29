@@ -87,7 +87,9 @@ interface SortOption {
                 </h3>
                 <div class="series-meta">
                   <span class="year">{{ series.yearStarted }}</span>
-                  <span class="seasons">{{ series.seasons }} seasons</span>
+                  @if (series.seasons) {
+                    <span class="seasons">{{ series.seasons }} seasons</span>
+                  }
                 </div>
                 <div class="genres">
                   @for (genre of series.genres; track genre; let last = $last) {
