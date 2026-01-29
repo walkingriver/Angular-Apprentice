@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 import { MatCardModule } from '@angular/material/card';
@@ -257,6 +257,8 @@ interface SortOption {
 })
 export class SeriesListComponent implements OnInit, OnDestroy {
   private seriesService = inject(SeriesService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();
 
@@ -318,14 +320,29 @@ export class SeriesListComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    // Set up debounced search
+    // Read initial query params
+    const initialQuery = this.route.snapshot.queryParamMap.get('q') || '';
+    const initialSort = this.route.snapshot.queryParamMap.get('sort') || 'rating_desc';
+    
+    if (initialQuery) {
+      this.searchQuery = initialQuery;
+      this.performSearch(initialQuery);
+    }
+    if (initialSort) {
+      this.currentSort = initialSort;
+    }
+
+    // Set up debounced search with URL sync
     this.searchSubject
       .pipe(
         debounceTime(400),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )
-      .subscribe((query) => this.performSearch(query));
+      .subscribe((query) => {
+        this.updateQueryParams();
+        this.performSearch(query);
+      });
   }
 
   ngOnDestroy(): void {
@@ -336,6 +353,23 @@ export class SeriesListComponent implements OnInit, OnDestroy {
   onSearch(): void {
     this.currentPage.set(0);
     this.searchSubject.next(this.searchQuery);
+  }
+
+  private updateQueryParams(): void {
+    const queryParams: { q?: string; sort?: string } = {};
+    
+    if (this.searchQuery.trim()) {
+      queryParams.q = this.searchQuery;
+    }
+    if (this.currentSort !== 'rating_desc') {
+      queryParams.sort = this.currentSort;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      replaceUrl: true, // Don't add to history for each keystroke
+    });
   }
 
   private performSearch(query: string): void {
@@ -360,6 +394,7 @@ export class SeriesListComponent implements OnInit, OnDestroy {
 
   onSortChange(): void {
     this.currentPage.set(0);
+    this.updateQueryParams();
   }
 
   onPageChange(event: PageEvent): void {
