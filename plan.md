@@ -167,7 +167,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Consolidate mock data into single file (data/mock-series.ts)
 - [x] Update series-list component to use SeriesService
 - [x] Ensure mock data works standalone (TypeScript compiles, requires Node.js v20.19+)
-- [ ] Complete TMDb API integration
+- [x] Complete TMDb API integration
 - [ ] Upgrade to Angular 21 when available
 
 ### Phase 3: Foundation Updates (Ch 1-7)
