@@ -4,7 +4,7 @@
 
 | Aspect               | Decision                                           |
 | -------------------- | -------------------------------------------------- |
-| **Target Version**   | Angular 21 (or 22 if timing aligns)                |
+| **Target Version**   | Angular 21.x (currently 21.1.2)                    |
 | **Audience**         | HTML-literate beginners curious about Angular      |
 | **Demo App**         | Ends-Well (TV series discovery)                    |
 | **Tone**             | Short, practical, appetite-whetting—not exhaustive |
@@ -168,7 +168,7 @@ Moved to `_archive/a10dance-chapters/` for reference when writing new chapters:
 - [x] Update series-list component to use SeriesService
 - [x] Ensure mock data works standalone (TypeScript compiles, requires Node.js v20.19+)
 - [x] Complete TMDb API integration
-- [ ] Upgrade to Angular 21 when available
+- [x] Upgrade to Angular 21 (now on 21.1.2)
 
 ### Phase 3: Foundation Updates (Ch 1-7)
 
