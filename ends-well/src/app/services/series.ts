@@ -1,32 +1,112 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { Observable, of, delay, catchError, tap } from 'rxjs';
 import { TvSeries } from '../models/tv-series.model';
 import { MOCK_SERIES } from '../data/mock-series';
+import { TmdbService } from './tmdb.service';
+import { environment } from '../../environments/environment';
 
+/**
+ * Service for managing TV series data.
+ *
+ * Supports two data sources:
+ * - Mock data (default): Uses local MOCK_SERIES for development/demos
+ * - TMDb API: Uses real data when configured in environment
+ *
+ * Toggle via environment.useMockData
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class SeriesService {
+  private tmdbService = inject(TmdbService);
+
   // Signal-based state management
-  private _seriesList = signal<TvSeries[]>([...MOCK_SERIES]);
+  private _seriesList = signal<TvSeries[]>([]);
   private _isLoading = signal(false);
+  private _error = signal<string | null>(null);
+  private _dataSource = signal<'mock' | 'tmdb'>('mock');
 
   // Read-only signals for components
   readonly seriesList = this._seriesList.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
+  readonly error = this._error.asReadonly();
+  readonly dataSource = this._dataSource.asReadonly();
 
   // Computed signals for filtered views
   readonly topRatedSeries = computed(() => {
     return [...this._seriesList()]
       .sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0))
-      .slice(0, 5);
+      .slice(0, 10);
   });
 
   readonly featuredSeries = computed(() => {
+    // For TMDb data, just return top rated
+    // For mock data, return ended non-canceled shows
+    if (this._dataSource() === 'tmdb') {
+      return this.topRatedSeries().slice(0, 5);
+    }
     return this._seriesList()
       .filter((s) => s.ended && !s.wasCanceled)
       .slice(0, 5);
   });
+
+  constructor() {
+    this.loadInitialData();
+  }
+
+  /**
+   * Load initial data based on environment configuration
+   */
+  private loadInitialData(): void {
+    if (this.tmdbService.isConfigured) {
+      this.loadFromTmdb();
+    } else {
+      this.loadMockData();
+    }
+  }
+
+  /**
+   * Load mock data (immediate, no network)
+   */
+  private loadMockData(): void {
+    this._dataSource.set('mock');
+    this._seriesList.set([...MOCK_SERIES]);
+    console.log('SeriesService: Using mock data');
+  }
+
+  /**
+   * Load data from TMDb API
+   */
+  private loadFromTmdb(): void {
+    this._isLoading.set(true);
+    this._error.set(null);
+    this._dataSource.set('tmdb');
+
+    this.tmdbService
+      .getTopRatedTvShows(1)
+      .pipe(
+        tap((response) => {
+          this._seriesList.set(response.results);
+          this._isLoading.set(false);
+          console.log('SeriesService: Loaded from TMDb API');
+        }),
+        catchError((err) => {
+          console.error('TMDb API error, falling back to mock data:', err);
+          this._error.set('Failed to load from TMDb. Using offline data.');
+          this.loadMockData();
+          this._isLoading.set(false);
+          return of({ results: [], totalPages: 0 });
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Refresh data from the current source
+   */
+  refresh(): void {
+    this.loadInitialData();
+  }
 
   /**
    * Get all series
@@ -43,6 +123,29 @@ export class SeriesService {
   }
 
   /**
+   * Get series details by ID (with API call for TMDb source)
+   */
+  getSeriesDetails(id: string): Observable<TvSeries | null> {
+    // First check local cache
+    const cached = this.getSeriesById(id);
+    if (cached) {
+      return of(cached);
+    }
+
+    // If using TMDb and not in cache, fetch from API
+    if (this._dataSource() === 'tmdb' && this.tmdbService.isConfigured) {
+      return this.tmdbService.getTvShowDetails(parseInt(id, 10)).pipe(
+        catchError((err) => {
+          console.error('Failed to fetch series details:', err);
+          return of(null);
+        })
+      );
+    }
+
+    return of(null);
+  }
+
+  /**
    * Search series by title or description
    */
   searchSeries(query: string): Observable<TvSeries[]> {
@@ -50,6 +153,31 @@ export class SeriesService {
       return of(this._seriesList());
     }
 
+    // Use TMDb search if configured
+    if (this._dataSource() === 'tmdb' && this.tmdbService.isConfigured) {
+      return this.tmdbService.searchTvShows(query).pipe(
+        tap((response) => {
+          // Optionally update the list with search results
+        }),
+        catchError((err) => {
+          console.error('Search error:', err);
+          return of({ results: [], totalPages: 0 });
+        }),
+        // Extract just the results array
+        tap(() => {}),
+        // Map to just results
+        (obs) =>
+          new Observable<TvSeries[]>((subscriber) => {
+            obs.subscribe({
+              next: (response) => subscriber.next(response.results),
+              error: (err) => subscriber.error(err),
+              complete: () => subscriber.complete(),
+            });
+          })
+      );
+    }
+
+    // Local search for mock data
     const lowerQuery = query.toLowerCase();
     const results = this._seriesList().filter(
       (series) =>
@@ -63,7 +191,7 @@ export class SeriesService {
   }
 
   /**
-   * Rate a series (updates the average rating)
+   * Rate a series (updates the average rating - mock data only)
    */
   rateSeries(seriesId: string, rating: number): TvSeries | null {
     let updatedSeries: TvSeries | null = null;

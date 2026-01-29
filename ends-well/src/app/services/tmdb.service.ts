@@ -1,22 +1,44 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   TmdbSearchResponse,
   TmdbTvSeries,
   TvSeries,
 } from '../models/tv-series.model';
 
+/**
+ * Service to interact with The Movie Database (TMDb) API.
+ *
+ * Uses the API Read Access Token (v4 auth) for Bearer authentication.
+ * Get your token at: https://www.themoviedb.org/settings/api
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class TmdbService {
-  // TODO: Replace with your TMDb API key from https://www.themoviedb.org/settings/api
-  private readonly apiKey = 'YOUR_TMDB_API_KEY';
   private readonly baseUrl = 'https://api.themoviedb.org/3';
   private readonly imageBaseUrl = 'https://image.tmdb.org/t/p';
 
   private http = inject(HttpClient);
+
+  /**
+   * Check if the TMDb API is configured and available
+   */
+  get isConfigured(): boolean {
+    return !!environment.tmdbAccessToken && !environment.useMockData;
+  }
+
+  /**
+   * Get HTTP headers with Bearer token authentication
+   */
+  private get headers(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${environment.tmdbAccessToken}`,
+      'Content-Type': 'application/json',
+    });
+  }
 
   /**
    * Search for TV shows by name
@@ -26,7 +48,6 @@ export class TmdbService {
     page = 1
   ): Observable<{ results: TvSeries[]; totalPages: number }> {
     const params = new URLSearchParams({
-      api_key: this.apiKey,
       query: query,
       page: page.toString(),
       language: 'en-US',
@@ -34,7 +55,8 @@ export class TmdbService {
 
     return this.http
       .get<TmdbSearchResponse<TmdbTvSeries>>(
-        `${this.baseUrl}/search/tv?${params}`
+        `${this.baseUrl}/search/tv?${params}`,
+        { headers: this.headers }
       )
       .pipe(
         map((response) => ({
@@ -51,13 +73,14 @@ export class TmdbService {
    */
   getTvShowDetails(id: number): Observable<TvSeries> {
     const params = new URLSearchParams({
-      api_key: this.apiKey,
       language: 'en-US',
       append_to_response: 'credits,external_ids,videos',
     });
 
     return this.http
-      .get<TmdbTvSeries>(`${this.baseUrl}/tv/${id}?${params}`)
+      .get<TmdbTvSeries>(`${this.baseUrl}/tv/${id}?${params}`, {
+        headers: this.headers,
+      })
       .pipe(map((series) => this.mapTmdbToTvSeries(series)));
   }
 
@@ -68,14 +91,40 @@ export class TmdbService {
     page = 1
   ): Observable<{ results: TvSeries[]; totalPages: number }> {
     const params = new URLSearchParams({
-      api_key: this.apiKey,
       page: page.toString(),
       language: 'en-US',
     });
 
     return this.http
       .get<TmdbSearchResponse<TmdbTvSeries>>(
-        `${this.baseUrl}/tv/popular?${params}`
+        `${this.baseUrl}/tv/popular?${params}`,
+        { headers: this.headers }
+      )
+      .pipe(
+        map((response) => ({
+          results: response.results.map((series) =>
+            this.mapTmdbToTvSeries(series)
+          ),
+          totalPages: response.total_pages,
+        }))
+      );
+  }
+
+  /**
+   * Get top-rated TV shows
+   */
+  getTopRatedTvShows(
+    page = 1
+  ): Observable<{ results: TvSeries[]; totalPages: number }> {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      language: 'en-US',
+    });
+
+    return this.http
+      .get<TmdbSearchResponse<TmdbTvSeries>>(
+        `${this.baseUrl}/tv/top_rated?${params}`,
+        { headers: this.headers }
       )
       .pipe(
         map((response) => ({
@@ -139,10 +188,10 @@ export class TmdbService {
       description: tmdbSeries.overview,
       posterPath: tmdbSeries.poster_path
         ? `${this.imageBaseUrl}/w500${tmdbSeries.poster_path}`
-        : undefined,
+        : '/assets/images/poster-placeholder.jpg',
       backdropPath: tmdbSeries.backdrop_path
         ? `${this.imageBaseUrl}/original${tmdbSeries.backdrop_path}`
-        : undefined,
+        : '/assets/images/backdrop-placeholder.jpg',
       network: tmdbSeries.networks?.[0]?.name,
       seasons: tmdbSeries.number_of_seasons,
       episodes: tmdbSeries.number_of_episodes,
