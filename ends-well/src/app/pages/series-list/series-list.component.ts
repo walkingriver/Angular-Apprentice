@@ -51,7 +51,7 @@ interface SortOption {
 
         <mat-form-field appearance="outline" class="sort-field">
           <mat-label>Sort by</mat-label>
-          <mat-select [(value)]="currentSort" (selectionChange)="onSortChange()">
+          <mat-select [value]="currentSort()" (selectionChange)="onSortChange($event.value)">
             @for (option of sortOptions; track option.value) {
               <mat-option [value]="option.value">
                 {{ option.label }}
@@ -264,7 +264,7 @@ export class SeriesListComponent implements OnInit, OnDestroy {
 
   // Search and sort state
   searchQuery = '';
-  currentSort = 'rating_desc';
+  currentSort = signal('rating_desc');
 
   sortOptions: SortOption[] = [
     { value: 'rating_desc', label: 'Highest Rated' },
@@ -294,7 +294,7 @@ export class SeriesListComponent implements OnInit, OnDestroy {
 
     // Apply sorting
     result = [...result].sort((a, b) => {
-      switch (this.currentSort) {
+      switch (this.currentSort()) {
         case 'title_asc':
           return a.title.localeCompare(b.title);
         case 'title_desc':
@@ -329,7 +329,7 @@ export class SeriesListComponent implements OnInit, OnDestroy {
       this.performSearch(initialQuery);
     }
     if (initialSort) {
-      this.currentSort = initialSort;
+      this.currentSort.set(initialSort);
     }
 
     // Set up debounced search with URL sync
@@ -361,8 +361,8 @@ export class SeriesListComponent implements OnInit, OnDestroy {
     if (this.searchQuery.trim()) {
       queryParams.q = this.searchQuery;
     }
-    if (this.currentSort !== 'rating_desc') {
-      queryParams.sort = this.currentSort;
+    if (this.currentSort() !== 'rating_desc') {
+      queryParams.sort = this.currentSort();
     }
 
     this.router.navigate([], {
@@ -392,7 +392,8 @@ export class SeriesListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSortChange(): void {
+  onSortChange(value: string): void {
+    this.currentSort.set(value);
     this.currentPage.set(0);
     this.updateQueryParams();
   }
